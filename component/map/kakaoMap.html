@@ -1,0 +1,159 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      type="text/javascript"
+      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${MAP_APP_KEY}&libraries=services,clusterer,drawing"
+    ></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+      (function () {
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+          mapOption = {
+            center: new kakao.maps.LatLng(37.2561572, 127.2178524), // 지도의 중심좌표
+            level: 8, // 지도의 확대 레벨
+          };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+        // 마커를 표시할 위치와 title 객체 배열입니다
+        const positions = [
+          {
+            addr1: '경기도 용인시 처인구 포곡읍 포곡로118번길 51-14',
+            addr2: '',
+            areacode: '31',
+            booktour: '',
+            cat1: 'A05',
+            cat2: 'A0502',
+            cat3: 'A05020400',
+            contentid: '2756808',
+            contenttypeid: '39',
+            cpyrhtDivCd: 'Type3',
+            createdtime: '20211014005203',
+            dist: '1469.925462055417',
+            firstimage:
+              'http://tong.visitkorea.or.kr/cms/resource/58/2756958_image2_1.jpg',
+            firstimage2:
+              'http://tong.visitkorea.or.kr/cms/resource/58/2756958_image2_1.jpg',
+            mapx: '127.2219184180',
+            mapy: '37.2689931285',
+            mlevel: '6',
+            modifiedtime: '20230131091752',
+            sigungucode: '23',
+            tel: '',
+            title: '신짬뽕',
+          },
+          {
+            addr1: '경기도 용인시 처인구 포곡읍 포곡로 121',
+            addr2: '',
+            areacode: '31',
+            booktour: '',
+            cat1: 'A04',
+            cat2: 'A0401',
+            cat3: 'A04011000',
+            contentid: '2907817',
+            contenttypeid: '38',
+            cpyrhtDivCd: 'Type3',
+            createdtime: '20221031191905',
+            dist: '1560.522098876463',
+            firstimage:
+              'http://tong.visitkorea.or.kr/cms/resource/99/2888099_image2_1.jpg',
+            firstimage2:
+              'http://tong.visitkorea.or.kr/cms/resource/99/2888099_image3_1.jpg',
+            mapx: '127.2184853617',
+            mapy: '37.2702068149',
+            mlevel: '6',
+            modifiedtime: '20240323202948',
+            sigungucode: '23',
+            tel: '',
+            title: '올리브영 용인포곡',
+          },
+          {
+            addr1: '경기도 용인시 처인구 백옥대로 1225',
+            addr2: '',
+            areacode: '31',
+            booktour: '',
+            cat1: 'A05',
+            cat2: 'A0502',
+            cat3: 'A05020100',
+            contentid: '2834682',
+            contenttypeid: '39',
+            cpyrhtDivCd: 'Type3',
+            createdtime: '20220809144147',
+            dist: '1402.075981029109',
+            firstimage:
+              'http://tong.visitkorea.or.kr/cms/resource/69/2834669_image2_1.jpg',
+            firstimage2:
+              'http://tong.visitkorea.or.kr/cms/resource/69/2834669_image3_1.jpg',
+            mapx: '127.2118672416',
+            mapy: '37.2444707848',
+            mlevel: '6',
+            modifiedtime: '20240110105352',
+            sigungucode: '23',
+            tel: '',
+            title: '우리 설렁탕',
+          },
+          {
+            addr1: '경기도 용인시 처인구 경안천로 260',
+            addr2: '(고림동)',
+            areacode: '31',
+            booktour: '',
+            cat1: 'A05',
+            cat2: 'A0502',
+            cat3: 'A05020100',
+            contentid: '2743294',
+            contenttypeid: '39',
+            cpyrhtDivCd: '',
+            createdtime: '20210910224005',
+            dist: '271.5927608485187',
+            firstimage: '',
+            firstimage2: '',
+            mapx: '127.2200939920',
+            mapy: '37.2544947731',
+            mlevel: '6',
+            modifiedtime: '20231011100206',
+            sigungucode: '23',
+            tel: '',
+            title: '풍뎅이',
+          },
+        ];
+        // const positions = ${tourList}
+        // ${console.log('toursl    >> ', tourList)}
+
+        // 마커 이미지의 이미지 주소입니다
+        var imageSrc = './assets/target.png';
+        // var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+        positions.forEach((item) => {
+          // 마커 이미지의 이미지 크기 입니다
+          var imageSize = new kakao.maps.Size(24, 35);
+
+          var latlng = new kakao.maps.LatLng(
+            parseFloat(item.mapy),
+            parseFloat(item.mapx),
+          );
+
+          // 마커 이미지를 생성합니다
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+          // 마커를 생성합니다
+          var marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: latlng, // 마커를 표시할 위치
+            title: item.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            image: markerImage, // 마커 이미지
+          });
+
+          // 마커에 표시할 인포윈도우를 생성합니다
+          var infowindow = new kakao.maps.InfoWindow({
+            content: '<div>efs</div>', // 인포윈도우에 표시할 내용
+          });
+
+          infowindow.open(map, marker);
+        });
+      })();
+    </script>
+  </body>
+</html>
