@@ -1,31 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import {
-  Alert,
-  Animated,
-  Dimensions,
-  PanResponder,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Platform, SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MapScreen from './screens/MapScreen';
+import StackNavigation from './navigation/Stack';
 
-const Stack = createNativeStackNavigator();
+import Footer from './component/common/Footer';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.safearea}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Map" component={MapScreen}></Stack.Screen>
-        </Stack.Navigator>
+        <StackNavigation />
       </NavigationContainer>
+      <Footer />
     </SafeAreaView>
   );
 }

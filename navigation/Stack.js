@@ -1,0 +1,78 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MapScreen from '../screens/MapScreen';
+import CommunityScreen from '../screens/CommunityScreen';
+import CommunityDetail from '../screens/CommunityDetail';
+import { TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
+
+const Stack = createNativeStackNavigator();
+
+const StackNavigation = () => {
+  const naviOption = {
+    headerBackVisible: false,
+    headerLeft: ({ onPress }) => (
+      <PrevButton onPress={onPress}>
+        <ButtonImage
+          source={require('../assets/btn-back.png')}
+          resizeMode="cover"
+        />
+      </PrevButton>
+    ),
+    headerTitle: ({ children }) => <Title>{children}</Title>,
+    headerRight: ({ onPress }) => (
+      <CloseButton onPress={onPress}>
+        <ButtonImage
+          source={require('../assets/btn-close.png')}
+          resizeMode="cover"
+        />
+      </CloseButton>
+    ),
+    headerTitleAlign: 'center', // Ensures the title is centered
+  };
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="community"
+        component={CommunityScreen}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="communityDetail"
+        component={CommunityDetail}
+        options={naviOption}
+      />
+      <Stack.Screen name="map" component={MapScreen} options={naviOption} />
+    </Stack.Navigator>
+  );
+};
+
+export default StackNavigation;
+
+const PrevButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CloseButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ButtonImage = styled.ImageBackground`
+  width: 100%;
+  height: 100%;
+`;
+
+const Title = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  color: #373737;
+`;
