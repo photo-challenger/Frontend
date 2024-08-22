@@ -1,26 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Image } from 'react-native';
+import { Modal, View, Image, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
+import {
+  fetchCommunityDetail,
+  fetchDeletePost,
+  fetchSaveBookmark,
+} from '../service/api';
+import useConfirm from '../hooks/useConfirm';
 
-const CommunityDetail = () => {
+const CommunityDetail = ({ route, navigation }) => {
+  const { postId } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [postInfo, setPostInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isBookmark, setIsBookmark] = useState(false);
+  const [showConfirm, ConfirmComponent] = useConfirm();
 
   const openModal = () => {
     setModalVisible(true);
   };
 
-  const closeModal = () => {
+  // 수정하기
+  const editPost = () => {
+    // 수정하기 화면으로 이동
     setModalVisible(false);
   };
+
+  // 신고하기
+  const reportPost = () => {
+    // 신고하기 화면으로 이동
+    setModalVisible(false);
+  };
+
+  // 저장하기
+  const savePost = async () => {
+    const result = await fetchSaveBookmark(postId);
+    setIsBookmark(result.checkDeleteOrSave == 'Save');
+    setModalVisible(false);
+  };
+
+  // 삭제하기
+  const deletePost = () => {
+    // 삭제하시겠습니까?
+    showConfirm({
+      msg: '삭제하시겠습니까?',
+      onOk: async function () {
+        // 삭제 API 호출
+        const deleteCbData = await fetchDeletePost(postId);
+        console.log(deleteCbData);
+        // 화면 나가기
+        navigation.goBack();
+      },
+    });
+
+    setModalVisible(false);
+  };
+
+  useEffect(() => {
+    getCommunityDetail();
+  }, []);
+
+  async function getCommunityDetail() {
+    try {
+      const apiResponseData = await fetchCommunityDetail(postId);
+      console.log(' apiResponseData   :', apiResponseData);
+      setPostInfo(apiResponseData);
+      setIsBookmark(apiResponseData.isSaveBookmark == 'true');
+    } catch (error) {
+      console.error('Failed to fetch community detail:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   return (
     <CommunityDetailContainer>
       <TopBox>
         <UserProfile>
-          <UserImage source={require('../assets/img-profile.jpg')} />
+          <UserImage source={{ uri: postInfo.profileImgUrl }} />
           <UserInfo>
-            <UserName>트립처</UserName>
-            <UserLevel>Level 1 초보 챌린저</UserLevel>
+            <UserName>{postInfo.nickname}</UserName>
+            <UserLevel>{postInfo.level}</UserLevel>
           </UserInfo>
         </UserProfile>
         <SettingButton onPress={openModal}>
@@ -32,15 +96,11 @@ const CommunityDetail = () => {
       </TopBox>
 
       <ImageGrid>
-        <MainImage source={require('../assets/img-beach.png')} />
+        <MainImage source={{ uri: postInfo.imgUrl }} />
       </ImageGrid>
 
       <ContentBox>
-        <ContentText>
-          여행은 새로운 경험과 추억을 선사하지만, 올바른 준비가 필수입니다. 이번
-          블로그 포스트에서는 여행자가 가져가야 할 10가지 필수 아이템을 상세히
-          소개합니다.
-        </ContentText>
+        <ContentText>{postInfo.postContent}</ContentText>
       </ContentBox>
 
       <LocationBox>
@@ -60,47 +120,54 @@ const CommunityDetail = () => {
       <ScoreBox>
         <LikeBox>
           <Image
-            source={require('../assets/icon-like.png')}
+            source={
+              postInfo.isLike == 'true'
+                ? require('../assets/icon-like-on.png')
+                : require('../assets/icon-like.png')
+            }
             style={{ width: 24, height: 24 }}
           />
-          <ScoreText>0</ScoreText>
+          <ScoreText>{postInfo.postLikeCount}</ScoreText>
         </LikeBox>
         <CommentBox>
           <Image
             source={require('../assets/icon-annotation.png')}
             style={{ width: 24, height: 24 }}
           />
-          <ScoreText>0</ScoreText>
+          <ScoreText>{postInfo.postCommentCount}</ScoreText>
         </CommentBox>
       </ScoreBox>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <ModalContainer>
           <ModalContent>
-            <ModalOption onPress={closeModal}>
-              <ModalIcon source={require('../assets/icon-edit.png')} />
-              <ModalText>수정하기</ModalText>
-            </ModalOption>
-            <ModalOption onPress={closeModal}>
-              <ModalIcon source={require('../assets/icon-report.png')} />
-              <ModalText>신고하기</ModalText>
-            </ModalOption>
-            <ModalOption onPress={closeModal}>
+            {postInfo.isMyPost == 'true' && (
+              <ModalOption onPress={editPost}>
+                <ModalIcon source={require('../assets/icon-edit.png')} />
+                <ModalText>수정하기</ModalText>
+              </ModalOption>
+            )}
+            {postInfo.isMyPost != 'true' && (
+              <ModalOption onPress={reportPost}>
+                <ModalIcon source={require('../assets/icon-report.png')} />
+                <ModalText>신고하기</ModalText>
+              </ModalOption>
+            )}
+            <ModalOption onPress={savePost}>
               <ModalIcon source={require('../assets/icon-save.png')} />
               <ModalText>저장하기</ModalText>
             </ModalOption>
-            <ModalOption onPress={closeModal}>
-              <ModalIcon source={require('../assets/icon-delete.png')} />
-              <ModalText>삭제하기</ModalText>
-            </ModalOption>
+            {postInfo.isMyPost == 'true' && (
+              <ModalOption onPress={deletePost}>
+                <ModalIcon source={require('../assets/icon-delete.png')} />
+                <ModalText>삭제하기</ModalText>
+              </ModalOption>
+            )}
           </ModalContent>
         </ModalContainer>
       </Modal>
+
+      <ConfirmComponent />
     </CommunityDetailContainer>
   );
 };

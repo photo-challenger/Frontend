@@ -7,6 +7,18 @@ const config = {
   lang: 'ko-KR',
 };
 
+const fetchLogin = async () => {
+  try {
+    const response = await axios.post('https://www.tripture.shop/login/true', {
+      loginEmail: 'user1@example.com',
+      loginPw: 'password1',
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 async function fetchlocationBasedList(params) {
   let sendObj = params || {};
   sendObj.numOfRows = sendObj.numOfRows || 10;
@@ -37,40 +49,23 @@ async function fetchPopularCommunityList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   try {
-    const response = await fetch(
+    const response = await axios.get(
       `${config.apiUrl}post/popularPost?${queryStr}`,
     );
-
-    console.log('response   >> ', response);
-  } catch (error) {
-    console.error('error >>>  ', error);
-  }
-
-  const response = await fetch();
-
-  console.log('response  >> ', response);
-  return response.json();
-}
-
-const requestPost = async () => {
-  const data = {
-    title: 'foo',
-    body: 'bar',
-    userId: 1,
-  };
-
-  const response = await axios.get(`${url}/get`, {
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-  });
-  try {
-    const response = await axios.post(`${Config.API_URL}/login`, data);
-    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error(error);
   }
-};
+}
+
+async function fetchCommunityDetail(postId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}post/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function fetchSearchCommnunityRegion(params) {
   let sendObj = params || {};
@@ -85,8 +80,32 @@ async function fetchSearchCommnunityRegion(params) {
   return response.json();
 }
 
+async function fetchSaveBookmark(postId) {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}bookmark/save/photochallenge/${postId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchDeletePost(postId) {
+  try {
+    const response = await axios.post(`${config.apiUrl}post/delete/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   fetchlocationBasedList,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
+  fetchCommunityDetail,
+  fetchSaveBookmark,
+  fetchDeletePost,
+  fetchLogin,
 };

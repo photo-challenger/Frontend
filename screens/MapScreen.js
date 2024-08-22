@@ -7,7 +7,6 @@ import { fetchlocationBasedList } from '../service/api';
 import styled from 'styled-components/native';
 
 const MapScreen = () => {
-  const [location, setLocation] = useState(null);
   const [coords, setCoords] = useState(null);
   const [tourList, setTourList] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -37,13 +36,10 @@ const MapScreen = () => {
   }, []);
 
   async function reloadCurrentLocation() {
-    let location = await Location.getCurrentPositionAsync();
-    let coords = location.coords;
-    setLocation(location);
-    setCoords(coords);
+    let _location = await Location.getCurrentPositionAsync();
+    let _coords = _location.coords;
+    setCoords(_coords);
     searchTourList();
-
-    console.log(location);
   }
 
   async function searchTourList() {

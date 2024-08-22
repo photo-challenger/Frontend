@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import {
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
+  fetchLogin,
 } from '../service/api';
 
 const CommunityScreen = ({ route, navigation }) => {
@@ -11,44 +12,50 @@ const CommunityScreen = ({ route, navigation }) => {
   const [challList, setchallList] = useState([]);
 
   useEffect(() => {
+    // fetchLogin();
     getCommunityList();
   }, []);
 
   async function getCommunityList() {
-    console.log('useEffect!!');
     const apiResponseData = await fetchPopularCommunityList({ page: 0 });
     console.log(' apiResponseData   :', apiResponseData);
     setchallList(apiResponseData?.popularCalculateDtoList);
   }
 
   async function searchRegion() {
+    console.log('text  : ', text);
     const apiResponseData = await fetchSearchCommnunityRegion({
-      searchOne: '',
+      searchOne: text,
     });
+
     console.log(' apiResponseData   :', apiResponseData);
+
     setchallList(apiResponseData?.searchResponseList);
   }
 
-  const moveDetail = () => {
-    navigation.navigate('communityDetail');
+  const moveDetail = (id) => {
+    navigation.navigate('communityDetail', { postId: id });
   };
 
   return (
     <ListContainer>
       <SearchContent>
-        <SearchIconImg
-          source={require('../assets/icon-search.png')}
-          onChangeText={onChangeText}
+        <SearchIconImg source={require('../assets/icon-search.png')} />
+        <SearchInput
+          placeholder="어떤 여행지를 찾으세요?"
+          onChangeText={(text) => onChangeText(text)}
+          onSubmitEditing={searchRegion}
         />
-        <SearchInput placeholder="어떤 여행지를 찾으세요?" />
       </SearchContent>
 
       <ImageListContainer>
         {challList.map((item) => (
-          <ImageItem
-            source={item.postImgName}
-            onPress={moveDetail(item.postId)}
-          />
+          <TouchableOpacity
+            key={item.postId}
+            onPress={() => moveDetail(item.postId)}
+          >
+            <ImageItem source={{ uri: item.postImgName }} />
+          </TouchableOpacity>
         ))}
       </ImageListContainer>
     </ListContainer>
