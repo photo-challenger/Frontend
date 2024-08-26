@@ -100,6 +100,45 @@ async function fetchDeletePost(postId) {
   }
 }
 
+// 포토챌린지 > 주변 포토챌린지 상위 10개
+async function fetchSurroundingChallenge(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.lat = sendObj.lat || 37.858039;
+    sendObj.lon = sendObj.lon || 127.758664;
+    const response = await axios.post(
+      `${config.apiUrl}challenge/TopSurroundingChallenge`,
+      sendObj,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 포토챌린지 > 인기 포토챌린지 상위 10개
+async function fetchPopularChallenge() {
+  try {
+    const response = await axios.get(
+      `${config.apiUrl}post/TopPopularPost?criteria=postLikeCount`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 포토챌린지 > 포토챌린지 상세 정보 조회
+async function fetchChallengeDetail(contentId) {
+  try {
+    const response = await axios.get(
+      `${config.apiUrl}challenge/content${contentId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 export {
   fetchlocationBasedList,
   fetchPopularCommunityList,
@@ -107,5 +146,8 @@ export {
   fetchCommunityDetail,
   fetchSaveBookmark,
   fetchDeletePost,
+  fetchSurroundingChallenge,
+  fetchPopularChallenge,
+  fetchChallengeDetail,
   fetchLogin,
 };
