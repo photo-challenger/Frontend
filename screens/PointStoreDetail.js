@@ -35,8 +35,8 @@ const PointStoreDetail = ({ route, navigation }) => {
 	}
 
 	const movePayment = (id) => {
-    navigation.navigate('PointStorePayment');
-  };
+		navigation.navigate('PointStorePayment');
+	};
 
 	useEffect(() => {
 		setFinalPrice(item.itemPrice * buyCount);
@@ -79,20 +79,20 @@ const PointStoreDetail = ({ route, navigation }) => {
 			</BottomOutContainer>
 
 
-			<Modal 
-				animationType="slide" 
-				transparent={true} 
+			<Modal
+				animationType="slide"
+				transparent={true}
 				visible={modalVisible}
 				onBackdropPress={() => exitModal()}>
 				<ModalContainer>
-					<TouchableOpacity style={{height: '100%'}} onPress={() => exitModal()}></TouchableOpacity>
+					<TouchableOpacity style={{ height: '100%' }} onPress={() => exitModal()}></TouchableOpacity>
 					<ModalContent>
 						<View style={{ paddingTop: 0, paddingLeft: 24, paddingRight: 24 }}>
-							<ModalExitContainer activeOpacity={0.9} onPress={() => exitModal()}>
-								<ModalDragImage source={require('../assets/Drag-handle.png')} />
-							</ModalExitContainer>
-							<ModalHeaderTextWrapper activeOpacity={1} onPress={() => exitModal()}>
+							<ModalHeaderTextWrapper activeOpacity={1}>
 								<ModalHeaderText>옵션 선택</ModalHeaderText>
+								<TouchableOpacity activeOpacity={0.9} onPress={() => exitModal()}>
+									<ModalDragImage source={require('../assets/x-close.png')} />
+								</TouchableOpacity>
 							</ModalHeaderTextWrapper>
 							<ModalDetailContainer>
 								<ModalDetailImage source={{ uri: item.itemImgName }} />
@@ -270,7 +270,7 @@ const ModalContainer = styled.View`
 `;
 
 const ModalDragImage = styled.Image`
-	height: 5.5px;
+	width: 30px;
 	resizeMode: contain;
 `
 
@@ -280,15 +280,12 @@ const ModalContent = styled.View`
   border-top-right-radius: 12px;
 `;
 
-const ModalExitContainer = styled.TouchableOpacity`
-	height: 24px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-`
-
 const ModalHeaderTextWrapper = styled.TouchableOpacity`
-	padding: 24px 0;
+	padding: 8px 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 `
 
 const ModalHeaderText = styled.Text`

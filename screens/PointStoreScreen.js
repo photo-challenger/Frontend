@@ -57,8 +57,10 @@ const PointStoreScreen = ({ route, navigation }) => {
           textStyle={textStyle}
           listMode="SCROLLVIEW"
           labelStyle={{ marginRight: -10 }}
-          selectedItemLabelStyle={{ fontWeight: "bold" }}
+          selectedItemLabelStyle={{ fontWeight: "bold", paddingLeft: 10 }}
           ArrowDownIconComponent={() => <ArrowIcon source={require('../assets/icon-dropdown.png')} />}
+          ArrowUpIconComponent={() => <ArrowIcon source={require('../assets/icon-up.png')} />}
+          TickIconComponent={() => null}
       />
       </View>
     </ItemListHeader>
