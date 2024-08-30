@@ -2,13 +2,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import MyPageTicketScreen from '../screens/MyPage/MyPageTicketScreen';
+import MyPageTicketUseScreen from '../screens/MyPage/MyPageTicketUseScreen';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
-  const naviOption = {
+  const naviOption = ({ route }) => ({
     headerBackVisible: false,
     headerLeft: ({ onPress }) => (
       <PrevButton onPress={onPress}>
@@ -19,20 +21,37 @@ const StackNavigation = () => {
       </PrevButton>
     ),
     headerTitle: ({ children }) => <Title>{children}</Title>,
-    headerRight: ({ onPress }) => (
+    headerRight: route.params?.showHeaderRight ? ({ onPress }) => (
       <CloseButton onPress={onPress}>
         <ButtonImage
           source={require('../assets/btn-close.png')}
           resizeMode="cover"
         />
       </CloseButton>
-    ),
-    headerTitleAlign: 'center', // Ensures the title is centered
-  };
+    ) : null,
+    headerTitleAlign: 'center',
+    headerShown: route.params?.headerVisible !== false,
+    headerStyle: {
+      backgroundColor: route.params?.backgroundColor || '#ffffff',
+    },
+    headerShadowVisible: false,
+  });
 
   return (
     <Stack.Navigator>
       <Stack.Screen
+        name="나의 티켓 보관함"
+        component={MyPageTicketScreen}
+        options={naviOption}
+        initialParams={{ backgroundColor: "#F7F7F8", showHeaderRight: false }}
+      />
+      <Stack.Screen
+        name="나의 티켓"
+        component={MyPageTicketUseScreen}
+        options={naviOption}
+        initialParams={{ backgroundColor: "#F7F7F8", showHeaderRight: false }}
+      />
+      {/* <Stack.Screen
         name="community"
         component={CommunityScreen}
         options={naviOption}
@@ -42,7 +61,12 @@ const StackNavigation = () => {
         component={CommunityDetail}
         options={naviOption}
       />
-      <Stack.Screen name="map" component={MapScreen} options={naviOption} />
+      <Stack.Screen
+        name="map"
+        component={MapScreen}
+        options={naviOption}
+        initialParams={{ headerVisible: false }}
+      /> */}
     </Stack.Navigator>
   );
 };

@@ -49,7 +49,7 @@ const CommunityScreen = ({ route, navigation }) => {
       </SearchContent>
 
       <ImageListContainer>
-        {challList.map((item) => (
+        {challList && challList.map((item) => (
           <TouchableOpacity
             key={item.postId}
             onPress={() => moveDetail(item.postId)}
