@@ -1,6 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/user';
+import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
@@ -8,6 +14,12 @@ import MyPageTicketScreen from '../screens/MyPage/MyPageTicketScreen';
 import MyPageTicketUseScreen from '../screens/MyPage/MyPageTicketUseScreen';
 import PointStoreScreen from '../screens/PointStoreScreen';
 import PointStoreDetail from '../screens/PointStoreDetail';
+import LoginScreen from '../screens/LoginScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import MainScreen from '../screens/MainScreen';
+import MainRegionTabScreen from '../screens/MainRegionTabScreen';
+import MainSearchScreen from '../screens/MainSearchScreen';
+import MainDetailScreen from '../screens/MainDetailScreen';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
@@ -16,10 +28,18 @@ import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 import MyPageScreen from '../screens/MyPage/MypageScreen';
 import SettingScreen from '../screens/MyPage/SettingScreen';
 import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
+import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
+
+  const defaultHeaderTitle = (title) => <Title>{title}</Title>;
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
 
   const defaultHeaderLeft = () => (
     <PrevButton onPress={() => navigation.goBack()}>
@@ -48,13 +68,62 @@ const StackNavigation = () => {
     </SaveButton>
   );
 
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const sessionData = await AsyncStorage.getItem('userSessionData');
+
+        if (sessionData) {
+          const savedTime = await AsyncStorage.getItem('loginTimestamp');
+
+          if (savedTime) {
+            const expirationPeriod =
+              3 * 30 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000;
+            const currentTime = new Date().getTime();
+            const elapsedTime = currentTime - parseInt(savedTime, 10);
+
+            if (elapsedTime >= expirationPeriod) {
+              await AsyncStorage.multiRemove([
+                'loginTimestamp',
+                'userSessionData',
+              ]);
+              setIsLoggedIn(false);
+            } else {
+              dispatch(login({ sessionId: sessionData }));
+              setIsLoggedIn(true);
+            }
+          }
+        } else if (user.sessionId !== '') {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <ActivityIndicator size="large" color="#CA7FFE" />
+      </LoadingContainer>
+    );
+  }
+
   const naviOption = ({
     headerVisible,
     headerLeftVisible,
     headerRightVisible,
+    headerTitle,
   }) => ({
     headerBackVisible: false,
-    headerTitle: ({ children }) => <Title>{children}</Title>,
+    headerTitle: headerTitle ? defaultHeaderTitle(headerTitle) : '',
     headerTitleAlign: 'center',
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
@@ -90,16 +159,91 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
+        name="challengeState"
+        component={ChallengeStateScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '챌린지 참여 현황',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
         name="나의 티켓 보관함"
         component={MyPageTicketScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
       />
       <Stack.Screen
         name="나의 티켓"
         component={MyPageTicketUseScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
+      />
+      {!isLoggedIn && (
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={() => ({
+            ...naviOption({
+              headerLeftVisible: true,
+              headerRightVisible: false,
+            }),
+          })}
+          setIsLoggedIn={setIsLoggedIn}
+          initialParams={{ headerVisible: false }}
+        />
+      )}
+      <Stack.Screen
+        name="MainScreen"
+        component={MainScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="MainRegionTabScreen"
+        component={MainRegionTabScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="MainDetailScreen"
+        component={MainDetailScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="MainSearchScreen"
+        component={MainSearchScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="pointStore"
@@ -167,6 +311,7 @@ const StackNavigation = () => {
         component={CommunityScreen}
         options={() => ({
           ...naviOption({
+            headerTitle: '커뮤니티',
             headerLeftVisible: false,
             headerRightVisible: false,
           }),
@@ -177,6 +322,7 @@ const StackNavigation = () => {
         component={CommunityDetail}
         options={() => ({
           ...naviOption({
+            headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -208,6 +354,12 @@ const StackNavigation = () => {
 };
 
 export default StackNavigation;
+
+const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
 const PrevButton = styled.TouchableOpacity`
   width: 32px;

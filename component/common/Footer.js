@@ -31,7 +31,7 @@ const Footer = () => {
         navigation.navigate('pointStore');
         break;
       case 'myPage':
-        // navigation.navigate('myPage');
+        navigation.navigate('mypage');
         break;
     }
   };
