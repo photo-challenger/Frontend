@@ -113,11 +113,18 @@ const ModalTest = () => {
 			<CommentContainer key={comment.profileId}>
 				<CommentProfileImage source={{ uri: comment.profileImgName }} />
 				<CommentDetailContainer>
-					<CommentProfileContainer>
-						<CommentProfileNickname>{comment.nickname}</CommentProfileNickname>
-						<CommentDuration>{comment.commentCalculatedDate}</CommentDuration>
-					</CommentProfileContainer>
-					<CommentContent>{comment.commentContent}</CommentContent>
+					<CommentReportContainer>
+						<View>
+							<CommentProfileContainer>
+								<CommentProfileNickname>{comment.nickname}</CommentProfileNickname>
+								<CommentDuration>{comment.commentCalculatedDate}</CommentDuration>
+							</CommentProfileContainer>
+							<CommentContent>{comment.commentContent}</CommentContent>
+						</View>
+						<TouchableOpacity>
+							<CommentReportButtonImage source={require('../assets/alert-triangle.png')} />
+						</TouchableOpacity>
+					</CommentReportContainer>
 					<CommentReplyButton activeOpacity={0.8} onPress={() => focusOnInput()} >
 						<CommentReplyButtonText>답글 달기</CommentReplyButtonText>
 					</CommentReplyButton>
@@ -125,11 +132,11 @@ const ModalTest = () => {
 						<CommentReplyMore />
 						{showReplies ? <CommentReplyMoreButtonText>답글 닫기</CommentReplyMoreButtonText> : <CommentReplyMoreButtonText>답글 더보기</CommentReplyMoreButtonText>}
 					</CommentReplyMoreButton>
-					<CommentReplyListContainer>
+					<View>
 						{showReplies && commentReplayList && (commentReplayList.map((comment, index) => (
 							<CommentReplyContainer key={index} comment={comment} />
 						)))}
-					</CommentReplyListContainer>
+					</View>
 				</CommentDetailContainer>
 			</CommentContainer>
 		);
@@ -345,11 +352,20 @@ const SearchInput = styled.TextInput`
 	flex: 1;
 `;
 
-const CommentReplyListContainer = styled.View`
-`
-
 const CommentReplyMapContainer = styled.View`
   display: flex;
 	margin-top: 32px;
   flex-direction: row;
+`
+
+const CommentReportContainer = styled.View`
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+`
+
+const CommentReportButtonImage = styled.Image`
+	width: 16px;
+height: 16px;
 `
