@@ -7,15 +7,35 @@ const config = {
   lang: 'ko-KR',
 };
 
-const fetchLogin = async () => {
+const axiosInstance = axios.create({
+  withCredentials: true,
+});
+
+export const setCookie = cookie => {
+  axiosInstance.defaults.headers.Cookie = cookie;
+};
+
+const fetchLogin = async (email, password, isAutoLogin) => {
   try {
-    const response = await axios.post('https://www.tripture.shop/login/true', {
-      loginEmail: 'user1@example.com',
-      loginPw: 'password1',
+    const response = await axiosInstance.post(`https://www.tripture.shop/login/${isAutoLogin}`, {
+      loginEmail: email,
+      loginPw: password
     });
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
+
+    const setCookieHeader = response.headers['set-cookie'];
+    if (setCookieHeader && !isAutoLogin) {
+      const jsessionId = setCookieHeader[0]
+        .split(';')
+        .find(cookie => cookie.trim().startsWith('mySessionId='))
+        .split('=')[1];
+
+        setCookie(jsessionId);
+        return jsessionId;
+    } else {
+      console.warn('No JSESSIONID found in response');
+    }
+  } catch(error) {
+    console.log(error);
   }
 };
 
@@ -49,8 +69,8 @@ async function fetchPopularCommunityList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   try {
-    const response = await axios.get(
-      `${config.apiUrl}post/popularPost?${queryStr}`,
+    const response = await axiosInstance.get(
+      `https://www.tripture.shop/post/popularPost?${queryStr}`,
     );
     return response.data;
   } catch (error) {
