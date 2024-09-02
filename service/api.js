@@ -100,7 +100,17 @@ async function fetchDeletePost(postId) {
   }
 }
 
+async function fetchItemDetail(itemId) {
+  try {
+    const response = await axios.post(`${config.apiUrl}item/detail/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
+  fetchItemDetail,
   fetchlocationBasedList,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
