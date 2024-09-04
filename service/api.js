@@ -100,8 +100,36 @@ async function fetchDeletePost(postId) {
   }
 }
 
+async function fetchCommentReplyList(groupId) {
+  try {
+    const response = await axios.get(
+      `${config.apiUrl}comment/nested/${groupId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchReport(params) {
+  let sendObj = params || {};
+  sendObj.reportType = sendObj.reportType || '';
+  console.log(sendObj);
+  try {
+    const response = await axios.post(`${config.apiUrl}report/save`, sendObj);
+  } catch (error) {
+    console.error(error);
+  }
+
+  console.log('response  >> ', response);
+
+  return response.json();
+}
+
 export {
+  fetchReport,
   fetchlocationBasedList,
+  fetchCommentReplyList,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
   fetchCommunityDetail,
