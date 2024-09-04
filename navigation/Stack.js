@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import ReportScreen from '../screens/report/ReportScreen';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -40,6 +41,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="communityDetail"
         component={CommunityDetail}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="report"
+        component={ReportScreen}
         options={naviOption}
       />
       <Stack.Screen name="map" component={MapScreen} options={naviOption} />
