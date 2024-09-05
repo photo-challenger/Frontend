@@ -71,7 +71,7 @@ const CommunityScreen = ({ route, navigation }) => {
 
   const [reportContent, setReportContent] = useState('');
   const report = async () => {
-    await fetchLogin();
+    // await fetchLogin();
     const result = await fetchReport({
       reportType: reportType,
       postOrCommentId: postOrCommentId,
