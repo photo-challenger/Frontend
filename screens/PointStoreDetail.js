@@ -6,10 +6,11 @@ import useConfirm from '../hooks/useConfirm';
 import { fetchItemDetail, fetchLogin } from '../service/api';
 const PointStoreDetail = ({ route, navigation }) => {
   const { itemId } = route.params;
+  // const { itemId } = { itemId: 1 };
   const [modalVisible, setModalVisible] = useState(false);
   const [buyCount, setBuyCount] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState({});
 
   useEffect(() => {
     // fetchLogin();

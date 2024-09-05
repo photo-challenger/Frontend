@@ -102,7 +102,7 @@ async function fetchDeletePost(postId) {
 
 async function fetchItemDetail(itemId) {
   try {
-    const response = await axios.post(`${config.apiUrl}item/detail/${itemId}`);
+    const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
     return response.data;
   } catch (error) {
     console.error(error);

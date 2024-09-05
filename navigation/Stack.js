@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import PointStoreDetail from '../screens/PointStoreDetail';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -32,6 +33,11 @@ const StackNavigation = () => {
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="pointStoreDetail"
+        component={PointStoreDetail}
+        options={naviOption}
+      />
       <Stack.Screen
         name="community"
         component={CommunityScreen}
