@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  ScrollView,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import styled from 'styled-components/native';
-import Swiper from 'react-native-swiper';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import NearestCardItem from '../component/challenge/NearestCardItem';
 import PopularCardItem from '../component/challenge/PopularCardItem';
 import {
-  fetchSurroundingChallenge,
   fetchLogin,
+  fetchSurroundingChallenge,
   fetchPopularChallenge,
+  fetchUserTotalPoint,
 } from '../service/api';
 
 const { width } = Dimensions.get('window');
@@ -15,26 +22,94 @@ const { width } = Dimensions.get('window');
 const PhotoChallengeScreen = ({ route, navigation }) => {
   const [surrondChallengList, setSurrondChallengList] = useState([]);
   const [popularChallengList, setPopularChallengList] = useState([]);
+  const [myPoint, setMyPoint] = useState(0);
 
+  const [surroundCurrIndex, setSurroundCurrIndex] = useState(0);
+  const [popularCurrIndex, setPopularCurrIndex] = useState(0);
+
+  // Separate translateX values for each section
+  const translateXSurround = useRef(new Animated.Value(0)).current;
+  const translateXPopular = useRef(new Animated.Value(0)).current;
+
+  // Animation functions for each section
+  const animateToSurroundIndex = (index) => {
+    Animated.spring(translateXSurround, {
+      toValue: -index * (width * 0.5 + 10), // Adjust to desired width
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const animateToPopularIndex = (index) => {
+    Animated.spring(translateXPopular, {
+      toValue: -index * (width * 0.5 + 10), // Adjust to desired width
+      useNativeDriver: true,
+    }).start();
+  };
+
+  // Swipe handlers for surrounding challenges
+  const onSurroundSwipeLeft = () => {
+    if (surroundCurrIndex < surrondChallengList.length - 1) {
+      const newIndex = surroundCurrIndex + 1;
+      setSurroundCurrIndex(newIndex);
+      animateToSurroundIndex(newIndex);
+    }
+  };
+
+  const onSurroundSwipeRight = () => {
+    if (surroundCurrIndex > 0) {
+      const newIndex = surroundCurrIndex - 1;
+      setSurroundCurrIndex(newIndex);
+      animateToSurroundIndex(newIndex);
+    }
+  };
+
+  // Swipe handlers for popular challenges
+  const onPopularSwipeLeft = () => {
+    if (popularCurrIndex < popularChallengList.length - 1) {
+      const newIndex = popularCurrIndex + 1;
+      setPopularCurrIndex(newIndex);
+      animateToPopularIndex(newIndex);
+    }
+  };
+
+  const onPopularSwipeRight = () => {
+    if (popularCurrIndex > 0) {
+      const newIndex = popularCurrIndex - 1;
+      setPopularCurrIndex(newIndex);
+      animateToPopularIndex(newIndex);
+    }
+  };
+
+  // Fetching data functions
   const getSurroundingChallenge = async () => {
     const surronds = await fetchSurroundingChallenge();
-    console.log('surronds : ', surronds);
     setSurrondChallengList(surronds);
     getPopularChallenge();
   };
 
   const getPopularChallenge = async () => {
     const populars = await fetchPopularChallenge();
-    console.log('populars : ', populars);
     setPopularChallengList(populars);
   };
 
-  const moveDetail = (id) => {
-    navigation.navigate('PhotoChallengeDetail', { postId: id });
+  const getMyTotalPoint = async () => {
+    const res = await fetchUserTotalPoint();
+    setMyPoint(res);
+
+    getSurroundingChallenge();
+  };
+
+  const moveChallegeDetail = (id) => {
+    navigation.navigate('PhotoChallengeDetail', { challengeId: id });
+  };
+
+  const movePostDetail = (id) => {
+    navigation.navigate('communityDetail', { postId: id });
   };
 
   useEffect(() => {
-    getSurroundingChallenge();
+    // fetchLogin();
+    getMyTotalPoint();
   }, []);
 
   return (
@@ -44,7 +119,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
         <PointsDetails>
           <PointsLabel>챌린지로 내가 모은 포인트</PointsLabel>
           <PointsValue>
-            1,500 <PointsText>포인트</PointsText>
+            {myPoint} <PointsText>포인트</PointsText>
           </PointsValue>
         </PointsDetails>
         <PointsLink>전체 내역 보기</PointsLink>
@@ -52,18 +127,24 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
 
       {/* 주변 포토챌린지 */}
       <SectionTitle>주변 포토챌린지</SectionTitle>
-      <SwiperContainer>
-        <Swiper
-          showsPagination={false}
-          loop={true}
-          horizontal={true}
-          pagingEnabled={false}
+      <GestureContainer
+        onSwipeLeft={onSurroundSwipeLeft}
+        onSwipeRight={onSurroundSwipeRight}
+        config={{
+          velocityThreshold: 0.3,
+          directionalOffsetThreshold: 80,
+        }}
+      >
+        <AnimatedCarouselContainer
+          style={{ transform: [{ translateX: translateXSurround }] }}
         >
           {surrondChallengList.map((item, index) => (
-            <Slide>
+            <NearestCardWrapper
+              key={item.challengeId}
+              active={index === surroundCurrIndex}
+            >
               <TouchableOpacity
-                key={item.challengeId}
-                onPress={() => moveDetail(item.challengeId)}
+                onPress={() => moveChallegeDetail(item.challengeId)}
               >
                 <NearestCardItem
                   imageUrl={{ uri: item.challengeImgName }}
@@ -73,25 +154,39 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
                   participants={item.participants}
                 />
               </TouchableOpacity>
-            </Slide>
+            </NearestCardWrapper>
           ))}
-        </Swiper>
-      </SwiperContainer>
+        </AnimatedCarouselContainer>
+      </GestureContainer>
 
       {/* 인기 포토챌린지 */}
       <SectionTitle>인기 포토챌린지</SectionTitle>
-      <SwiperContainer>
-        <Swiper showsPagination={false} loop={false} horizontal={true}>
+      <GestureContainer
+        onSwipeLeft={onPopularSwipeLeft}
+        onSwipeRight={onPopularSwipeRight}
+        config={{
+          velocityThreshold: 0.3,
+          directionalOffsetThreshold: 80,
+        }}
+      >
+        <AnimatedCarouselContainer
+          style={{ transform: [{ translateX: translateXPopular }] }}
+        >
           {popularChallengList.map((item, index) => (
-            <Slide>
-              <PopularCardItem
-                imageUrl={{ uri: item.postImgName }}
-                place={item.challengePoint}
-              />
-            </Slide>
+            <PopularCardWrapper
+              key={item.postId}
+              active={index === popularCurrIndex}
+            >
+              <TouchableOpacity onPress={() => movePostDetail(item.postId)}>
+                <PopularCardItem
+                  imageUrl={{ uri: item.postImgName }}
+                  place={item.challengePoint}
+                />
+              </TouchableOpacity>
+            </PopularCardWrapper>
           ))}
-        </Swiper>
-      </SwiperContainer>
+        </AnimatedCarouselContainer>
+      </GestureContainer>
     </Container>
   );
 };
@@ -139,21 +234,35 @@ const SectionTitle = styled.Text`
   padding: 8px 24px;
   font-size: 18px;
   font-weight: bold;
-  font-weight: 600;
   letter-spacing: -0.36px;
 `;
 
-const SwiperContainer = styled.View`
-  height: 246px;
-  margin-top: 10px;
+const GestureContainer = styled(GestureRecognizer)`
+  flex: 1;
+  justify-content: center;
+  height: 320px;
+  padding-left: 24px;
+  margin: 0;
 `;
 
-const Slide = styled.View`
-  flex: 1;
-  position: relative;
+const AnimatedCarouselContainer = styled(Animated.View)`
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+`;
+
+const NearestCardWrapper = styled.View`
   width: ${width * 0.5}px;
-  margin-right: 15px;
-  padding: 0px !important;
+  margin-horizontal: 10px;
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
+  transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
+`;
+
+const PopularCardWrapper = styled.View`
+  width: ${width * 0.3}px;
+  margin-horizontal: 10px;
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
+  transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
 `;
 
 export default PhotoChallengeScreen;
