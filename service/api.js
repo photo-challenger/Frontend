@@ -18,6 +18,15 @@ const fetchLogin = async () => {
     console.error(error);
   }
 };
+const fetchProfileEditForm = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/edit`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 async function fetchlocationBasedList(params) {
   let sendObj = params || {};
@@ -235,6 +244,7 @@ async function fetchReport(params) {
 }
 
 export {
+  fetchProfileEditForm,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentReplyList,
