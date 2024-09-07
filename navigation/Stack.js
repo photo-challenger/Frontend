@@ -73,7 +73,6 @@ const StackNavigation = () => {
         component={ReportScreen}
         options={naviOption}
       />
-      <Stack.Screen name="map" component={MapScreen} options={naviOption} />
     </Stack.Navigator>
   );
 };
