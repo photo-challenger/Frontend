@@ -100,6 +100,67 @@ async function fetchDeletePost(postId) {
   }
 }
 
+const regionCodes = {
+  '전체': '',
+  '서울': '1',
+  '인천': '2',
+  '대전': '3',
+  '대구': '4',
+  '광주': '5',
+  '부산': '6',
+  '울산': '7',
+  '세종': '8',
+  '경기': '31',
+  '강원': '32',
+  '충청북도': '33',
+  '충청남도': '34',
+  '경상북도': '35',
+  '경상남도': '36',
+  '전북': '37',
+  '전라남도': '38',
+  '제주': '39'
+};
+
+// 공공 API 연결
+async function fetchAreaBasedList(region, page) {
+  try {
+    const apiResponseData = await axios.get(`${config.publicUrl}areaBasedList1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&areaCode=${regionCodes[region]}&serviceKey=${config.key}`);
+    const apiResult = apiResponseData.data.response;
+    return apiResult.body;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchDetailCommon(contentId) {
+  try {
+    const apiResponseData = await axios.get(`${config.publicUrl}detailCommon1?MobileOS=AND&MobileApp=tripture&_type=json&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${config.key}`);
+    const apiResult = apiResponseData.data;
+    return apiResult.response.body.items.item[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchSearchKeyword(keyword, page) {
+  try {
+    const apiResponseData = await axios.get(`${config.publicUrl}searchKeyword1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&keyword=${keyword}&serviceKey=${config.key}`);
+    const apiResult = apiResponseData.data.response;
+    return apiResult.body;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchIsPhotoChallenge(contentId) {
+  try {
+    const apiResponseData = await axios.get(`${config.apiUrl}challenge/check/${contentId}`);
+    return apiResponseData.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // 포토챌린지 > 주변 포토챌린지 상위 10개
 async function fetchSurroundingChallenge(params) {
   try {
@@ -150,4 +211,8 @@ export {
   fetchPopularChallenge,
   fetchChallengeDetail,
   fetchLogin,
+  fetchAreaBasedList,
+  fetchDetailCommon,
+  fetchSearchKeyword,
+  fetchIsPhotoChallenge
 };
