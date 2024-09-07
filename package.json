@@ -27,7 +27,8 @@
     "react-native-screens": "3.31.1",
     "react-native-webview": "13.8.6",
     "styled-components": "^6.1.12",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
