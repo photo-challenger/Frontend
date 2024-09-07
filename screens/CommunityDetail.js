@@ -30,6 +30,10 @@ const CommunityDetail = ({ route, navigation }) => {
   const reportPost = () => {
     // 신고하기 화면으로 이동
     setModalVisible(false);
+    navigation.navigate('report', {
+      reportType: 'post',
+      postOrCommentId: postId,
+    });
   };
 
   // 저장하기

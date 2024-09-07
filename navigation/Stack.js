@@ -5,6 +5,7 @@ import CommunityDetail from '../screens/CommunityDetail';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
+import ReportScreen from '../screens/report/ReportScreen';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -67,6 +68,12 @@ const StackNavigation = () => {
         options={naviOption}
         initialParams={{ headerVisible: false }}
       />
+      <Stack.Screen
+        name="report"
+        component={ReportScreen}
+        options={naviOption}
+      />
+      <Stack.Screen name="map" component={MapScreen} options={naviOption} />
     </Stack.Navigator>
   );
 };
