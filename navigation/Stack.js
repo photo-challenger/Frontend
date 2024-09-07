@@ -3,13 +3,16 @@ import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
 import PointStoreDetail from '../screens/PointStoreDetail';
+import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
+import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
+import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
-  const naviOption = {
+  const naviOption = ({ route }) => ({
     headerBackVisible: false,
     headerLeft: ({ onPress }) => (
       <PrevButton onPress={onPress}>
@@ -28,14 +31,30 @@ const StackNavigation = () => {
         />
       </CloseButton>
     ),
-    headerTitleAlign: 'center', // Ensures the title is centered
-  };
+    headerTitleAlign: 'center',
+    headerShown: route.params?.headerVisible !== false,
+  });
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="pointStoreDetail"
         component={PointStoreDetail}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PhotoChallenge"
+        component={PhotoChallengeScreen}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PhotoChallengeDetail"
+        component={PhotoChallengeDetail}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PhotoChallengeWrite"
+        component={PhotoChallengeWrite}
         options={naviOption}
       />
       <Stack.Screen
@@ -48,7 +67,12 @@ const StackNavigation = () => {
         component={CommunityDetail}
         options={naviOption}
       />
-      <Stack.Screen name="map" component={MapScreen} options={naviOption} />
+      <Stack.Screen
+        name="map"
+        component={MapScreen}
+        options={naviOption}
+        initialParams={{ headerVisible: false }}
+      />
     </Stack.Navigator>
   );
 };
