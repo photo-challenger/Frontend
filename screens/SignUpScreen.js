@@ -11,7 +11,7 @@ import {
 } from '../service/api';
 import useConfirm from '../hooks/useConfirm';
 
-const CommunityDetail = ({ route, navigation }) => {
+const SignUpScreen = ({ route, navigation }) => {
 	const [userNickname, setUserNickname] = useState('');
 	const [userEmail, setUserEmail] = useState('');
 	const [emailAuthNum, setEmailAuthNum] = useState('');
@@ -212,7 +212,7 @@ const CommunityDetail = ({ route, navigation }) => {
 	);
 };
 
-export default CommunityDetail;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
 	keyboardAvoidingView: {

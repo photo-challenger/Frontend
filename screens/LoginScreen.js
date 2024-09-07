@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Text, Modal, View, Image, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/user';
 import styled from 'styled-components/native';
 import {
 	fetchCommunityDetail,
@@ -8,11 +10,13 @@ import {
 	fetchPopularCommunityList,
 	fetchLogin
 } from '../service/api';
-import useConfirm from '../hooks/useConfirm';
+import useAlert from '../hooks/useAlert';
 
-const CommunityDetail = ({ route, navigation }) => {
+const LoginScreen = ({ route, navigation }) => {
 	const [userEmail, setUserEmail] = useState('');
 	const [userPassword, setUserPassword] = useState('');
+	const [showAlert, AlertComponent] = useAlert();
+	const dispatch = useDispatch();
 
 	const [checkBoxValue, setCheckBoxValue] = useState(false);
 	const toggleCheckBox = () => {
@@ -27,9 +31,26 @@ const CommunityDetail = ({ route, navigation }) => {
 		);
 	};
 
-	const handleLoginFetch = () => {
-		const response = fetchLogin(userEmail, userPassword, checkBoxValue);
+	const handleLoginFetch = async () => {
+		const response = await fetchLogin(userEmail, userPassword, checkBoxValue);
+
+		if (response === '존재하지 않는 이메일입니다.' || response === '비밀번호가 맞지 않습니다.') {
+			showAlert({
+				title: "로그인 오류",
+				msg: response,
+				onOk: async function () {
+					navigation.goBack();
+				}
+			});
+		} else {
+			dispatch(login({ sessionId: response }));
+			navigation.navigate('MainScreen');
+		}
 	}
+
+	const moveSignUp = (id) => {
+		navigation.navigate('SignUpScreen');
+	};
 
 	return (
 		<LoginContainer>
@@ -75,7 +96,7 @@ const CommunityDetail = ({ route, navigation }) => {
 			<KakaoButton activeOpacity={0.5}>
 				<KakaoButtonText>카카오 로그인 하기</KakaoButtonText>
 			</KakaoButton>
-			<SignUpButton activeOpacity={0.5}>
+			<SignUpButton activeOpacity={0.5} onPress={moveSignUp}>
 				<KakaoButtonText>회원가입</KakaoButtonText>
 			</SignUpButton>
 
@@ -89,7 +110,7 @@ const CommunityDetail = ({ route, navigation }) => {
 	);
 };
 
-export default CommunityDetail;
+export default LoginScreen;
 
 const LoginContainer = styled.View`
   background: #fff;
