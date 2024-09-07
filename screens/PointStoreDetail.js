@@ -3,7 +3,7 @@ import { Modal, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components/native';
 import useConfirm from '../hooks/useConfirm';
-import { fetchItemDetail, fetchLogin } from '../service/api';
+import { fetchPointStoreDetail, fetchLogin } from '../service/api';
 const PointStoreDetail = ({ route, navigation }) => {
   const { itemId } = route.params;
   // const { itemId } = { itemId: 1 };
@@ -18,7 +18,7 @@ const PointStoreDetail = ({ route, navigation }) => {
   }, []);
 
   async function getItemDetail() {
-    const apiResponseData = await fetchItemDetail(itemId);
+    const apiResponseData = await fetchPointStoreDetail(itemId);
     console.log(' apiResponseData   :', apiResponseData);
     setItem(apiResponseData);
   }

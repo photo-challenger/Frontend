@@ -100,16 +100,40 @@ async function fetchDeletePost(postId) {
   }
 }
 
-async function fetchItemDetail(itemId) {
+async function fetchPointStoreList(params) {
   try {
-    const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
     return response.data;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function fetchItemDetail(itemId) {
+async function fetchSearchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchPointStoreDetail(itemId) {
   try {
     const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
     return response.data;
@@ -158,7 +182,9 @@ async function fetchChallengeDetail(contentId) {
   }
 }
 export {
-  fetchItemDetail,
+  fetchPointStoreList,
+  fetchSearchPointStoreList,
+  fetchPointStoreDetail,
   fetchlocationBasedList,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,

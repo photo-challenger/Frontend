@@ -2,108 +2,167 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components';
+import ScrollWrapper from '../component/common/ScrollWrapper';
+import {
+  fetchLogin,
+  fetchPointStoreList,
+  fetchSearchPointStoreList,
+} from '../service/api';
 
 const PointStoreScreen = ({ route, navigation }) => {
-  const [text, onChangeText] = useState('');
-  const [itemList, setItemList] = useState([
-    {"itemId": 2,
-     "itemImgName": "https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_item.png",
-      "itemPrice": 2000,
-      "itemName": "할머니 순대국 3000원 쿠폰",
-      "itemPosition": "강원도 춘천시 어쩌구",
-      "itemStock": 20},
-      {"itemId": 1,
-            "itemImgName": "https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_item.png",
-            "itemPrice": 1000,
-            "itemName": "대둔산 케이블카 티켓 (왕복)",
-            "itemPosition": "대둔산 어쩌구",
-            "itemStock": 10}
-  ]);
+  const [itemList, setItemList] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('defalut');
-  const [items, setItems] = useState([
-    { label: '최신순', value: 'defalut' },
-    { label: '조회순', value: 'viewCount' }
+  const [sortingValue, setSortingValue] = useState('itemViewCount');
+  const [sortingItems, setSortingItems] = useState([
+    { label: '최신순', value: 'itemDate' },
+    { label: '조회순', value: 'itemViewCount' },
   ]);
+  const [pageNo, setPageNo] = useState(0);
+  const [totPageCnt, setTotPageCnt] = useState(null);
+  const [searchStr, setSearchStr] = useState('');
 
   const moveDetail = (id) => {
     navigation.navigate('PointStoreDetail', { itemId: id });
   };
 
+  const getPointStoreList = async (pageNum) => {
+    setPageNo(pageNum);
+    let sendData = {
+      page: pageNo,
+      criteria: sortingValue,
+    };
+    let resultData = {};
+    let resultList = [];
+
+    if (searchStr === '') {
+      resultData = await fetchPointStoreList(sendData);
+      resultList = resultData.itemList;
+    } else {
+      sendData['searchOne'] = escape(searchStr);
+      resultData = await fetchSearchPointStoreList(sendData);
+      resultList = resultData.searchResponseList;
+    }
+
+    console.log('pageNo  >> ', pageNo);
+    console.log('resultList  >> ', resultList);
+
+    if (pageNo == 0) {
+      setItemList(resultList);
+      setTotPageCnt(resultData.totalPages);
+    } else {
+      setItemList(resultList.concat(itemList));
+    }
+  };
+
+  const changeSorting = (val) => {
+    setSortingItems(val);
+    getPointStoreList(0);
+  };
+
+  // 입력시 즉시 조회
+  const onInputSearchText = (str) => {
+    console.log('onInputSearchText : ', str);
+    setSearchStr(str);
+  };
+
+  // searchStr가 변경될 때마다 getPointStoreList 호출
+  useEffect(() => {
+    if (searchStr !== '') {
+      getPointStoreList(0);
+      console.log('searchStr : ', searchStr); // 업데이트된 searchStr 값
+    } else {
+      // fetchLogin();
+      getPointStoreList(0);
+    }
+  }, [searchStr]);
+
   return (
-    <ListContainer>
+    <Container>
       <SearchContent>
         <SearchIconImg source={require('../assets/icon-search.png')} />
         <SearchInput
           placeholder="원하시는 상품을 검색해 보세요!"
-          onChangeText={(text) => onChangeText(text)}
+          onChangeText={onInputSearchText}
         />
-    </SearchContent>
+      </SearchContent>
 
-    <ItemListHeader>
-      <ItemListText>상품 리스트</ItemListText>
-      <View>
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          placeholder="Select an option"
-          style={dropdownStyle}
-          dropDownContainerStyle={dropdownContainerStyle}
-          textStyle={textStyle}
-          listMode="SCROLLVIEW"
-          labelStyle={{ marginRight: -10 }}
-          selectedItemLabelStyle={{ fontWeight: "bold", paddingLeft: 10 }}
-          ArrowDownIconComponent={() => <ArrowIcon source={require('../assets/icon-dropdown.png')} />}
-          ArrowUpIconComponent={() => <ArrowIcon source={require('../assets/icon-up.png')} />}
-          TickIconComponent={() => null}
-      />
-      </View>
-    </ItemListHeader>
-      <View>
-        {itemList && itemList.map((item) => (
-          <ItemContainer
-            key={item.itemId}
-            onPress={() => moveDetail(item.itemId)}
-          >
-            <ImageItem source={{ uri: item.itemImgName }} />
-            <ItemDetails>
-              <View>
-                <ItemName>{item.itemName}</ItemName>
-                <ItemAddress>{item.itemPosition}</ItemAddress>
-              </View>
-              <ItemPrice>{new Intl.NumberFormat().format(item.itemPrice)}원</ItemPrice>
-            </ItemDetails>
-          </ItemContainer>
-        ))}
-      </View>
-    </ListContainer>
+      <ItemListHeader>
+        <ItemListText>상품 리스트</ItemListText>
+        <View>
+          <DropDownPicker
+            open={open}
+            value={sortingValue}
+            items={sortingItems}
+            setOpen={setOpen}
+            setValue={setSortingValue}
+            setItems={changeSorting}
+            placeholder="Select an option"
+            style={dropdownStyle}
+            dropDownContainerStyle={dropdownContainerStyle}
+            textStyle={textStyle}
+            listMode="SCROLLVIEW"
+            labelStyle={{ marginRight: -10 }}
+            selectedItemLabelStyle={{ fontWeight: 'bold', paddingLeft: 10 }}
+            ArrowDownIconComponent={() => (
+              <ArrowIcon source={require('../assets/icon-dropdown.png')} />
+            )}
+            ArrowUpIconComponent={() => (
+              <ArrowIcon source={require('../assets/icon-up.png')} />
+            )}
+            TickIconComponent={() => null}
+          />
+        </View>
+      </ItemListHeader>
+      <ScrollWrapper
+        loadMoreData={getPointStoreList}
+        totalPageNo={totPageCnt}
+        currPageNo={pageNo}
+      >
+        <ListContainer>
+          {itemList &&
+            itemList.map((item) => (
+              <ItemContainer
+                key={item.itemId}
+                onPress={() => moveDetail(item.itemId)}
+              >
+                <ImageItem source={{ uri: item.itemImgName }} />
+                <ItemDetails>
+                  <View>
+                    <ItemName>{item.itemName}</ItemName>
+                    <ItemAddress>{item.itemPosition}</ItemAddress>
+                  </View>
+                  <ItemPrice>
+                    {new Intl.NumberFormat().format(item.itemPrice)}원
+                  </ItemPrice>
+                </ItemDetails>
+              </ItemContainer>
+            ))}
+        </ListContainer>
+      </ScrollWrapper>
+    </Container>
   );
 };
 
 export default PointStoreScreen;
 
-const ListContainer = styled.View`
+const Container = styled.View`
   display: flex;
-  background: #F7F7F8;
+  background: #f7f7f8;
   height: 100%;
 `;
 
 const ItemContainer = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 20px 24px;
-`
+`;
 
 const ImageItem = styled.Image`
   width: 30%;
   height: 112px;
-  resizeMode: 'contain';
+  resizemode: 'contain';
   border-radius: 8px;
   aspect-ratio: 1;
   background-color: #f0f0f0;
@@ -114,23 +173,23 @@ const ItemDetails = styled.View`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`
+`;
 
 const ItemName = styled.Text`
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-`
+`;
 const ItemAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-`
+`;
 const ItemPrice = styled.Text`
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-`
+`;
 
 const SearchContent = styled.View`
   display: flex;
@@ -138,7 +197,7 @@ const SearchContent = styled.View`
   padding: 9px 0px 9px 20px;
   margin: 55px 24px 30px 24px;
   border-radius: 8px;
-  background: #FFFFFF;
+  background: #ffffff;
   flex-direction: row;
 `;
 const SearchIconImg = styled.Image`
@@ -153,19 +212,21 @@ const SearchInput = styled.TextInput`
   }
 `;
 
+const ListContainer = styled.View``;
+
 const ItemListHeader = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin: 8px 24px;
-`
+`;
 
 const ItemListText = styled.Text`
   font-size: 19px;
   font-style: normal;
   font-weight: 600;
-`
+`;
 
 const dropdownStyle = {
   minHeight: 32,
@@ -173,14 +234,14 @@ const dropdownStyle = {
   backgroundColor: '#85889914',
   borderWidth: 0,
   fontSize: 14,
-  paddingVertical: 5, 
-  paddingHorizontal: 8
+  paddingVertical: 5,
+  paddingHorizontal: 8,
 };
 
 const dropdownContainerStyle = {
   borderWidth: 0,
   backgroundColor: '#85889914',
-  width: 80
+  width: 80,
 };
 
 const textStyle = {
@@ -188,7 +249,7 @@ const textStyle = {
   fontWeight: 500,
   color: '#7A7A7A',
   lineHeight: 20,
-  textAlign: 'center'
+  textAlign: 'center',
 };
 
 const ArrowIcon = styled.Image`
