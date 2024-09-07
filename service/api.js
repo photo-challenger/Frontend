@@ -169,6 +169,48 @@ async function fetchIsPhotoChallenge(contentId) {
   }
 }
 
+async function fetchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchSearchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchPointStoreDetail(itemId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // 포토챌린지 > 주변 포토챌린지 상위 10개
 async function fetchSurroundingChallenge(params) {
   try {
@@ -235,6 +277,9 @@ async function fetchReport(params) {
 }
 
 export {
+  fetchPointStoreList,
+  fetchSearchPointStoreList,
+  fetchPointStoreDetail,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentReplyList,

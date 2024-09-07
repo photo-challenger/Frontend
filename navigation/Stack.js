@@ -2,12 +2,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import PointStoreScreen from '../screens/PointStoreScreen';
+import PointStoreDetail from '../screens/PointStoreDetail';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +40,21 @@ const StackNavigation = () => {
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="PointStorePaymentScreen"
+        component={PointStorePaymentScreen}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PointStore"
+        component={PointStoreScreen}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PointStoreDetail"
+        component={PointStoreDetail}
+        options={naviOption}
+      />
       <Stack.Screen
         name="PhotoChallenge"
         component={PhotoChallengeScreen}
