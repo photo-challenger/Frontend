@@ -4,6 +4,10 @@ import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
 import MyPageTicketScreen from '../screens/MyPage/MyPageTicketScreen';
 import MyPageTicketUseScreen from '../screens/MyPage/MyPageTicketUseScreen';
+import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
+import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
+import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
+import ReportScreen from '../screens/report/ReportScreen';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -52,6 +56,21 @@ const StackNavigation = () => {
         initialParams={{ backgroundColor: "#F7F7F8", showHeaderRight: false }}
       />
       {/* <Stack.Screen
+        name="PhotoChallenge"
+        component={PhotoChallengeScreen}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PhotoChallengeDetail"
+        component={PhotoChallengeDetail}
+        options={naviOption}
+      />
+      <Stack.Screen
+        name="PhotoChallengeWrite"
+        component={PhotoChallengeWrite}
+        options={naviOption}
+      />
+      <Stack.Screen
         name="community"
         component={CommunityScreen}
         options={naviOption}
@@ -67,6 +86,11 @@ const StackNavigation = () => {
         options={naviOption}
         initialParams={{ headerVisible: false }}
       /> */}
+      <Stack.Screen
+        name="report"
+        component={ReportScreen}
+        options={naviOption}
+      />
     </Stack.Navigator>
   );
 };
