@@ -32,7 +32,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
   }, [password]);
 
   useEffect(() => {
-    fetchLogin();
+    // fetchLogin();
     getProfileEditForm();
   }, []);
 

@@ -15,12 +15,7 @@ import {
 } from '../../service/api';
 
 const SettingScreen = ({ route, navigation }) => {
-  const [profileInfo, setProfileInfo] = useState({
-    profileNickname: '짱구',
-    profileImgName:
-      'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_profile.jpg',
-    loginEmail: 'user1@example.com',
-  });
+  const profileInfo = route.params;
 
   const moveProfileEdit = () => {
     navigation.navigate('프로필 수정');
