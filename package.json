@@ -24,10 +24,14 @@
     "react-native": "0.74.3",
     "react-native-dotenv": "^3.4.11",
     "react-native-reanimated": "^3.10.1",
+    "react-native-elements": "^3.4.3",
     "react-native-screens": "3.31.1",
+    "react-native-swipe-gestures": "^1.0.5",
+    "react-native-swiper": "^1.6.0",
     "react-native-webview": "13.8.6",
     "styled-components": "^6.1.12",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
