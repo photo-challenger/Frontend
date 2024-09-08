@@ -48,7 +48,7 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    // fetchLogin('user1@example.com', 'password1', false);
+    fetchLogin('user1@example.com', 'password1', false);
     getDefaultProfile();
   }, []);
 

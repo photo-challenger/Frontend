@@ -4,7 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components';
 import ScrollWrapper from '../component/common/ScrollWrapper';
 import {
-  fetchLogin,
+  fetchLogin_before,
   fetchPointStoreList,
   fetchSearchPointStoreList,
 } from '../service/api';
@@ -36,6 +36,8 @@ const PointStoreScreen = ({ route, navigation }) => {
     let resultList = [];
 
     if (searchStr === '') {
+      const a = await fetchLogin_before();
+      // console.log('🚀 ~ getPointStoreList ~ a:', a);
       resultData = await fetchPointStoreList(sendData);
       resultList = resultData.itemList;
     } else {

@@ -42,6 +42,18 @@ export const setCookie = (cookie) => {
   axiosInstance.defaults.headers.Cookie = cookie;
 };
 
+const fetchLogin_before = async () => {
+  try {
+    const response = await axios.post('https://www.tripture.shop/login/true', {
+      loginEmail: 'user1@example.com',
+      loginPw: 'password1',
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const fetchLogin = async (email, password, isAutoLogin) => {
   try {
     const response = await axiosInstance.post(
@@ -333,6 +345,35 @@ async function fetchPointStoreList(params) {
   }
 }
 
+const fetchBuyItem = async (params) => {
+  let sendObj = params || {};
+  try {
+    const response = await axios.post(`${config.apiUrl}item/buy`, sendObj);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if (error.status == 400) {
+      console.log(error);
+      return -1;
+    } else {
+      console.error(error);
+    }
+  }
+};
+const fetchBuyByPoint = async (params) => {
+  let sendObj = params || {};
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/order/pay`,
+      sendObj,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 async function fetchSearchPointStoreList(params) {
   try {
     let sendObj = params || {};
@@ -537,6 +578,9 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchBuyByPoint,
+  fetchLogin_before,
+  fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
   fetchMyTicketList,

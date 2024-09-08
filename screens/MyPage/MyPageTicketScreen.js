@@ -67,6 +67,10 @@ const TicketListComponent = ({ navigation }) => {
     </MyPageTicketComponent>
   );
 };
+const goToBuyTicket = () => {
+  console.log('여기요');
+  navigation.navigate('pointStore');
+};
 
 const UseTicketComponent = () => {
   const [itemUsedList, setItemList] = useState([]);
@@ -110,7 +114,10 @@ const UseTicketComponent = () => {
             포인트를 이용해서{'\n'}
             티켓을 구매해보세요.
           </TicketListNotExistText>
-          <TicketListNotExistButton activeOpacity={0.9}>
+          <TicketListNotExistButton
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('pointStore')}
+          >
             <TicketListNotExistButtonText>
               티켓 사러가기
             </TicketListNotExistButtonText>
