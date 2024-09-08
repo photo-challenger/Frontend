@@ -1,4 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import styled from 'styled-components/native';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
@@ -8,89 +10,146 @@ import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
-import { TouchableOpacity } from 'react-native';
-import styled from 'styled-components/native';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 
-const Stack = createNativeStackNavigator();
-
 const StackNavigation = () => {
-  const naviOption = ({ route }) => ({
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+
+  const defaultHeaderLeft = () => (
+    <PrevButton onPress={() => navigation.goBack()}>
+      <ButtonImage
+        source={require('../assets/btn-back.png')}
+        resizeMode="cover"
+      />
+    </PrevButton>
+  );
+
+  const defaultHeaderRight = () => (
+    <CloseButton onPress={() => navigation.goBack()}>
+      <ButtonImage
+        source={require('../assets/btn-close.png')}
+        resizeMode="cover"
+      />
+    </CloseButton>
+  );
+
+  const naviOption = ({
+    headerVisible,
+    headerLeftVisible,
+    headerRightVisible,
+  }) => ({
     headerBackVisible: false,
-    headerLeft: ({ onPress }) => (
-      <PrevButton onPress={onPress}>
-        <ButtonImage
-          source={require('../assets/btn-back.png')}
-          resizeMode="cover"
-        />
-      </PrevButton>
-    ),
     headerTitle: ({ children }) => <Title>{children}</Title>,
-    headerRight: ({ onPress }) => (
-      <CloseButton onPress={onPress}>
-        <ButtonImage
-          source={require('../assets/btn-close.png')}
-          resizeMode="cover"
-        />
-      </CloseButton>
-    ),
     headerTitleAlign: 'center',
-    headerShown: route.params?.headerVisible !== false,
+    headerShown: headerVisible !== false, // 기본값 true
+    headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
+    headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
   });
 
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="PointStore"
+        name="pointStore"
         component={PointStoreScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PointStorePaymentScreen"
+        name="pointStorePayment"
         component={PointStorePaymentScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
 
       <Stack.Screen
-        name="PointStoreDetail"
+        name="pointStoreDetail"
         component={PointStoreDetail}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PhotoChallenge"
+        name="photoChallenge"
         component={PhotoChallengeScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PhotoChallengeDetail"
+        name="photoChallengeDetail"
         component={PhotoChallengeDetail}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PhotoChallengeWrite"
+        name="photoChallengeWrite"
         component={PhotoChallengeWrite}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="community"
         component={CommunityScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="communityDetail"
         component={CommunityDetail}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="map"
         component={MapScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ headerVisible: false }}
       />
       <Stack.Screen
         name="report"
         component={ReportScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: true,
+          }),
+        })}
       />
     </Stack.Navigator>
   );
