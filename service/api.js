@@ -119,7 +119,7 @@ const fetchMyTicketList = async () => {
 };
 const fetchMyUsedTicketList = async () => {
   try {
-    const response = await axios.get(`${config.apiUrl}purchase/ItemsBeforeUse`);
+    const response = await axios.get(`${config.apiUrl}purchase/ItemsAfterUse`);
     console.log(response.data);
     return response.data;
   } catch (error) {
