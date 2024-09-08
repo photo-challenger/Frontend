@@ -18,7 +18,8 @@ import ScrapComponent from './ScrapComponent';
 
 const Tab = createMaterialTopTabNavigator();
 
-const CommunityDetail = ({ route, navigation }) => {
+const MypageScreen = ({ route, navigation }) => {
+  const [tabIndex, setTabIndex] = useState(0);
   const [profileInfo, setProfileInfo] = useState({});
 
   useEffect(() => {
@@ -70,11 +71,11 @@ const CommunityDetail = ({ route, navigation }) => {
       </SettingImageContainer>
       <MyPageHeaderContainer>
         <MyPageHeaderText>
-          {profileInfo.profileNickname}님, 트립처와 함께{'\n'}
+          {profileInfo?.profileNickname}님, 트립처와 함께{'\n'}
           추억가득한 여행되세요!
         </MyPageHeaderText>
         <MyPageHeaderProfileImage
-          source={{ uri: profileInfo.profileImgName }}
+          source={{ uri: profileInfo?.profileImgName }}
         />
       </MyPageHeaderContainer>
       <Tab.Navigator
@@ -89,7 +90,7 @@ const CommunityDetail = ({ route, navigation }) => {
         <Tab.Screen
           name="챌린지"
           component={ChallengeComponent}
-          initialParams={{ profileNickname: profileInfo.profileNickname }}
+          initialParams={{ profileNickname: profileInfo?.profileNickname }}
         />
         <Tab.Screen name="포인트" component={PointComponent} />
         <Tab.Screen name="스크랩" component={ScrapComponent} />
@@ -98,7 +99,7 @@ const CommunityDetail = ({ route, navigation }) => {
   );
 };
 
-export default CommunityDetail;
+export default MypageScreen;
 
 const MyPageScreen = styled.View`
   background-color: #f7f7f8;

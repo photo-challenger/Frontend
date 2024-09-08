@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import { fetchlocationBasedList } from '../service/api';
 import styled from 'styled-components/native';
 
-const MapScreen = () => {
+const MapScreen = ({ route, navigation }) => {
   const [coords, setCoords] = useState(null);
   const [tourList, setTourList] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -31,7 +31,13 @@ const MapScreen = () => {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-      reloadCurrentLocation();
+
+      if (route.params) {
+        setCoords(route.params._coords);
+        searchTourList();
+      } else {
+        reloadCurrentLocation();
+      }
     })();
   }, []);
 

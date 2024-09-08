@@ -13,6 +13,8 @@ import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
+import MypageScreen from '../screens/MyPage/MypageScreen';
+import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -35,14 +37,16 @@ const StackNavigation = () => {
       />
     </CloseButton>
   );
+  const defaultHeaderTitle = (title) => <Title>{title}</Title>;
 
   const naviOption = ({
     headerVisible,
     headerLeftVisible,
     headerRightVisible,
+    headerTitle,
   }) => ({
     headerBackVisible: false,
-    headerTitle: ({ children }) => <Title>{children}</Title>,
+    headerTitle: headerTitle ? defaultHeaderTitle(headerTitle) : '',
     headerTitleAlign: 'center',
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
@@ -52,15 +56,47 @@ const StackNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        name="mypage"
+        component={MypageScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '프로필 및 환경설정',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="challengeState"
+        component={ChallengeStateScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '챌린지 참여 현황',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
         name="나의 티켓 보관함"
         component={MyPageTicketScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
       />
       <Stack.Screen
         name="나의 티켓"
         component={MyPageTicketUseScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
       />
       <Stack.Screen
@@ -129,6 +165,7 @@ const StackNavigation = () => {
         component={CommunityScreen}
         options={() => ({
           ...naviOption({
+            headerTitle: '커뮤니티',
             headerLeftVisible: false,
             headerRightVisible: false,
           }),
@@ -139,6 +176,7 @@ const StackNavigation = () => {
         component={CommunityDetail}
         options={() => ({
           ...naviOption({
+            headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),

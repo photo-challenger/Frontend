@@ -307,6 +307,105 @@ async function fetchReport(params) {
   return response.json();
 }
 
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 작성한 게시글
+async function fetchMyPostList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(
+      `${config.apiUrl}post/myPostList?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 작성한 댓글
+async function fetchMyCommentList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(
+      `${config.apiUrl}comment/myCommentList?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 챌린지 참여현황
+async function fetchMyChallengeState() {
+  try {
+    const response = await axios.get(`${config.apiUrl}postCnt/cnt`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 포틴트 탭 > 적립 내역
+async function fetchMyDurationPointList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.startDate = sendObj.startDate || '';
+    sendObj.endDate = sendObj.endDate || '';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr  : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}point/list?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 스크랩 탭 > 관광지
+async function fetchMyBookmarkSightList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr  : ', queryStr);
+
+    const response = await axios.get(
+      `${config.apiUrl}bookmark/contents?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 스크랩 탭 > 챌린지
+async function fetchMyBookmarkPostList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(
+      `${config.apiUrl}bookmark/photoChallenges?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   fetchPointStoreList,
   fetchSearchPointStoreList,
@@ -330,4 +429,10 @@ export {
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
   fetchUserTotalPoint,
+  fetchMyPostList,
+  fetchMyCommentList,
+  fetchMyChallengeState,
+  fetchMyDurationPointList,
+  fetchMyBookmarkSightList,
+  fetchMyBookmarkPostList,
 };
