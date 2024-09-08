@@ -13,6 +13,7 @@ import Animated from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DateRangePicker from './DateRangePicker';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
+import MyPageTicketScreen from './MyPageTicketScreen';
 
 const PointComponent = ({ route, navigation }) => {
   const [myPoint, setMyPoint] = useState(1000);
@@ -22,7 +23,9 @@ const PointComponent = ({ route, navigation }) => {
 
   const [myPointPageNo, setMyPointPageNo] = useState(0);
   const [myPointTotPageCnt, setmyPointTotPageCnt] = useState(null);
-
+  const moveMyPageTicketScreen = () => {
+    navigation.navigate('나의 티켓 보관함');
+  };
   const getPointHistory = async (pageNum) => {
     setMyPointPageNo(pageNum);
 
@@ -86,7 +89,10 @@ const PointComponent = ({ route, navigation }) => {
               </PointNumText>
               <PointText>포인트</PointText>
             </PointSubContainer>
-            <MyTicketContainer activeOpacity={0.5}>
+            <MyTicketContainer
+              activeOpacity={0.5}
+              onPress={moveMyPageTicketScreen}
+            >
               <MyTicketText>나의 티켓 보관함</MyTicketText>
               <MyTicketChevronImage
                 source={require('../../assets/gray-chevron-right.png')}

@@ -25,26 +25,32 @@ const getSessionId = async () => {
   }
 };
 
-axiosInstance.interceptors.request.use(async (config) => {
-  const sessionId = await getSessionId();
-  if (sessionId) {
-    config.headers['Authorization'] = `Bearer ${sessionId}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const sessionId = await getSessionId();
+    if (sessionId) {
+      config.headers['Authorization'] = `Bearer ${sessionId}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-export const setCookie = cookie => {
+export const setCookie = (cookie) => {
   axiosInstance.defaults.headers.Cookie = cookie;
 };
 
 const fetchLogin = async (email, password, isAutoLogin) => {
   try {
-    const response = await axiosInstance.post(`${config.apiUrl}login/${isAutoLogin}`, {
-      loginEmail: email,
-      loginPw: password
-    });
+    const response = await axiosInstance.post(
+      `${config.apiUrl}login/${isAutoLogin}`,
+      {
+        loginEmail: email,
+        loginPw: password,
+      },
+    );
 
     if (response.status === 200) {
       const setCookieHeader = response.headers['set-cookie'];
@@ -53,18 +59,18 @@ const fetchLogin = async (email, password, isAutoLogin) => {
         if (isAutoLogin) {
           jsessionId = setCookieHeader[0]
             .split(';')
-            .find(cookie => cookie.trim().startsWith('mySessionId='))
+            .find((cookie) => cookie.trim().startsWith('mySessionId='))
             .split('=')[1];
 
           setCookie(`mySessionId=${jsessionId}`);
           await AsyncStorage.multiSet([
             ['loginTimestamp', new Date().getTime().toString()],
-            ['userSessionData', JSON.stringify({ sessionId: jsessionId })]
+            ['userSessionData', JSON.stringify({ sessionId: jsessionId })],
           ]);
         } else {
           jsessionId = setCookieHeader[0]
             .split(';')
-            .find(cookie => cookie.trim().startsWith('JSESSIONID='))
+            .find((cookie) => cookie.trim().startsWith('JSESSIONID='))
             .split('=')[1];
           setCookie(`JSESSIONID=${jsessionId}`);
         }
@@ -74,10 +80,10 @@ const fetchLogin = async (email, password, isAutoLogin) => {
 
       return jsessionId;
     } else {
-      if(response.data.status === 404) {
-        return "존재하지 않는 이메일입니다.";
-      } else if(response.data.status === 400) {
-        return "비밀번호가 맞지 않습니다.";
+      if (response.data.status === 404) {
+        return '존재하지 않는 이메일입니다.';
+      } else if (response.data.status === 400) {
+        return '비밀번호가 맞지 않습니다.';
       }
     }
   } catch (error) {
@@ -96,6 +102,24 @@ const fetchProfileEditForm = async () => {
 const fetchDefaultProfile = async () => {
   try {
     const response = await axios.get(`${config.apiUrl}profile/default`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchMyTicketList = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}purchase/ItemsBeforeUse`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchMyUsedTicketList = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}purchase/ItemsBeforeUse`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -191,7 +215,7 @@ async function fetchSignUp(params) {
     if (response.status === 200) {
       return response;
     } else {
-      if(response.data.status === 400) {
+      if (response.data.status === 400) {
         return response.data.message;
       }
     }
@@ -489,6 +513,8 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchMyTicketList,
+  fetchMyUsedTicketList,
   fetchPointStoreList,
   fetchSearchPointStoreList,
   fetchPointStoreDetail,
