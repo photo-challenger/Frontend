@@ -5,9 +5,13 @@ import styled from 'styled-components/native';
 import useConfirm from '../hooks/useConfirm';
 
 const PointStorePaymentScreen = ({ route, navigation }) => {
-	// 추후 디자인 나온 후 수정
-	const [modalVisible, setModalVisible] = useState(false);
-	const [buyCount, setBuyCount] = useState(0);
+	const { itemId, itemCount } = route.params;
+
+	const [pointInfo, setPointInfo] = useState({
+    "needPoint": 1000,
+    "havePoint": 99400,
+    "stockCount": 1
+	});
 	const [finalPrice, setFinalPrice] = useState(0);
 	const [item, setItem] = useState(
 		{
@@ -19,26 +23,46 @@ const PointStorePaymentScreen = ({ route, navigation }) => {
 			"itemPosition": "전라북도 완주군 운주면 대둔산공원길 57"
 		});
 
-	useEffect(() => {
-		setFinalPrice(item.itemPrice * buyCount);
-	}, [buyCount]);
-
 	return (
 		<PointStorePaymentComponent>
-      <ButtonImageWrapper activeOpacity={0.8}>
-			<ButtonImage
-						source={require('../assets/btn-back.png')}
-						resizeMode="cover"
-					/>
-			</ButtonImageWrapper>
-
-			<PaymentUserInfoContainer>
-				<PaymentHeaderText>현재 누적 포인트</PaymentHeaderText>
-				<PaymentUserInfoSubContainer>
-					<PaymenyUserInfoPointNum>1,500</PaymenyUserInfoPointNum>
-					<PaymentUserInfoPointText>포인트</PaymentUserInfoPointText>
-				</PaymentUserInfoSubContainer>
-			</PaymentUserInfoContainer>
+			<PaymentInfoContainer>
+				<PaymentInfoHeaderText>결제 정보</PaymentInfoHeaderText>
+				<PaymentInfoSubContainer>
+					<PaymentInfoTitle numberOfLines={1} ellipsizeMode="tail">{item.itemName}</PaymentInfoTitle>
+					<PaymentInfoAddress numberOfLines={1} ellipsizeMode="tail">{item.itemPosition}</PaymentInfoAddress>
+					<PaymentBuyPointContainer>
+						<View>
+							<PaymentItemCount>구매 개수</PaymentItemCount>
+							<PaymentItemCount>상품 가격</PaymentItemCount>
+						</View>
+						<View>
+							<PaymentItemCount>{pointInfo.stockCount} 개</PaymentItemCount>
+							<PaymentItemCount>{item.itemPrice} P</PaymentItemCount>
+						</View>
+					</PaymentBuyPointContainer>
+					<PaymentPoint>{new Intl.NumberFormat().format(itemCount * item.itemPrice)} 포인트</PaymentPoint>
+				</PaymentInfoSubContainer>
+			</PaymentInfoContainer>
+			<PaymentBuyContainer>
+				<PaymentBuyHeaderText>포인트 현황</PaymentBuyHeaderText>
+				<PaymentBuyPointContainer>
+					<View>
+						<PaymentBuyPoint>보유 포인트</PaymentBuyPoint>
+						<PaymentBuyPoint>소멸 예정 포인트</PaymentBuyPoint>
+					</View>
+					<View>
+						<PaymentBuyPointNum>{pointInfo.havePoint} P</PaymentBuyPointNum>
+						<PaymentBuyPointNum>{pointInfo.needPoint} P</PaymentBuyPointNum>
+					</View>
+				</PaymentBuyPointContainer>
+				<PaymentRemainingPointContainer>
+					<PaymentBuyPoint>결제 후 남은 포인트</PaymentBuyPoint>
+					<PaymentBuyPoint style={{color: '#CA7FFE'}}>{pointInfo.havePoint - pointInfo.needPoint} P</PaymentBuyPoint>
+				</PaymentRemainingPointContainer>
+			</PaymentBuyContainer>
+			<BuyButton activeOpacity={0.6}>
+				<BuyButtonText>구매하기</BuyButtonText>
+			</BuyButton>
 		</PointStorePaymentComponent>
 	);
 };
@@ -51,54 +75,109 @@ const PointStorePaymentComponent = styled.View`
   flex: 1;
 `;
 
-const ButtonImageWrapper = styled.TouchableOpacity`
-	position: absolute;
-  top: 44px;
-  left: 22px;
-`
-
-const ButtonImage = styled.Image`
-	width: 32px;
-	height: 32px;
-`;
-
-const PaymentUserInfoContainer = styled.View`
+const PaymentInfoContainer = styled.View`
 	background-color: #FFFFFF;
-	width: 100%;
-	height: 157px;
-	margin-top: 84px;
 	padding: 24px;
 `
 
-const PaymentHeaderText = styled.Text`
+const PaymentInfoHeaderText = styled.Text`
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 500;
-	margin-bottom: 8px;
+	font-weight: 600;
+	margin-bottom: 24px;
 `
 
-const PaymentUserInfoSubContainer = styled.View`
+const PaymentInfoSubContainer = styled.View`
+	border-radius: 4px;
+	border: 1px solid #B5B5B5;
+	padding: 16px 12px;
+`
+
+const PaymentInfoTitle = styled.Text`
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+`
+
+const PaymentInfoAddress = styled.Text`
+	font-size: 10px;
+	font-style: normal;
+	font-weight: 600;
+	color: #B5B5B5;
+	margin-bottom: 10px;
+`
+
+const PaymentItemCount = styled.Text`
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	text-align: right;
+`
+
+const PaymentPoint = styled.Text`
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 700;
+	color: #CA7FFE;
+	margin-top: 8px;
+	text-align: right;
+`
+
+const PaymentBuyContainer = styled.View`
+	background-color: #FFFFFF;
+	padding: 24px;
+	margin-top: 16px;
+`
+
+const PaymentBuyHeaderText = styled.Text`
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 600;
+`
+
+const PaymentBuyPointContainer = styled.View`
 	display: flex;
 	flex-direction: row;
+	justify-content: space-between;
+	border-bottom-width: 1px;
+	border-bottom-color: #B5B5B5;
+	padding-bottom: 18px;
+`
+
+const PaymentRemainingPointContainer = styled.View`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+`
+
+const PaymentBuyPoint = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	margin-top: 16px;
+`
+
+const PaymentBuyPointNum = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	margin-top: 16px;
+	text-align: right;
+`
+
+const BuyButton = styled.TouchableOpacity`
+	width: 100%;
+	height: 80px;
+	justify-content: center;
 	align-items: center;
+	background-color: #4F4F4F;
+	position: absolute;
+	bottom: 0;
 `
 
-const PaymenyUserInfoPointNum = styled.Text`
-	font-family: Pretendard;
-	font-size: 40px;
+const BuyButtonText = styled.Text`
+	font-size: 18px;
 	font-style: normal;
-	font-weight: 500;
-	color: #CA7FFE;
+	font-weight: 700;
+	color: #FFFFFF;
 `
-
-const PaymentUserInfoPointText = styled.Text`
-	font-size: 24px;
-	font-style: normal;
-	font-weight: 500;
-	color: #CA7FFE;
-	margin-left: 4px;
-`
-
-const PaymentFinalPriceContainer = styled.View``
-
-const PaymentFinalPriceHeaderText = styled.Text``

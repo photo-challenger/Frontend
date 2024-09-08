@@ -43,6 +43,7 @@ const StackNavigation = () => {
         name="PointStore"
         component={PointStoreScreen}
         options={naviOption}
+        initialParams={{ headerVisible: false }}
       />
       <Stack.Screen
         name="PointStorePaymentScreen"
@@ -54,6 +55,7 @@ const StackNavigation = () => {
         name="PointStoreDetail"
         component={PointStoreDetail}
         options={naviOption}
+        initialParams={{ headerVisible: false }}
       />
       <Stack.Screen
         name="PhotoChallenge"
