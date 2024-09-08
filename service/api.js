@@ -187,6 +187,49 @@ async function fetchIsPhotoChallenge(contentId) {
   }
 }
 
+async function fetchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchSearchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchPointStoreDetail(itemId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // 포토챌린지 > 주변 포토챌린지 상위 10개
 async function fetchSurroundingChallenge(params) {
   try {
@@ -214,6 +257,17 @@ async function fetchPopularChallenge() {
     console.error(error);
   }
 }
+
+// 사용자 총 포인트
+async function fetchUserTotalPoint() {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/point`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchCommentReplyList(groupId) {
   try {
     const response = await axios.get(
@@ -227,9 +281,10 @@ async function fetchCommentReplyList(groupId) {
 
 // 포토챌린지 > 포토챌린지 상세 정보 조회
 async function fetchChallengeDetail(contentId) {
+  console.log(`${config.apiUrl}challenge/challengeId/${contentId}`);
   try {
     const response = await axios.get(
-      `${config.apiUrl}challenge/content${contentId}`,
+      `${config.apiUrl}challenge/challengeId/${contentId}`,
     );
     return response.data;
   } catch (error) {
@@ -253,6 +308,9 @@ async function fetchReport(params) {
 }
 
 export {
+  fetchPointStoreList,
+  fetchSearchPointStoreList,
+  fetchPointStoreDetail,
   fetchDefaultProfile,
   fetchProfileEditForm,
   fetchReport,
@@ -271,4 +329,5 @@ export {
   fetchDetailCommon,
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
+  fetchUserTotalPoint,
 };

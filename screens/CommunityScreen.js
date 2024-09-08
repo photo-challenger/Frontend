@@ -49,14 +49,15 @@ const CommunityScreen = ({ route, navigation }) => {
       </SearchContent>
 
       <ImageListContainer>
-        {challList && challList.map((item) => (
-          <TouchableOpacity
-            key={item.postId}
-            onPress={() => moveDetail(item.postId)}
-          >
-            <ImageItem source={{ uri: item.postImgName }} />
-          </TouchableOpacity>
-        ))}
+        {challList &&
+          challList.map((item) => (
+            <TouchableOpacity
+              key={item.postId}
+              onPress={() => moveDetail(item.postId)}
+            >
+              <ImageItem source={{ uri: item.postImgName }} />
+            </TouchableOpacity>
+          ))}
       </ImageListContainer>
     </ListContainer>
   );
