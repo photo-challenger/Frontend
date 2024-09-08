@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Text, Image, Dimensions, Animated } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
-import { fetchChallengeDetail, fetchPostDetail } from '../service/api';
+import { fetchChallengeDetail } from '../service/api';
 
 const { width } = Dimensions.get('window');
 
@@ -11,11 +11,7 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
   const [challengeDetail, setChallengeDetail] = useState({});
 
   useEffect(() => {
-    if (postId) {
-      getPostDetail();
-    } else if (challengeId) {
-      getChallengeDetail();
-    }
+    getChallengeDetail();
   }, []);
 
   async function getChallengeDetail() {
@@ -25,15 +21,8 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
     console.log(challengeDetail);
   }
 
-  async function getPostDetail() {
-    const apiResponseData = await fetchPostDetail(postId);
-    console.log(' apiResponseData   :', apiResponseData);
-    setChallengeDetail(apiResponseData);
-    console.log(challengeDetail);
-  }
-
   function moveWrite() {
-    navigation.navigate('PhotoChallengeWrite', {
+    navigation.navigate('photoChallengeWrite', {
       challengeInfo: challengeDetail,
     });
   }
@@ -41,19 +30,19 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
   return (
     <Container>
       <TopText>
-        {challengeDetail.challengeName}에서의 {'\n'}특별한 순간을 공유해주세요
+        {challengeDetail?.challengeName}에서의 {'\n'}특별한 순간을 공유해주세요
       </TopText>
-      <ImageWrapper key={challengeDetail.challengeId}>
-        <StyledImage source={{ uri: challengeDetail.challengeImgUrl }} />
+      <ImageWrapper key={challengeDetail?.challengeId}>
+        <StyledImage source={{ uri: challengeDetail?.challengeImgUrl }} />
       </ImageWrapper>
       <DescriptionContainer>
         <DescriptionTitle>이곳은요</DescriptionTitle>
-        <Description>{challengeDetail.challengeContent}</Description>
+        <Description>{challengeDetail?.challengeContent}</Description>
       </DescriptionContainer>
-      {/* <GuideContainer>
+      <GuideContainer>
         <GuideTop>지금 참여하면</GuideTop>
-        <GuideBottom>{challengeDetail.challengePoint} Point</GuideBottom>
-      </GuideContainer> */}
+        <GuideBottom>{challengeDetail?.challengePoint} Point</GuideBottom>
+      </GuideContainer>
       <ActionButton onPress={() => moveWrite()}>
         <ButtonText>포토챌린지 참여하기</ButtonText>
       </ActionButton>
@@ -92,8 +81,6 @@ const AnimatedCarouselContainer = styled(Animated.View)`
 const ImageWrapper = styled.View`
   width: ${width * 0.6}px;
   margin-horizontal: 12px;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
-  transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
 `;
 
 const StyledImage = styled.Image`

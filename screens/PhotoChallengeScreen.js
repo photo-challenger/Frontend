@@ -100,7 +100,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
   };
 
   const moveChallegeDetail = (id) => {
-    navigation.navigate('PhotoChallengeDetail', { challengeId: id });
+    navigation.navigate('photoChallengeDetail', { challengeId: id });
   };
 
   const movePostDetail = (id) => {
