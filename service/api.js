@@ -42,6 +42,18 @@ export const setCookie = (cookie) => {
   axiosInstance.defaults.headers.Cookie = cookie;
 };
 
+const fetchLogin_before = async () => {
+  try {
+    const response = await axios.post('https://www.tripture.shop/login/true', {
+      loginEmail: 'user1@example.com',
+      loginPw: 'password1',
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const fetchLogin = async (email, password, isAutoLogin) => {
   try {
     const response = await axiosInstance.post(
@@ -332,73 +344,21 @@ async function fetchPointStoreList(params) {
   }
 }
 
-async function fetchDetailCommon(contentId) {
+const fetchBuyItem = async (params) => {
+  let sendObj = params || {};
   try {
-    const apiResponseData = await axios.get(
-      `${config.publicUrl}detailCommon1?MobileOS=AND&MobileApp=tripture&_type=json&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${config.key}`,
-    );
-    const apiResult = apiResponseData.data;
-    return apiResult.response.body.items.item[0];
-  } catch (error) {
-    console.error(error);
-  }
-}
-async function fetchSearchPointStoreList(params) {
-  try {
-    let sendObj = params || {};
-    sendObj.searchOne = sendObj.searchOne || '';
-    sendObj.page = sendObj.page || '0';
-    sendObj.criteria = sendObj.criteria || 'itemViewCount';
-
-    const queryStr = new URLSearchParams(sendObj).toString();
-
-    console.log('queryStr : ', queryStr);
-
-    const response = await axios.get(`${config.apiUrl}item/search?${queryStr}`);
+    const response = await axios.post(`${config.apiUrl}item/buy`, sendObj);
+    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
+    if (error.status == 400) {
+      console.log(error);
+      return -1;
+    } else {
+      console.error(error);
+    }
   }
-}
-
-async function fetchSearchKeyword(keyword, page) {
-  try {
-    const apiResponseData = await axios.get(
-      `${config.publicUrl}searchKeyword1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&keyword=${keyword}&serviceKey=${config.key}`,
-    );
-    const apiResult = apiResponseData.data.response;
-    return apiResult.body;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function fetchIsPhotoChallenge(contentId) {
-  try {
-    const apiResponseData = await axios.get(
-      `${config.apiUrl}challenge/check/${contentId}`,
-    );
-    return apiResponseData.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function fetchPointStoreList(params) {
-  try {
-    let sendObj = params || {};
-    sendObj.page = sendObj.page || '0';
-    sendObj.criteria = sendObj.criteria || 'itemViewCount';
-
-    const queryStr = new URLSearchParams(sendObj).toString();
-    console.log('queryStr : ', queryStr);
-
-    const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+};
 
 async function fetchSearchPointStoreList(params) {
   try {
@@ -604,6 +564,8 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchLogin_before,
+  fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
   fetchMyTicketList,
