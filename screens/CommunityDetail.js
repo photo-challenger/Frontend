@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Image, ActivityIndicator } from 'react-native';
+import {
+  Modal,
+  View,
+  Image,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import styled from 'styled-components/native';
 import {
   fetchCommunityDetail,
@@ -18,6 +24,9 @@ const CommunityDetail = ({ route, navigation }) => {
 
   const openModal = () => {
     setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   // 수정하기
@@ -143,32 +152,34 @@ const CommunityDetail = ({ route, navigation }) => {
       </ScoreBox>
 
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <ModalContainer>
-          <ModalContent>
-            {postInfo.isMyPost == 'true' && (
-              <ModalOption onPress={editPost}>
-                <ModalIcon source={require('../assets/icon-edit.png')} />
-                <ModalText>수정하기</ModalText>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <ModalContainer>
+            <ModalContent>
+              {postInfo.isMyPost == 'true' && (
+                <ModalOption onPress={editPost}>
+                  <ModalIcon source={require('../assets/icon-edit.png')} />
+                  <ModalText>수정하기</ModalText>
+                </ModalOption>
+              )}
+              {postInfo.isMyPost != 'true' && (
+                <ModalOption onPress={reportPost}>
+                  <ModalIcon source={require('../assets/icon-report.png')} />
+                  <ModalText>신고하기</ModalText>
+                </ModalOption>
+              )}
+              <ModalOption onPress={savePost}>
+                <ModalIcon source={require('../assets/icon-save.png')} />
+                <ModalText>저장하기</ModalText>
               </ModalOption>
-            )}
-            {postInfo.isMyPost != 'true' && (
-              <ModalOption onPress={reportPost}>
-                <ModalIcon source={require('../assets/icon-report.png')} />
-                <ModalText>신고하기</ModalText>
-              </ModalOption>
-            )}
-            <ModalOption onPress={savePost}>
-              <ModalIcon source={require('../assets/icon-save.png')} />
-              <ModalText>저장하기</ModalText>
-            </ModalOption>
-            {postInfo.isMyPost == 'true' && (
-              <ModalOption onPress={deletePost}>
-                <ModalIcon source={require('../assets/icon-delete.png')} />
-                <ModalText>삭제하기</ModalText>
-              </ModalOption>
-            )}
-          </ModalContent>
-        </ModalContainer>
+              {postInfo.isMyPost == 'true' && (
+                <ModalOption onPress={deletePost}>
+                  <ModalIcon source={require('../assets/icon-delete.png')} />
+                  <ModalText>삭제하기</ModalText>
+                </ModalOption>
+              )}
+            </ModalContent>
+          </ModalContainer>
+        </TouchableWithoutFeedback>
       </Modal>
 
       <ConfirmComponent />

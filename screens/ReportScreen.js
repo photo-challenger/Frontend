@@ -13,8 +13,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import Animated from 'react-native-reanimated';
-import { fetchReport, fetchLogin } from '../../service/api';
-const CommunityScreen = ({ route, navigation }) => {
+import { fetchReport, fetchLogin } from '../service/api';
+
+const ReportScreen = ({ route, navigation }) => {
   const { reportType, postOrCommentId } = {
     reportType: 'post',
     postOrCommentId: 2,
@@ -46,9 +47,7 @@ const CommunityScreen = ({ route, navigation }) => {
       <ReportTypePerContainer onPress={toggleReplies} showReplies={showReplies}>
         <ReportTypeText showReplies={showReplies}>{props.type}</ReportTypeText>
         {showReplies === true ? (
-          <ReportSelectImage
-            source={require('../../assets/check-circle.png')}
-          />
+          <ReportSelectImage source={require('../assets/check-circle.png')} />
         ) : null}
       </ReportTypePerContainer>
     );
@@ -63,7 +62,7 @@ const CommunityScreen = ({ route, navigation }) => {
     return (
       <CheckBoxContainer checkBoxValue={checkBoxValue} onPress={toggleCheckBox}>
         {props.checkBoxValue === true ? (
-          <CheckBoxIconImage source={require('../../assets/check.png')} />
+          <CheckBoxIconImage source={require('../assets/check.png')} />
         ) : null}
       </CheckBoxContainer>
     );
@@ -125,7 +124,7 @@ const CommunityScreen = ({ route, navigation }) => {
               <ReportInfoContainer>
                 <ReportInfoPerContainer>
                   <ReportInfoImage
-                    source={require('../../assets/info-circle.png')}
+                    source={require('../assets/info-circle.png')}
                   />
                   <View style={{ flex: 1 }}>
                     <ReportInfoText>
@@ -136,7 +135,7 @@ const CommunityScreen = ({ route, navigation }) => {
                 </ReportInfoPerContainer>
                 <ReportInfoPerContainer>
                   <ReportInfoImage
-                    source={require('../../assets/info-circle.png')}
+                    source={require('../assets/info-circle.png')}
                   />
                   <View style={{ flex: 1 }}>
                     <ReportInfoText>
@@ -147,7 +146,7 @@ const CommunityScreen = ({ route, navigation }) => {
                 </ReportInfoPerContainer>
                 <ReportInfoPerContainer>
                   <ReportInfoImage
-                    source={require('../../assets/info-circle.png')}
+                    source={require('../assets/info-circle.png')}
                   />
                   <View style={{ flex: 1 }}>
                     <ReportInfoText>
@@ -181,7 +180,7 @@ const CommunityScreen = ({ route, navigation }) => {
   );
 };
 
-export default CommunityScreen;
+export default ReportScreen;
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {

@@ -9,7 +9,7 @@ import PointStoreDetail from '../screens/PointStoreDetail';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
-import ReportScreen from '../screens/report/ReportScreen';
+import ReportScreen from '../screens/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 
 const StackNavigation = () => {
