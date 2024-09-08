@@ -13,8 +13,8 @@ export default function App() {
       <SafeAreaView style={styles.safearea}>
         <NavigationContainer>
           <StackNavigation />
+          <Footer />
         </NavigationContainer>
-        <Footer />
       </SafeAreaView>
     </Provider>
   );

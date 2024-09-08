@@ -183,30 +183,32 @@ async function fetchSignUp(params) {
 }
 
 const regionCodes = {
-  '전체': '',
-  '서울': '1',
-  '인천': '2',
-  '대전': '3',
-  '대구': '4',
-  '광주': '5',
-  '부산': '6',
-  '울산': '7',
-  '세종': '8',
-  '경기': '31',
-  '강원': '32',
-  '충청북도': '33',
-  '충청남도': '34',
-  '경상북도': '35',
-  '경상남도': '36',
-  '전북': '37',
-  '전라남도': '38',
-  '제주': '39'
+  전체: '',
+  서울: '1',
+  인천: '2',
+  대전: '3',
+  대구: '4',
+  광주: '5',
+  부산: '6',
+  울산: '7',
+  세종: '8',
+  경기: '31',
+  강원: '32',
+  충청북도: '33',
+  충청남도: '34',
+  경상북도: '35',
+  경상남도: '36',
+  전북: '37',
+  전라남도: '38',
+  제주: '39',
 };
 
 // 공공 API 연결
 async function fetchAreaBasedList(region, page) {
   try {
-    const apiResponseData = await axios.get(`${config.publicUrl}areaBasedList1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&areaCode=${regionCodes[region]}&serviceKey=${config.key}`);
+    const apiResponseData = await axios.get(
+      `${config.publicUrl}areaBasedList1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&areaCode=${regionCodes[region]}&serviceKey=${config.key}`,
+    );
     const apiResult = apiResponseData.data.response;
     return apiResult.body;
   } catch (error) {
@@ -216,7 +218,9 @@ async function fetchAreaBasedList(region, page) {
 
 async function fetchDetailCommon(contentId) {
   try {
-    const apiResponseData = await axios.get(`${config.publicUrl}detailCommon1?MobileOS=AND&MobileApp=tripture&_type=json&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${config.key}`);
+    const apiResponseData = await axios.get(
+      `${config.publicUrl}detailCommon1?MobileOS=AND&MobileApp=tripture&_type=json&contentId=${contentId}&defaultYN=Y&firstImageYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&serviceKey=${config.key}`,
+    );
     const apiResult = apiResponseData.data;
     return apiResult.response.body.items.item[0];
   } catch (error) {
@@ -226,7 +230,9 @@ async function fetchDetailCommon(contentId) {
 
 async function fetchSearchKeyword(keyword, page) {
   try {
-    const apiResponseData = await axios.get(`${config.publicUrl}searchKeyword1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&keyword=${keyword}&serviceKey=${config.key}`);
+    const apiResponseData = await axios.get(
+      `${config.publicUrl}searchKeyword1?pageNo=${page}&MobileOS=AND&MobileApp=tripture&_type=json&keyword=${keyword}&serviceKey=${config.key}`,
+    );
     const apiResult = apiResponseData.data.response;
     return apiResult.body;
   } catch (error) {
@@ -236,8 +242,53 @@ async function fetchSearchKeyword(keyword, page) {
 
 async function fetchIsPhotoChallenge(contentId) {
   try {
-    const apiResponseData = await axios.get(`${config.apiUrl}challenge/check/${contentId}`);
+    const apiResponseData = await axios.get(
+      `${config.apiUrl}challenge/check/${contentId}`,
+    );
     return apiResponseData.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchSearchPointStoreList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
+    sendObj.page = sendObj.page || '0';
+    sendObj.criteria = sendObj.criteria || 'itemViewCount';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}item/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchPointStoreDetail(itemId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}item/detail/${itemId}`);
+    return response.data;
   } catch (error) {
     console.error(error);
   }
@@ -271,19 +322,62 @@ async function fetchPopularChallenge() {
   }
 }
 
-// 포토챌린지 > 포토챌린지 상세 정보 조회
-async function fetchChallengeDetail(contentId) {
+// 사용자 총 포인트
+async function fetchUserTotalPoint() {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/point`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchCommentReplyList(groupId) {
   try {
     const response = await axios.get(
-      `${config.apiUrl}challenge/content${contentId}`,
+      `${config.apiUrl}comment/nested/${groupId}`,
     );
     return response.data;
   } catch (error) {
     console.error(error);
   }
 }
+
+// 포토챌린지 > 포토챌린지 상세 정보 조회
+async function fetchChallengeDetail(contentId) {
+  console.log(`${config.apiUrl}challenge/challengeId/${contentId}`);
+  try {
+    const response = await axios.get(
+      `${config.apiUrl}challenge/challengeId/${contentId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function fetchReport(params) {
+  let sendObj = params || {};
+  sendObj.reportType = sendObj.reportType || '';
+  console.log(sendObj);
+  try {
+    const response = await axios.post(`${config.apiUrl}report/save`, sendObj);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+
+  console.log('response  >> ', response);
+
+  return response.json();
+}
+
 export {
+  fetchPointStoreList,
+  fetchSearchPointStoreList,
+  fetchPointStoreDetail,
+  fetchReport,
   fetchlocationBasedList,
+  fetchCommentReplyList,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
   fetchCommunityDetail,
@@ -297,5 +391,6 @@ export {
   fetchAreaBasedList,
   fetchDetailCommon,
   fetchSearchKeyword,
-  fetchIsPhotoChallenge
+  fetchIsPhotoChallenge,
+  fetchUserTotalPoint,
 };

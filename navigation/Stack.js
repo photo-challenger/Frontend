@@ -1,25 +1,53 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import styled from 'styled-components/native';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import PointStoreScreen from '../screens/PointStoreScreen';
+import PointStoreDetail from '../screens/PointStoreDetail';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
+import MainSearchScreen from '../screens/MainSearchScreen';
+import MainDetailScreen from '../screens/MainDetailScreen';
 import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
+import ReportScreen from '../screens/report/ReportScreen';
+import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/user';
 import { useSelector } from 'react-redux'
 
-const Stack = createNativeStackNavigator();
-
 const StackNavigation = () => {
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+
+  const defaultHeaderLeft = () => (
+    <PrevButton onPress={() => navigation.goBack()}>
+      <ButtonImage
+        source={require('../assets/btn-back.png')}
+        resizeMode="cover"
+      />
+    </PrevButton>
+  );
+
+  const defaultHeaderRight = () => (
+    <CloseButton onPress={() => navigation.goBack()}>
+      <ButtonImage
+        source={require('../assets/btn-close.png')}
+        resizeMode="cover"
+      />
+    </CloseButton>
+  );
+
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = useSelector((state) => state.user.value);
@@ -37,7 +65,7 @@ const StackNavigation = () => {
             const expirationPeriod = (3 * 30 * 24 * 60 * 60 * 1000) - (60 * 60 * 1000);
             const currentTime = new Date().getTime();
             const elapsedTime = currentTime - parseInt(savedTime, 10);
-            
+
             if (elapsedTime >= expirationPeriod) {
               await AsyncStorage.multiRemove(['loginTimestamp', 'userSessionData']);
               setIsLoggedIn(false);
@@ -46,7 +74,7 @@ const StackNavigation = () => {
               setIsLoggedIn(true);
             }
           }
-        } else if(user.sessionId !== '') {
+        } else if (user.sessionId !== '') {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
@@ -69,80 +97,178 @@ const StackNavigation = () => {
     );
   }
 
-  const naviOption = ({ route }) => ({
+  const naviOption = ({
+    headerVisible,
+    headerLeftVisible,
+    headerRightVisible,
+  }) => ({
     headerBackVisible: false,
-    headerLeft: ({ onPress }) => (
-      <PrevButton onPress={onPress}>
-        <ButtonImage
-          source={require('../assets/btn-back.png')}
-          resizeMode="cover"
-        />
-      </PrevButton>
-    ),
     headerTitle: ({ children }) => <Title>{children}</Title>,
-    headerRight: ({ onPress }) => (
-      <CloseButton onPress={onPress}>
-        <ButtonImage
-          source={require('../assets/btn-close.png')}
-          resizeMode="cover"
-        />
-      </CloseButton>
-    ),
     headerTitleAlign: 'center',
-    headerShown: route.params?.headerVisible !== false,
+    headerShown: headerVisible !== false, // 기본값 true
+    headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
+    headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
   });
 
 
   return (
     <Stack.Navigator>
       {!isLoggedIn && (
-        <Stack.Screen name="LoginScreen" component={LoginScreen} options={naviOption} setIsLoggedIn={setIsLoggedIn}  initialParams={{ headerVisible: false }}
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={() => ({
+            ...naviOption({
+              headerLeftVisible: true,
+              headerRightVisible: false,
+            }),
+          })}
+          setIsLoggedIn={setIsLoggedIn}
+          initialParams={{ headerVisible: false }}
         />
       )}
-      <Stack.Screen name="MainScreen" component={MainScreen} options={naviOption} />
       <Stack.Screen
-        name="PhotoChallenge"
-        component={PhotoChallengeScreen}
-        options={naviOption}
+        name="MainScreen"
+        component={MainScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="MainRegionTabScreen"
         component={MainRegionTabScreen}
-        options={naviOption}
-        initialParams={{ headerVisible: false }}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PhotoChallengeDetail"
-        component={PhotoChallengeDetail}
-        options={naviOption}
+        name="MainDetailScreen"
+        component={MainDetailScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="PhotoChallengeWrite"
-        component={PhotoChallengeWrite}
-        options={naviOption}
+        name="MainSearchScreen"
+        component={MainSearchScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
-        name="SignUpScreen"
-        component={SignUpScreen}
-        options={naviOption}
+        name="pointStore"
+        component={PointStoreScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="pointStorePayment"
+        component={PointStorePaymentScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
 
-      {/* <Stack.Screen
+      <Stack.Screen
+        name="pointStoreDetail"
+        component={PointStoreDetail}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="photoChallenge"
+        component={PhotoChallengeScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="photoChallengeDetail"
+        component={PhotoChallengeDetail}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="photoChallengeWrite"
+        component={PhotoChallengeWrite}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
         name="community"
         component={CommunityScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="communityDetail"
         component={CommunityDetail}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
       />
       <Stack.Screen
         name="map"
         component={MapScreen}
-        options={naviOption}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
         initialParams={{ headerVisible: false }}
-      /> */}
+      />
+      <Stack.Screen
+        name="report"
+        component={ReportScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: true,
+          }),
+        })}
+      />
     </Stack.Navigator>
   );
 };
