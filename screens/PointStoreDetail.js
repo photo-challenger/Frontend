@@ -40,7 +40,11 @@ const PointStoreDetail = ({ route, navigation }) => {
   };
 
   const movePayment = (itemId, buyCount) => {
+<<<<<<< HEAD
     navigation.navigate('PointStorePaymentScreen', {
+=======
+    navigation.navigate('pointStorePayment', {
+>>>>>>> dev
       itemId: itemId,
       itemCount: buyCount,
     });

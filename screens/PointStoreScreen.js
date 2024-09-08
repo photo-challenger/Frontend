@@ -23,7 +23,7 @@ const PointStoreScreen = ({ route, navigation }) => {
   const [searchStr, setSearchStr] = useState('');
 
   const moveDetail = (id) => {
-    navigation.navigate('PointStoreDetail', { itemId: id });
+    navigation.navigate('pointStoreDetail', { itemId: id });
   };
 
   const getPointStoreList = async (pageNum) => {
