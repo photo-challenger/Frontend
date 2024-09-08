@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const config = {
   publicUrl: process.env.REACT_PUBLIC_SERVER,
@@ -7,15 +8,80 @@ const config = {
   lang: 'ko-KR',
 };
 
-const fetchLogin = async () => {
+const axiosInstance = axios.create({
+  withCredentials: true,
+});
+
+const getSessionId = async () => {
   try {
-    const response = await axios.post('https://www.tripture.shop/login/true', {
-      loginEmail: 'user1@example.com',
-      loginPw: 'password1',
-    });
-    console.log(response.data);
+    const sessionData = await AsyncStorage.getItem('userSessionData');
+    if (sessionData) {
+      const parsedData = JSON.parse(sessionData);
+      return parsedData.sessionId;
+    }
   } catch (error) {
-    console.error(error);
+    console.log('Error getting sessionId:', error);
+    return null;
+  }
+};
+
+axiosInstance.interceptors.request.use(async (config) => {
+  const sessionId = await getSessionId();
+  if (sessionId) {
+    config.headers['Authorization'] = `Bearer ${sessionId}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+export const setCookie = cookie => {
+  axiosInstance.defaults.headers.Cookie = cookie;
+};
+
+const fetchLogin = async (email, password, isAutoLogin) => {
+  try {
+    const response = await axiosInstance.post(`${config.apiUrl}login/${isAutoLogin}`, {
+      loginEmail: email,
+      loginPw: password
+    });
+
+    if (response.status === 200) {
+      const setCookieHeader = response.headers['set-cookie'];
+      let jsessionId = '';
+      if (setCookieHeader) {
+        if (isAutoLogin) {
+          jsessionId = setCookieHeader[0]
+            .split(';')
+            .find(cookie => cookie.trim().startsWith('mySessionId='))
+            .split('=')[1];
+
+          setCookie(`mySessionId=${jsessionId}`);
+          await AsyncStorage.multiSet([
+            ['loginTimestamp', new Date().getTime().toString()],
+            ['userSessionData', JSON.stringify({ sessionId: jsessionId })]
+          ]);
+        } else {
+          jsessionId = setCookieHeader[0]
+            .split(';')
+            .find(cookie => cookie.trim().startsWith('JSESSIONID='))
+            .split('=')[1];
+          setCookie(`JSESSIONID=${jsessionId}`);
+        }
+      } else {
+        console.warn('No JSESSIONID found in response');
+      }
+
+      return jsessionId;
+    } else {
+      if(response.data.status === 404) {
+        return "존재하지 않는 이메일입니다.";
+      } else if(response.data.status === 400) {
+        return "비밀번호가 맞지 않습니다.";
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 const fetchProfileEditForm = async () => {
@@ -67,8 +133,8 @@ async function fetchPopularCommunityList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   try {
-    const response = await axios.get(
-      `${config.apiUrl}post/popularPost?${queryStr}`,
+    const response = await axiosInstance.get(
+      `${config.apiUrl}/post/popularPost?${queryStr}`,
     );
     return response.data;
   } catch (error) {
@@ -115,6 +181,22 @@ async function fetchDeletePost(postId) {
     return response.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+async function fetchSignUp(params) {
+  try {
+    const response = await axiosInstance.get(`${config.apiUrl}login/new`);
+
+    if (response.status === 200) {
+      return response;
+    } else {
+      if(response.data.status === 400) {
+        return response.data.message;
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -424,6 +506,7 @@ export {
   fetchPopularChallenge,
   fetchChallengeDetail,
   fetchLogin,
+  fetchSignUp,
   fetchAreaBasedList,
   fetchDetailCommon,
   fetchSearchKeyword,
