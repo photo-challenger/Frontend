@@ -40,7 +40,7 @@ const PointComponent = ({ route, navigation }) => {
     console.log('fetchMyDurationPointList pageNum  >> ', pageNum);
 
     const totPoint = resultData.pointDtos.reduce((acc, cur) => {
-      return (acc += Number(cur.pointChange.replace(/[^0-9]/g, '')));
+      return (acc += Number(cur.pointChange.replace(/[^-0-9]/g, '')));
     }, 0);
     setMyPoint(totPoint);
 
