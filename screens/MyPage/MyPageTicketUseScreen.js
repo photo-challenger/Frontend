@@ -2,28 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Image, ActivityIndicator, Text } from 'react-native';
 import styled from 'styled-components/native';
 import useConfirm from '../../hooks/useConfirm';
-import { fetchLogin, fetchMyUsedTicketList } from '../../service/api';
+import {
+  fetchLogin,
+  fetchMyTicketDetail,
+  fetchUseMyTicket,
+} from '../../service/api';
 
 const MyPageTicketUseScreen = ({ route, navigation }) => {
-  // const [item, setItem] = useState(
-  // 	{
-  // 		"itemImgName": "https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_item.png",
-  // 		"itemName": "짱구 초코비",
-  // 		"itemPosition": "초코비시 떡잎마을동 짱구네 집",
-  // 		"purchaseCount": 1,
-  // 		"purchaseCheck": true
-  // 	}
-  // );
-  //   const [item, setItem] = useState([]);
-  //   const getMyUsedTicketList = async () => {
-  //     const result = await fetchMyUsedTicketList();
-  //     console.log('🚀 ~ result:', result);
-  //     setItem(result);
-  //   };
+  const purchaseId = route.params.purchaseId;
+  const [item, setItem] = useState([]);
+  const getMyTicketDetail = async () => {
+    const result = await fetchMyTicketDetail(purchaseId);
+    // console.log('🚀 ~ result:', result);
+    setItem(result);
+  };
 
-  //   useEffect(() => {
-  //     getMyUsedTicketList();
-  //   }, []);
+  useEffect(() => {
+    getMyTicketDetail();
+  }, []);
 
   const [showConfirm, ConfirmComponent] = useConfirm();
   const [useCheck, setUseCheck] = useState(false);
@@ -31,6 +27,11 @@ const MyPageTicketUseScreen = ({ route, navigation }) => {
   useEffect(() => {
     navigation.setOptions({ headerTitle: item.itemName });
   }, [navigation]);
+
+  const postUseTicket = async () => {
+    const result = await fetchUseMyTicket(purchaseId);
+    setUseCheck(true);
+  };
 
   const useTicket = () => {
     // 삭제하시겠습니까?
@@ -46,7 +47,7 @@ const MyPageTicketUseScreen = ({ route, navigation }) => {
       okText: '사용할게요',
       onOk: async function () {
         // 티켓 사용 API 호출
-        setUseCheck(true);
+        postUseTicket();
       },
     });
   };

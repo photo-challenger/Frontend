@@ -128,7 +128,7 @@ const fetchMyUsedTicketList = async () => {
 };
 const fetchMyTicketDetail = async (purchaseId) => {
   try {
-    const response = await axios.post(
+    const response = await axios.get(
       `${config.apiUrl}purchase/${purchaseId}/detail`,
     );
     console.log(response.data);
@@ -137,6 +137,19 @@ const fetchMyTicketDetail = async (purchaseId) => {
     console.error(error);
   }
 };
+const fetchUseMyTicket = async (purchaseId) => {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/${purchaseId}/use`,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if (error.status == 303) console.log('success using ticket');
+    else console.error(error);
+  }
+};
+
 async function fetchlocationBasedList(params) {
   let sendObj = params || {};
   sendObj.numOfRows = sendObj.numOfRows || 10;
@@ -523,6 +536,7 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchUseMyTicket,
   fetchMyTicketDetail,
   fetchMyTicketList,
   fetchMyUsedTicketList,
