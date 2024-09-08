@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styled, { StyleSheetManager } from 'styled-components';
 import { fetchMyChallengeState } from '../../service/api';
+import { useSelector } from 'react-redux';
 
 const ChallengeStateScreen = ({ route, navigation }) => {
-  const [profileInfo, setProfileInfo] = useState({
-    profileNickname: '짱구',
-    profileImgName:
-      'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_profile.jpg',
-    loginEmail: 'user1@example.com',
-  });
+  const [profileInfo, setProfileInfo] = useState({});
+  const userInfo = useSelector((state) => state.user.userInfo);
   const [profileLevel, setProfileLevel] = useState('레벨1 찰칵 루키');
   const challengeEngList = ['inc', 'seo', 'gang', 'chung', 'jeon', 'gyeong'];
   const challengeList = ['인천 경기', '서울', '강원', '충청', '호남', '영남'];
@@ -44,6 +41,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    setProfileInfo(userInfo);
     getMyChallengeState();
   }, []);
 

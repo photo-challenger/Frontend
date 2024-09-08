@@ -180,8 +180,8 @@ async function fetchPopularCommunityList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   try {
-    const response = await axiosInstance.get(
-      `${config.apiUrl}/post/popularPost?${queryStr}`,
+    const response = await axios.get(
+      `${config.apiUrl}post/popularPost?${queryStr}`,
     );
     return response.data;
   } catch (error) {
@@ -199,16 +199,17 @@ async function fetchCommunityDetail(postId) {
 }
 
 async function fetchSearchCommnunityRegion(params) {
-  let sendObj = params || {};
-  sendObj.searchOne = sendObj.searchOne || '';
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
 
-  const queryStr = new URLSearchParams(sendObj).toString();
+    const queryStr = new URLSearchParams(sendObj).toString();
 
-  const response = await fetch(`${config.apiUrl}post/search?${queryStr}`);
-
-  console.log('response  >> ', response);
-
-  return response.json();
+    const response = await fetch(`${config.apiUrl}post/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function fetchSaveBookmark(postId) {
