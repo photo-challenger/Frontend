@@ -40,15 +40,16 @@ const StackNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="PointStorePaymentScreen"
-        component={PointStorePaymentScreen}
-        options={naviOption}
-      />
-      <Stack.Screen
         name="PointStore"
         component={PointStoreScreen}
         options={naviOption}
       />
+      <Stack.Screen
+        name="PointStorePaymentScreen"
+        component={PointStorePaymentScreen}
+        options={naviOption}
+      />
+
       <Stack.Screen
         name="PointStoreDetail"
         component={PointStoreDetail}
