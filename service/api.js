@@ -126,7 +126,17 @@ const fetchMyUsedTicketList = async () => {
     console.error(error);
   }
 };
-
+const fetchMyTicketDetail = async (purchaseId) => {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/${purchaseId}/detail`,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 async function fetchlocationBasedList(params) {
   let sendObj = params || {};
   sendObj.numOfRows = sendObj.numOfRows || 10;
@@ -513,6 +523,7 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchMyTicketDetail,
   fetchMyTicketList,
   fetchMyUsedTicketList,
   fetchPointStoreList,

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { fetchLogin, fetchMyTicketList } from '../../service/api';
+import {
+  fetchLogin,
+  fetchMyTicketList,
+  fetchMyUsedTicketList,
+} from '../../service/api';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -16,7 +20,7 @@ const TicketListComponent = ({ navigation }) => {
 
   useEffect(() => {
     getMyTicketList();
-  });
+  }, []);
 
   const moveDetail = (id) => {
     navigation.navigate('나의 티켓', { purchaseId: id });
@@ -65,22 +69,15 @@ const TicketListComponent = ({ navigation }) => {
 };
 
 const UseTicketComponent = () => {
-  const [itemUsedList, setItemList] = useState([
-    {
-      purchaseId: 2,
-      itemName: '짱구 초코비',
-      itemPosition: '초코비시 떡잎마을동 짱구네 집',
-      itemImageUrl:
-        'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_item.png',
-    },
-    {
-      purchaseId: 1,
-      itemName: '짱구 초코비',
-      itemPosition: '초코비시 떡잎마을동 짱구네 집',
-      itemImageUrl:
-        'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_item.png',
-    },
-  ]);
+  const [itemUsedList, setItemList] = useState([]);
+  const getMyTicketList = async () => {
+    const result = await fetchMyUsedTicketList();
+    // console.log('🚀 ~ result:', result);
+    setItemList(result);
+  };
+  useEffect(() => {
+    getMyTicketList();
+  }, []);
 
   return (
     <MyPageTicketComponent>
