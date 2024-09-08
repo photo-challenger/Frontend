@@ -359,6 +359,19 @@ const fetchBuyItem = async (params) => {
     }
   }
 };
+const fetchBuyByPoint = async (params) => {
+  let sendObj = params || {};
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/order/pay`,
+      sendObj,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 async function fetchSearchPointStoreList(params) {
   try {
@@ -564,6 +577,7 @@ async function fetchMyBookmarkPostList(params) {
 }
 
 export {
+  fetchBuyByPoint,
   fetchLogin_before,
   fetchBuyItem,
   fetchUseMyTicket,

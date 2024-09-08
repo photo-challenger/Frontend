@@ -37,7 +37,7 @@ const PointStoreScreen = ({ route, navigation }) => {
 
     if (searchStr === '') {
       const a = await fetchLogin_before();
-      console.log('🚀 ~ getPointStoreList ~ a:', a);
+      // console.log('🚀 ~ getPointStoreList ~ a:', a);
       resultData = await fetchPointStoreList(sendData);
       resultList = resultData.itemList;
     } else {

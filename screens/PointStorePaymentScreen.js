@@ -3,10 +3,19 @@ import { Modal, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components/native';
 import useConfirm from '../hooks/useConfirm';
-
+import { fetchBuyByPoint } from '../service/api';
 const PointStorePaymentScreen = ({ route, navigation }) => {
   const { item, pointInfo } = route.params;
   const [finalPrice, setFinalPrice] = useState(0);
+  const buyByPoint = async () => {
+    const result = await fetchBuyByPoint({
+      price: pointInfo.needPoint,
+      amount: pointInfo.stockCount,
+      itemId: item.itemId,
+      usePoint: pointInfo.needPoint,
+    });
+    navigation.navigate('나의 티켓 보관함');
+  };
   return (
     <PointStorePaymentComponent>
       <PaymentInfoContainer>
@@ -55,7 +64,7 @@ const PointStorePaymentScreen = ({ route, navigation }) => {
           </PaymentBuyPoint>
         </PaymentRemainingPointContainer>
       </PaymentBuyContainer>
-      <BuyButton activeOpacity={0.6}>
+      <BuyButton activeOpacity={0.6} onPress={() => buyByPoint()}>
         <BuyButtonText>구매하기</BuyButtonText>
       </BuyButton>
     </PointStorePaymentComponent>
