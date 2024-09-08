@@ -48,6 +48,7 @@ const MyPageTicketUseScreen = ({ route, navigation }) => {
       onOk: async function () {
         // 티켓 사용 API 호출
         postUseTicket();
+        navigation.push('나의 티켓 보관함');
       },
     });
   };

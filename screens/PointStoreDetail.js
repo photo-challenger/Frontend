@@ -82,7 +82,7 @@ const PointStoreDetail = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    setFinalPrice(item.itemPrice * buyCount);
+    setFinalPrice((item.itemPrice ?? 0) * (buyCount ?? 0));
   }, [buyCount]);
 
   return (
