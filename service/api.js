@@ -166,19 +166,54 @@ async function fetchDeletePost(postId) {
   }
 }
 
-async function fetchSignUp(params) {
+async function fetchSignUp(formData) {
   try {
-    const response = await axiosInstance.get(`${config.apiUrl}login/new`);
+    const response = await axiosInstance.post(`${config.apiUrl}login/new`, formData, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    });
 
     if (response.status === 200) {
-      return response;
-    } else {
-      if(response.data.status === 400) {
-        return response.data.message;
-      }
+      return response.data;
     }
   } catch (error) {
-    console.log(error);
+    if(error.response.status === 400) {
+      return error.response.data.message;
+    } else {
+      console.log(error);
+    }
+  }
+}
+
+async function fetchEmailAuthSend(email) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/mailSend`, {
+      email: email
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchEmailAuthCheck(email, authNum) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/mailAuthCheck`, {
+      email: email,
+      authNum: authNum
+    });
+
+    if (response.status === 200) {
+      return "true";
+    }
+  } catch (error) {
+    if(error.response.status === 400) {
+      return error.response.data.message;
+    } else {
+      console.error(error);
+    }
   }
 }
 
@@ -393,4 +428,6 @@ export {
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
   fetchUserTotalPoint,
+  fetchEmailAuthSend,
+  fetchEmailAuthCheck,
 };

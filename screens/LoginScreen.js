@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, Modal, View, Image, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, Text, Modal, View, Image, ActivityIndicator, Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/user';
 import styled from 'styled-components/native';
 import {
-	fetchCommunityDetail,
-	fetchDeletePost,
-	fetchSaveBookmark,
-	fetchPopularCommunityList,
 	fetchLogin
 } from '../service/api';
 import useAlert from '../hooks/useAlert';
@@ -48,8 +44,17 @@ const LoginScreen = ({ route, navigation }) => {
 		}
 	}
 
-	const moveSignUp = (id) => {
-		navigation.navigate('SignUpScreen');
+	const handleKakaoLogin = async () => {
+		const kakaoUrl = process.env.KAKAO_API_URL;
+
+		await fetch(kakaoUrl)
+			.then(function(response) {
+				Linking.openURL(response.url).catch((err) => console.error('An error occurred', err));
+			})
+	}
+
+	const moveSignUp = () => {
+		navigation.navigate('회원가입');
 	};
 
 	return (
@@ -93,7 +98,7 @@ const LoginScreen = ({ route, navigation }) => {
 				</SubButton>
 			</SubButtonContainer>
 
-			<KakaoButton activeOpacity={0.5}>
+			<KakaoButton activeOpacity={0.5} onPress={handleKakaoLogin}>
 				<KakaoButtonText>카카오 로그인 하기</KakaoButtonText>
 			</KakaoButton>
 			<SignUpButton activeOpacity={0.5} onPress={moveSignUp}>

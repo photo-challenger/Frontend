@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, Text, Modal, View, Image, ActivityIndicator } from 'react-native';
+import ImagePickerItem from '../component/common/ImagePickerItem';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import {
-	fetchCommunityDetail,
-	fetchDeletePost,
-	fetchSaveBookmark,
-	fetchPopularCommunityList,
-	fetchLogin
+	fetchSignUp,
+	fetchEmailAuthSend,
+	fetchEmailAuthCheck,
 } from '../service/api';
-import useConfirm from '../hooks/useConfirm';
+import useAlert from '../hooks/useAlert';
 
 const SignUpScreen = ({ route, navigation }) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const [userNickname, setUserNickname] = useState('');
 	const [userEmail, setUserEmail] = useState('');
 	const [emailAuthNum, setEmailAuthNum] = useState('');
@@ -19,17 +19,18 @@ const SignUpScreen = ({ route, navigation }) => {
 	const [checkUserPassword, setCheckUserPassword] = useState('');
 
 	const [emailIsValid, setEmailIsValid] = useState();
-	const [duplicateEmail, setDuplicateEmail] = useState();
 	const [emailValidText, setEmailValidText] = useState();
 	const [nicknameIsValid, setNicknameIsValid] = useState();
 	const [emailAuthNumIsValid, setEmailAuthNumIsValid] = useState();
 	const [passwordIsValid, setPasswordIsValid] = useState();
 	const [checkPasswordIsValid, setCheckPasswordIsValid] = useState();
+	const [imageInfo, setImageInfo] = useState('');
+	const [showAlert, AlertComponent] = useAlert();
 
 	const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 	useEffect(() => {
-		if(userEmail !== '') {
-			if(emailRegex.test(userEmail)) {
+		if (userEmail !== '') {
+			if (emailRegex.test(userEmail)) {
 				setEmailIsValid(true);
 			} else {
 				setEmailValidText("이메일 형식이 맞지 않습니다.");
@@ -39,38 +40,121 @@ const SignUpScreen = ({ route, navigation }) => {
 	}, [userEmail]);
 
 	useEffect(() => {
-		if(checkUserPassword !== '') {
+		if (checkUserPassword !== '') {
 			setCheckPasswordIsValid(userPassword === checkUserPassword);
 		}
 	}, [checkUserPassword]);
 
 	const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
 	useEffect(() => {
-		if(userPassword !== '') {
+		if (userPassword !== '') {
 			setPasswordIsValid(passwordRegex.test(userPassword));
 		}
 	}, [userPassword]);
 
-	const [checkBoxValue, setCheckBoxValue] = useState(false);
-	const toggleCheckBox = () => {
-		setCheckBoxValue(!checkBoxValue);
-	};
+	const handleSignUpFetch = async () => {
+		if (!emailIsValid || !userNickname || !passwordIsValid || !emailAuthNumIsValid) {
+			showAlert({
+				title: "회원가입 오류",
+				msg: "회원가입에 필요한 모든 내용을\n 양식에 맞춰 작성해 주세요!",
+			});
+			return;
+		}
 
-	const CheckBox = (props) => {
-		return (
-			<CheckBoxContainer checkBoxValue={checkBoxValue} onPress={toggleCheckBox}>
-				{props.checkBoxValue === true ? <CheckBoxIconImage source={require('../assets/check.png')} /> : null}
-			</CheckBoxContainer>
-		);
-	};
+		const formData = new FormData();
 
-	const handleSignUpFetch = () => {
-		// 이메일 형식이나 비밀번호 형식 맞지 않으면 에러 알림창
-		// 닉네임 중복 에러 뜨면 nicknameIsValid -> false
+		formData.append('loginEmail', userEmail);
+		formData.append('loginPw', userPassword);
+		formData.append('nickname', userNickname);
+		formData.append('loginType', 'SELF');
+
+		if(imageInfo) {
+			formData.append('file', imageInfo);
+		} else {
+			formData.append('file', {
+				uri: '',
+				type: '',
+				name: '',
+			});
+		}
+		formData.append('emailAuthCheck', emailAuthNumIsValid);
+
+		const response = await fetchSignUp(formData);
+
+		if (response === 'User register success') {
+			showAlert({
+				title: "회원가입 성공!",
+				msg: <Text><Text color={"#CA7FFE"}>tripture</Text>의 회원이 되신 것을 환영합니다.</Text>,
+				onOk: async function () {
+					navigation.goBack();
+				}
+			});
+		} else {
+			showAlert({
+				title: "회원가입 오류",
+				msg: response,
+			});
+		}
+	}
+
+	const handleEmailAuthSend = async () => {
+		if (emailIsValid && userEmail) {
+			setIsLoading(true);
+			const response = await fetchEmailAuthSend(userEmail);
+
+			if (response) {
+				showAlert({
+					title: "인증번호 전송 완료",
+					msg: "회원님의 이메일로 인증번호가 전송되었습니다.",
+				});
+			}
+			setIsLoading(false);
+		} else {
+			showAlert({
+				title: "이메일 형식을 확인해 주세요.",
+				msg: "ex) username@example.com",
+			});
+		}
+	}
+
+	const handleEmailAuthCheck = async () => {
+		if (emailAuthNum) {
+			setIsLoading(true);
+			const response = await fetchEmailAuthCheck(userEmail, emailAuthNum);
+
+			if (response === 'true') {
+				setEmailAuthNumIsValid(true);
+			} else {
+				showAlert({
+					title: "이메일 인증 오류",
+					msg: response,
+				});
+			}
+			setIsLoading(false);
+		} else {
+			showAlert({
+				title: "인증번호를 입력해 주세요.",
+				msg: "이메일로 발송해 드린 인증번호를 확인해 주세요.",
+			});
+		}
+	}
+
+	function setImageResult(rs) {
+		const file = {
+			uri: rs.assets[0].uri,
+			type: 'image/jpeg',
+			name: rs.assets[0].fileName || rs.assets[0].uri.split('/').pop(),
+		};
+		setImageInfo(file);
 	}
 
 	return (
 		<SignUpContainer>
+			{isLoading && (
+				<LoadingContainer>
+					<ActivityIndicator size="large" color="#CA7FFE" />
+				</LoadingContainer>
+			)}
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={styles.keyboardAvoidingView}
@@ -84,6 +168,9 @@ const SignUpScreen = ({ route, navigation }) => {
 						keyboardShouldPersistTaps="always"
 					>
 						<SignUpHeaderText>트립처와 함께{'\n'}추억을 붙잡아볼까요?</SignUpHeaderText>
+
+						<ImagePickerItem callbackResult={setImageResult} borderType={'circle'} />
+						<View style={{ marginBottom: 26 }} />
 
 						<SignUpInputContainer>
 							<InputLabelText>닉네임</InputLabelText>
@@ -102,29 +189,34 @@ const SignUpScreen = ({ route, navigation }) => {
 								) : null}
 							</NicknameInputContent>
 							{nicknameIsValid !== undefined && nicknameIsValid !== null ? (
-								nicknameIsValid ? ( null ) : (
+								nicknameIsValid ? (null) : (
 									<EmailNotValidText>중복된 닉네임입니다.</EmailNotValidText>
 								)) : null}
 						</SignUpInputContainer>
 
 						<SignUpInputContainer>
 							<InputLabelText>이메일</InputLabelText>
-							<EmailInputContent emailIsValid={emailIsValid}>
-								<TextInput
-									placeholder="이메일을 입력해주세요."
-									placeholderTextColor={"#5F5F5F"}
-									onChangeText={(text) => setUserEmail(text)}
-								/>
-								{emailIsValid !== undefined && emailIsValid !== null ? (
-									emailIsValid ? (
-										<InputImage source={require('../assets/signUp-check-icon.png')} />
-									) : (
-										<InputImage source={require('../assets/signUp-warning-icon.png')} />
-									)
-								) : null}
-							</EmailInputContent>
+							<EmailAuthContainer>
+								<EmailInputContent emailIsValid={emailIsValid}>
+									<TextInput
+										placeholder="이메일을 입력해주세요."
+										placeholderTextColor={"#5F5F5F"}
+										onChangeText={(text) => setUserEmail(text)}
+									/>
+									{emailIsValid !== undefined && emailIsValid !== null ? (
+										emailIsValid ? (
+											<InputImage source={require('../assets/signUp-check-icon.png')} />
+										) : (
+											<InputImage source={require('../assets/signUp-warning-icon.png')} />
+										)
+									) : null}
+								</EmailInputContent>
+								<EmailButton activeOpacity={0.6} onPress={handleEmailAuthSend}>
+									<EmailButtonText>인증 받기</EmailButtonText>
+								</EmailButton>
+							</EmailAuthContainer>
 							{emailIsValid !== undefined && emailIsValid !== null ? (
-								emailIsValid ? ( null ) : (
+								emailIsValid ? (null) : (
 									<EmailNotValidText>{emailValidText}</EmailNotValidText>
 								)) : null}
 						</SignUpInputContainer>
@@ -146,12 +238,12 @@ const SignUpScreen = ({ route, navigation }) => {
 										)
 									) : null}
 								</EmailAuthInputContent>
-								<EmailButton activeOpacity={0.6}>
-									<EmailButtonText>인증 받기</EmailButtonText>
+								<EmailButton activeOpacity={0.6} onPress={handleEmailAuthCheck}>
+									<EmailButtonText>인증 확인</EmailButtonText>
 								</EmailButton>
 							</EmailAuthContainer>
 							{emailAuthNumIsValid !== undefined && emailAuthNumIsValid !== null ? (
-								emailAuthNumIsValid ? ( null ) : (
+								emailAuthNumIsValid ? (null) : (
 									<EmailNotValidText>인증번호가 맞지 않습니다.</EmailNotValidText>
 								)) : null}
 						</SignUpInputContainer>
@@ -174,7 +266,7 @@ const SignUpScreen = ({ route, navigation }) => {
 								) : null}
 							</PasswordInputContent>
 							{passwordIsValid !== undefined && passwordIsValid !== null ? (
-								passwordIsValid ? ( null ) : (
+								passwordIsValid ? (null) : (
 									<EmailNotValidText>비밀번호 형식이 맞지 않습니다.</EmailNotValidText>
 								)) : null}
 						</SignUpInputContainer>
@@ -197,7 +289,7 @@ const SignUpScreen = ({ route, navigation }) => {
 								) : null}
 							</CheckPasswordInputContent>
 							{checkPasswordIsValid !== undefined && checkPasswordIsValid !== null ? (
-								checkPasswordIsValid ? ( null ) : (
+								checkPasswordIsValid ? (null) : (
 									<EmailNotValidText>비밀번호가 같지 않습니다.</EmailNotValidText>
 								)) : null}
 						</SignUpInputContainer>
@@ -205,6 +297,8 @@ const SignUpScreen = ({ route, navigation }) => {
 						<SignUpButton activeOpacity={0.6} onPress={handleSignUpFetch}>
 							<SignUpButtonText>가입하기</SignUpButtonText>
 						</SignUpButton>
+
+						<AlertComponent />
 					</Animated.ScrollView>
 				</Animated.View>
 			</KeyboardAvoidingView>
@@ -217,6 +311,7 @@ export default SignUpScreen;
 const styles = StyleSheet.create({
 	keyboardAvoidingView: {
 		flex: 1,
+		backgroundColor: 'transparent',
 	},
 	animatedSheet: {
 		backgroundColor: 'white',
@@ -224,11 +319,25 @@ const styles = StyleSheet.create({
 	},
 	scrollView: {
 		flexGrow: 1, // Changed from flex: 1
+		backgroundColor: 'transparent',
 	},
 	scrollViewContent: {
 		flexGrow: 1,
+		backgroundColor: 'transparent',
 	}
 });
+
+const LoadingContainer = styled.View`
+	position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+`
 
 const SignUpContainer = styled.View`
   background: #fff;
@@ -267,7 +376,7 @@ const NicknameInputContent = styled.View`
   flex-direction: row;
 	border-bottom-width: 1px;
 	border-bottom-color: ${(props) =>
-    props.nicknameIsValid === undefined || props.nicknameIsValid === null ? "#DEDEDE" : props.nicknameIsValid ? "#0046B8" : "#CB1400"};
+		props.nicknameIsValid === undefined || props.nicknameIsValid === null ? "#DEDEDE" : props.nicknameIsValid ? "#0046B8" : "#CB1400"};
 	flex: 1;
 	align-items: center;
 	justify-content: space-between;
@@ -280,7 +389,7 @@ const EmailInputContent = styled.View`
   flex-direction: row;
 	border-bottom-width: 1px;
 	border-bottom-color: ${(props) =>
-    props.emailIsValid === undefined || props.emailIsValid === null ? "#DEDEDE" : props.emailIsValid ? "#0046B8" : "#CB1400"};
+		props.emailIsValid === undefined || props.emailIsValid === null ? "#DEDEDE" : props.emailIsValid ? "#0046B8" : "#CB1400"};
 	flex: 1;
 	align-items: center;
 	justify-content: space-between;
@@ -301,7 +410,7 @@ const EmailAuthInputContent = styled.View`
   flex-direction: row;
 	border-bottom-width: 1px;
 	border-bottom-color: ${(props) =>
-    props.emailAuthNumIsValid === undefined || props.emailAuthNumIsValid === null ? "#DEDEDE" : props.emailAuthNumIsValid ? "#0046B8" : "#CB1400"};
+		props.emailAuthNumIsValid === undefined || props.emailAuthNumIsValid === null ? "#DEDEDE" : props.emailAuthNumIsValid ? "#0046B8" : "#CB1400"};
 	flex: 1;
 	align-items: center;
 	justify-content: space-between;
@@ -314,7 +423,7 @@ const PasswordInputContent = styled.View`
   flex-direction: row;
 	border-bottom-width: 1px;
 	border-bottom-color: ${(props) =>
-    props.passwordIsValid === undefined || props.passwordIsValid === null ? "#DEDEDE" : props.passwordIsValid ? "#0046B8" : "#CB1400"};
+		props.passwordIsValid === undefined || props.passwordIsValid === null ? "#DEDEDE" : props.passwordIsValid ? "#0046B8" : "#CB1400"};
 	flex: 1;
 	align-items: center;
 	justify-content: space-between;
@@ -327,7 +436,7 @@ const CheckPasswordInputContent = styled.View`
   flex-direction: row;
 	border-bottom-width: 1px;
 	border-bottom-color: ${(props) =>
-    props.checkPasswordIsValid === undefined || props.checkPasswordIsValid === null ? "#DEDEDE" : props.checkPasswordIsValid ? "#0046B8" : "#CB1400"};
+		props.checkPasswordIsValid === undefined || props.checkPasswordIsValid === null ? "#DEDEDE" : props.checkPasswordIsValid ? "#0046B8" : "#CB1400"};
 	flex: 1;
 	align-items: center;
 	justify-content: space-between;
@@ -354,7 +463,7 @@ const EmailButtonText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 600;
-	color: #B5B5B5;
+	color: #999999;
 	line-height: 40px;
 `
 

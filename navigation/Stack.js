@@ -20,7 +20,6 @@ import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
-import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/user';
 import { useSelector } from 'react-redux'
@@ -108,6 +107,7 @@ const StackNavigation = () => {
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
     headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
+    headerShadowVisible: false,
   });
 
 
@@ -121,10 +121,10 @@ const StackNavigation = () => {
             ...naviOption({
               headerLeftVisible: true,
               headerRightVisible: false,
+              headerVisible: false,
             }),
           })}
           setIsLoggedIn={setIsLoggedIn}
-          initialParams={{ headerVisible: false }}
         />
       )}
       <Stack.Screen
@@ -133,6 +133,16 @@ const StackNavigation = () => {
         options={() => ({
           ...naviOption({
             headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="회원가입"
+        component={SignUpScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
             headerRightVisible: false,
           }),
         })}
