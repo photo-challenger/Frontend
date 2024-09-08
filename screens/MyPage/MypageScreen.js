@@ -15,23 +15,18 @@ import DateRangePicker from './DateRangePicker';
 import ChallengeComponent from './ChallengeComponent';
 import PointComponent from './PointComponent';
 import ScrapComponent from './ScrapComponent';
+import { useSelector } from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
 const MypageScreen = ({ route, navigation }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [profileInfo, setProfileInfo] = useState({});
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   useEffect(() => {
-    // fetchLogin();
-    getDefaultProfile();
+    setProfileInfo(userInfo);
   }, []);
-
-  const getDefaultProfile = async () => {
-    const result = await fetchDefaultProfile();
-    console.log('🚀 ~ result:', result);
-    setProfileInfo(result);
-  };
 
   const moveDetail = (id) => {
     navigation.navigate('프로필 및 환경설정', profileInfo);

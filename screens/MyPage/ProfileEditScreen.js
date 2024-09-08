@@ -12,9 +12,18 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
-import { fetchLogin, fetchProfileEditForm } from '../../service/api';
+import { fetchProfileEditForm } from '../../service/api';
+import { useDispatch } from 'react-redux';
+import { updateUserProfile } from '../../redux/user';
+
+const SaveButtonComponent = ({ onSave }) => (
+  <SaveButton onPress={onSave}>
+    <SaveText>저장</SaveText>
+  </SaveButton>
+);
 
 const ProfileEditScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const [profileInfo, setProfileInfo] = useState({});
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -31,10 +40,22 @@ const ProfileEditScreen = ({ route, navigation }) => {
     }
   }, [password]);
 
+  const saveData = async () => {
+    dispatch(
+      updateUserProfile({
+        profileImgName: profileInfo.profileImgName,
+        nickname: nickname,
+      }),
+    );
+  };
+
   useEffect(() => {
-    // fetchLogin();
+    navigation.setOptions({
+      headerRight: () => <SaveButtonComponent onSave={saveData} />,
+    });
+
     getProfileEditForm();
-  }, []);
+  }, [navigation]);
 
   const getProfileEditForm = async () => {
     const result = await fetchProfileEditForm();
@@ -287,4 +308,19 @@ const PasswordCheckContent = styled.View`
         ? '#0046B8'
         : '#CB1400'};
   margin-bottom: 20px;
+`;
+
+const SaveText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  color: #373737;
+`;
+const SaveButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 `;
