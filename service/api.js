@@ -176,6 +176,7 @@ async function fetchPointStoreList(params) {
     sendObj.criteria = sendObj.criteria || 'itemViewCount';
 
     const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr : ', queryStr);
 
     const response = await axios.get(`${config.apiUrl}item/list?${queryStr}`);
     return response.data;

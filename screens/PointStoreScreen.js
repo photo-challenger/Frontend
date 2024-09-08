@@ -39,7 +39,7 @@ const PointStoreScreen = ({ route, navigation }) => {
       resultData = await fetchPointStoreList(sendData);
       resultList = resultData.itemList;
     } else {
-      sendData['searchOne'] = escape(searchStr);
+      sendData['searchOne'] = encodeURIComponent(searchStr);
       resultData = await fetchSearchPointStoreList(sendData);
       resultList = resultData.searchResponseList;
     }
