@@ -239,6 +239,17 @@ async function fetchPopularChallenge() {
     console.error(error);
   }
 }
+
+// 사용자 총 포인트
+async function fetchUserTotalPoint() {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/point`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchCommentReplyList(groupId) {
   try {
     const response = await axios.get(
@@ -252,9 +263,10 @@ async function fetchCommentReplyList(groupId) {
 
 // 포토챌린지 > 포토챌린지 상세 정보 조회
 async function fetchChallengeDetail(contentId) {
+  console.log(`${config.apiUrl}challenge/challengeId/${contentId}`);
   try {
     const response = await axios.get(
-      `${config.apiUrl}challenge/content${contentId}`,
+      `${config.apiUrl}challenge/challengeId/${contentId}`,
     );
     return response.data;
   } catch (error) {
@@ -297,4 +309,5 @@ export {
   fetchDetailCommon,
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
+  fetchUserTotalPoint,
 };
