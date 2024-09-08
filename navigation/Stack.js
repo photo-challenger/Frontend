@@ -1,6 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/user';
+import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapScreen from '../screens/MapScreen';
@@ -16,7 +20,6 @@ import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
 import MainSearchScreen from '../screens/MainSearchScreen';
 import MainDetailScreen from '../screens/MainDetailScreen';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
@@ -24,10 +27,6 @@ import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
 import MypageScreen from '../screens/MyPage/MypageScreen';
 import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
-import styled from 'styled-components/native';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/user';
-import { useSelector } from 'react-redux';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
