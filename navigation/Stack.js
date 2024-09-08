@@ -13,6 +13,9 @@ import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
+import MyPageScreen from '../screens/MyPage/MypageScreen';
+import SettingScreen from '../screens/MyPage/SettingScreen';
+import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -35,6 +38,15 @@ const StackNavigation = () => {
       />
     </CloseButton>
   );
+  const SAVEHeaderRight = () => (
+    <SaveButton
+      onPress={() => {
+        navigation.goBack();
+      }}
+    >
+      <SaveText>저장</SaveText>
+    </SaveButton>
+  );
 
   const naviOption = ({
     headerVisible,
@@ -46,11 +58,37 @@ const StackNavigation = () => {
     headerTitleAlign: 'center',
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
-    headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
+    headerRight:
+      headerRightVisible === false
+        ? null
+        : headerRightVisible == '저장'
+        ? SAVEHeaderRight
+        : defaultHeaderRight,
   });
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="MyPageScreen"
+        component={MyPageScreen}
+        options={() => ({
+          ...naviOption({ headerVisible: false }),
+        })}
+      />
+      <Stack.Screen
+        name="프로필 및 환경설정"
+        component={SettingScreen}
+        options={() => ({
+          ...naviOption,
+        })}
+      />
+      <Stack.Screen
+        name="프로필 수정"
+        component={ProfileEditScreen}
+        options={() => ({
+          ...naviOption({ headerRightVisible: '저장' }),
+        })}
+      />
       <Stack.Screen
         name="나의 티켓 보관함"
         component={MyPageTicketScreen}
@@ -197,4 +235,18 @@ const Title = styled.Text`
   font-weight: 700;
   letter-spacing: -0.36px;
   color: #373737;
+`;
+const SaveText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  color: #373737;
+`;
+const SaveButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 `;
