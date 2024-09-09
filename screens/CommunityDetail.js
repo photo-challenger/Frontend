@@ -14,6 +14,7 @@ import {
   fetchAddPostLike,
 } from '../service/api';
 import useConfirm from '../hooks/useConfirm';
+import CommunityCommentModal from './CommunityCommentModal';
 
 const CommunityDetail = ({ route, navigation }) => {
   const { postId } = route.params;
@@ -69,6 +70,11 @@ const CommunityDetail = ({ route, navigation }) => {
     });
 
     setModalVisible(false);
+  };
+
+  const [commentModalVisible, setCommentModalVisible] = useState(false);
+  const openCommentModal = () => {
+    setCommentModalVisible(true);
   };
 
   async function getCommunityDetail() {
@@ -150,13 +156,17 @@ const CommunityDetail = ({ route, navigation }) => {
           />
           <ScoreText>{postInfo.postLikeCount}</ScoreText>
         </LikeBox>
-        <CommentBox>
+        <CommentBox onPress={openCommentModal}>
           <Image
-            source={require('../assets/icon-annotation.png')}
+            source={
+              postInfo.postCommentCount == 0
+              ? require('../assets/icon-annotation.png')
+              : require('../assets/icon-annotation-on.png')}
             style={{ width: 24, height: 24 }}
           />
           <ScoreText>{postInfo.postCommentCount}</ScoreText>
         </CommentBox>
+        <CommunityCommentModal commentModalVisible={commentModalVisible} setCommentModalVisible={setCommentModalVisible} postId={postId} navigation={navigation} />
       </ScoreBox>
 
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -299,6 +309,7 @@ const ScoreBox = styled.View`
 const LikeBox = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
+  margin-right: 10px;
 `;
 
 const CommentBox = styled.TouchableOpacity`
@@ -308,7 +319,7 @@ const CommentBox = styled.TouchableOpacity`
 `;
 
 const ScoreText = styled.Text`
-  margin-left: 5px;
+  margin-left: 3px;
   color: #666;
   font-size: 14px;
   padding-left: 8px;

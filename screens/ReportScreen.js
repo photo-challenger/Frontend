@@ -40,15 +40,15 @@ const ReportScreen = ({ route, navigation }) => {
     const [showReplies, setShowReplies] = useState(false);
     const toggleReplies = () => {
       setSelectedReportCategory(props.type);
-      setShowReplies(!showReplies);
+      setShowReplies(prevState => !prevState);
     };
 
     return (
       <ReportTypePerContainer onPress={toggleReplies} showReplies={showReplies}>
         <ReportTypeText showReplies={showReplies}>{props.type}</ReportTypeText>
-        {showReplies === true ? (
+        {showReplies && (
           <ReportSelectImage source={require('../assets/check-circle.png')} />
-        ) : null}
+        )}
       </ReportTypePerContainer>
     );
   };
@@ -101,8 +101,8 @@ const ReportScreen = ({ route, navigation }) => {
                 <ReportTypeHeaderSubText>(필수 선택)</ReportTypeHeaderSubText>
               </ReportTypeTextContainer>
               <View>
-                {reportTypeList.map((type) => (
-                  <ReportPerTypeContainer type={type} />
+                {reportTypeList.map((type, index) => (
+                  <ReportPerTypeContainer type={type} index={index} />
                 ))}
               </View>
               <ReportContentContainer>

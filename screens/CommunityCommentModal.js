@@ -10,44 +10,42 @@ import {
   Platform,
   ScrollView,
   Keyboard,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { fetchCommentReplyList, fetchLogin } from '../service/api';
-const ModalTest = () => {
+import { fetchCommentReplyList, fetchCommentList, fetchComment } from '../service/api';
+const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, postId, navigation }) => {
   // 댓글 리스트
-  const [commentList, setCommentList] = useState([
-    {
-      profileId: 1,
-      profileImgName:
-        'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_profile.jpg',
-      nickname: '짱구',
-      commentCalculatedDate: '5일 전 작성',
-      commentContent: 'This is a comment 1 on Post 1',
-      blockChk: false,
-    },
-    {
-      profileId: 2,
-      profileImgName:
-        'https://tripture.s3.ap-northeast-2.amazonaws.com/file/be_profile.jpg',
-      nickname: 'gamja23',
-      commentCalculatedDate: '13일 전 작성',
-      commentContent: 'This is a comment 2 on Post 1',
-      blockChk: true,
-    },
-  ]);
+  const [commentList, setCommentList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(true);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(0);
+  const [replyCommentId, setReplyCommentId] = useState(0);
+  const [replyCommentNickname, setReplyCommentNickname] = useState('');
+  const [replyCommentIndex, setReplyCommentIndex] = useState();
 
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const flatListRef = useRef(null);  // FlatList를 참조할 ref
   const inputRef = useRef(null);
-  const focusOnInput = () => {
+  const focusOnInput = (commentId, nickname, index) => {
+    setReplyCommentId(commentId);
+    setReplyCommentNickname(nickname);
+    setReplyCommentIndex(index);
+
     setTimeout(() => {
       inputRef.current.focus();
     }, 0);
+
+    flatListRef.current?.scrollToIndex({ index, animated: true });
   };
 
   const handleKeyboardDidHide = () => {
     if (inputRef.current) {
+      setReplyCommentId(0);
+      setReplyCommentNickname('');
+
       inputRef.current.blur(); // Remove focus when keyboard hides
     }
   };
@@ -55,12 +53,42 @@ const ModalTest = () => {
   // 신고하기
   const reportComment = (commentId) => {
     // 신고하기 화면으로 이동
-    setModalVisible(false);
+    setCommentModalVisible(false);
     navigation.navigate('report', {
       reportType: 'comment',
       postOrCommentId: commentId,
     });
   };
+
+  const fetchAllCommentList = async () => {
+    if (page <= totalPage) {
+      setLoading(true);
+      const apiResponseData = await fetchCommentList(postId, page);
+      setCommentList(prevList => [...prevList, ...apiResponseData?.result]);
+      setTotalPage(apiResponseData.totalPages);
+      setPage(prevPage => prevPage + 1);
+      setLoading(false);
+      setFirstLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (commentModalVisible) {
+      fetchAllCommentList();
+    }
+  }, []);
+
+  useEffect((index) => {
+    if (firstLoading) {
+      fetchAllCommentList();
+    }
+  }, [firstLoading]);
+
+  const onEndReached = () => {
+    if (!loading) {
+      fetchAllCommentList();
+    }
+  }
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -73,12 +101,10 @@ const ModalTest = () => {
     };
   }, []);
 
-  const openModal = () => {
-    setModalVisible(true);
-  };
+
   const closeModal = () => {
     Keyboard.dismiss();
-    setModalVisible(false);
+    setCommentModalVisible(false);
   };
 
   const InputComponent = () => (
@@ -88,17 +114,29 @@ const ModalTest = () => {
         ref={inputRef} // Connect the ref here
         placeholder="댓글 추가"
         placeholderTextColor="#C4C7CE"
+        onSubmitEditing={(e) => handleLeaveComment(e.nativeEvent.text)}
       />
     </SearchContent>
   );
 
-  const Comment = ({ props, comment, onReplyPress }) => {
+  const handleLeaveComment = async (content) => {
+    const apiResponseData = await fetchComment(replyCommentId, postId, content);
+    console.log(apiResponseData);
+
+    setCommentList([]);
+    setReplyCommentId(0);
+    setPage(0);
+    setReplyCommentNickname('');
+    inputRef.current.clear();
+    setFirstLoading(true);
+  }
+
+  const Comment = ({ item, onReplyPress, index }) => {
     // 대댓글 리스트
     const [commentReplayList, setCommentReplyList] = useState([]);
 
     const getCommentReplyList = async (commentId) => {
       const apiResponseData = await fetchCommentReplyList(commentId);
-      console.log(' apiResponseData   :', apiResponseData);
       setCommentReplyList(apiResponseData?.result);
     };
 
@@ -125,22 +163,23 @@ const ModalTest = () => {
     );
 
     return (
-      <CommentContainer key={comment.profileId}>
-        <CommentProfileImage source={{ uri: comment.profileImgName }} />
+      <CommentContainer key={item.profileId}>
+        {item.profileImgName ? (<CommentProfileImage source={{ uri: item.profileImgName }} />)
+          : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
         <CommentDetailContainer>
           <CommentReportContainer>
             <View>
               <CommentProfileContainer>
                 <CommentProfileNickname>
-                  {comment.nickname}
+                  {item.nickname}
                 </CommentProfileNickname>
                 <CommentDuration>
-                  {comment.commentCalculatedDate}
+                  {item.commentCalculatedDate}
                 </CommentDuration>
               </CommentProfileContainer>
-              <CommentContent>{comment.commentContent}</CommentContent>
+              <CommentContent>{item.commentContent}</CommentContent>
             </View>
-            <TouchableOpacity onPress={() => reportComment(comment.commentId)}>
+            <TouchableOpacity onPress={() => reportComment(item.commentId)}>
               <CommentReportButtonImage
                 source={require('../assets/alert-triangle.png')}
               />
@@ -148,14 +187,14 @@ const ModalTest = () => {
           </CommentReportContainer>
           <CommentReplyButton
             activeOpacity={0.8}
-            onPress={() => focusOnInput()}
+            onPress={() => focusOnInput(item.commentId, item.nickname, index)}
           >
             <CommentReplyButtonText>답글 달기</CommentReplyButtonText>
           </CommentReplyButton>
           <CommentReplyMoreButton
             activeOpacity={0.8}
             onPress={() => {
-              getCommentReplyList(comment.commentId);
+              getCommentReplyList(item.commentId);
               toggleReplies();
             }}
           >
@@ -171,8 +210,8 @@ const ModalTest = () => {
           <View>
             {showReplies &&
               commentReplayList &&
-              commentReplayList.map((comment, index) => (
-                <CommentReplyContainer key={index} comment={comment} />
+              commentReplayList.map((item, index) => (
+                <CommentReplyContainer key={index} comment={item} />
               ))}
           </View>
         </CommentDetailContainer>
@@ -181,19 +220,16 @@ const ModalTest = () => {
   };
 
   return (
-    <ModalContainer>
-      <TouchableOpacity onPress={openModal}>
-        <Text>Modal Test</Text>
-      </TouchableOpacity>
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent
-        onRequestClose={closeModal}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.keyboardAvoidingView}
+    >
+      <ModalContainer>
+        <Modal
+          visible={commentModalVisible}
+          animationType="slide"
+          transparent
+          onRequestClose={closeModal}
         >
           <View style={styles.modalContainer}>
             <StatusBar
@@ -207,33 +243,47 @@ const ModalTest = () => {
                 <CloseImage source={require('../assets/btn-close.png')} />
               </CloseImageButton>
             </CommentHeaderContainer>
-            <Animated.View style={[styles.animatedSheet]}>
-              <Animated.ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollViewContent}
-                keyboardShouldPersistTaps="always"
-              >
-                {commentList.map((comment, index) => (
-                  <Comment
-                    key={index}
-                    comment={comment}
-                    onReplyPress={focusOnInput}
-                    focusOnInput={focusOnInput}
-                  />
-                ))}
-              </Animated.ScrollView>
-            </Animated.View>
+
+            { firstLoading ? (<View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color={'#CA7FFE'} />
+              </View>) : commentList.length !== 0 ? (
+              <FlatList
+                data={commentList}
+                renderItem={({ item, index }) => <Comment item={item} onReplyPress={focusOnInput} focusOnInput={focusOnInput} index={index} />}
+                keyExtractor={(item, index) => `${item.commentId}-${index}`}
+                onEndReached={onEndReached}
+                onEndReachedThreshold={0.6}
+                style={styles.flatListStyle}
+                ref={flatListRef}
+                ListFooterComponent={loading && (
+                  <View style={{ padding: 10 }}>
+                    <ActivityIndicator color="#CA7FFE" />
+                  </View>
+                )}
+                extraData={commentList}
+              />
+            ) : (
+            <View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 15, textAlign: 'center', color: '#7A7A7A' }}>댓글이 존재하지 않습니다.{'\n'}게시물에 다른 유저의 포토 챌린지에 대한{'\n'}댓글을 남겨보세요!</Text>
+              </View>
+            )}
           </View>
-        </KeyboardAvoidingView>
-        <View style={styles.inputContainer}>
-          <InputComponent />
-        </View>
-      </Modal>
-    </ModalContainer>
+
+          <View style={styles.inputContainer}>
+            {replyCommentId != 0 ? (
+              <View style={{marginLeft: 15, marginBottom: 10}}>
+                <Text><Text style={{color: '#CA7FFE'}}>{replyCommentNickname}</Text>님에게 답글 보내는 중</Text>
+              </View>
+            ) : (null)}
+            <InputComponent />
+          </View>
+        </Modal>
+      </ModalContainer>
+    </KeyboardAvoidingView>
   );
 };
 
-export default ModalTest;
+export default CommunityCommentModal;
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
@@ -246,15 +296,13 @@ const styles = StyleSheet.create({
   },
   animatedSheet: {
     backgroundColor: 'white',
-    paddingLeft: 16,
-    paddingRight: 16,
     maxHeight: '80%',
+    flex: 1,
   },
   scrollView: {
     flexGrow: 1, // Changed from flex: 1
   },
   scrollViewContent: {
-    paddingTop: 16,
     flexGrow: 1,
   },
   inputContainer: {
@@ -263,6 +311,12 @@ const styles = StyleSheet.create({
     borderTopColor: '#E0E0E0',
     backgroundColor: 'white',
   },
+  flatListStyle: {
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    backgroundColor: '#FFFFFF',
+    flex: 1,
+  }
 });
 
 const Scrim = styled.TouchableOpacity`
@@ -281,8 +335,9 @@ const CommentHeaderContainer = styled.View`
   align-items: center;
   padding: 16px;
   border-radius: 16px 16px 0 0;
-  background-color: white;
+  background-color: #FFFFFF;
 `;
+
 const CloseImageButton = styled.TouchableOpacity`
   position: absolute;
   right: 16px;
@@ -304,6 +359,7 @@ const CommentContainer = styled.View`
   margin-bottom: 32px;
   display: flex;
   flex-direction: row;
+  background-color: #FFFFFF;
 `;
 
 const CommentProfileImage = styled.Image`

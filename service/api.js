@@ -478,11 +478,36 @@ async function fetchUserTotalPoint() {
   }
 }
 
+async function fetchCommentList(postId, page) {
+  try {
+    const response = await axiosInstance.get(
+      `${config.apiUrl}comment/post/${postId}?page=${page}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchCommentReplyList(groupId) {
   try {
-    const response = await axios.get(
+    const response = await axiosInstance.get(
       `${config.apiUrl}comment/nested/${groupId}`,
     );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchComment(groupId, postId, commentContent) {
+  try {
+    const response = await axiosInstance.post(
+      `${config.apiUrl}comment`, {
+        groupId: groupId,
+        postId: postId,
+        commentContent: commentContent,
+      });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -661,7 +686,9 @@ export {
   fetchProfileEditForm,
   fetchReport,
   fetchlocationBasedList,
+  fetchCommentList,
   fetchCommentReplyList,
+  fetchComment,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
   fetchCommunityDetail,
