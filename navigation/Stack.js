@@ -30,9 +30,6 @@ import MypageScreen from '../screens/MyPage/MypageScreen';
 import SettingScreen from '../screens/MyPage/SettingScreen';
 import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
 import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/user';
-import { useSelector } from 'react-redux'
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
