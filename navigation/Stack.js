@@ -10,6 +10,7 @@ import PointStoreScreen from '../screens/PointStoreScreen';
 import PointStoreDetail from '../screens/PointStoreDetail';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import SignUpAgreeScreen from '../screens/SignUpAgreeScreen';
 import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
 import MainSearchScreen from '../screens/MainSearchScreen';
@@ -134,6 +135,7 @@ const StackNavigation = () => {
           ...naviOption({
             headerLeftVisible: false,
             headerRightVisible: false,
+            headerVisible: false,
           }),
         })}
       />
@@ -153,6 +155,16 @@ const StackNavigation = () => {
         options={() => ({
           ...naviOption({
             headerLeftVisible: false,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="약관동의"
+        component={SignUpAgreeScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
             headerRightVisible: false,
           }),
         })}

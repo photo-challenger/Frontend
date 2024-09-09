@@ -70,12 +70,6 @@ const SignUpScreen = ({ route, navigation }) => {
 
 		if(imageInfo) {
 			formData.append('file', imageInfo);
-		} else {
-			formData.append('file', {
-				uri: '',
-				type: '',
-				name: '',
-			});
 		}
 		formData.append('emailAuthCheck', emailAuthNumIsValid);
 
@@ -86,7 +80,7 @@ const SignUpScreen = ({ route, navigation }) => {
 				title: "회원가입 성공!",
 				msg: <Text><Text color={"#CA7FFE"}>tripture</Text>의 회원이 되신 것을 환영합니다.</Text>,
 				onOk: async function () {
-					navigation.goBack();
+					navigation.navigate('LoginScreen');
 				}
 			});
 		} else {

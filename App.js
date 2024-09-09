@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { Platform, SafeAreaView, StyleSheet, Text } from 'react-native';
+import { NavigationContainer, useNavigationState } from '@react-navigation/native';
 import StackNavigation from './navigation/Stack';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -12,11 +12,23 @@ export default function App() {
     <Provider store={store}>
       <SafeAreaView style={styles.safearea}>
         <NavigationContainer>
-          <StackNavigation />
-          <Footer />
+          <MainContent />
         </NavigationContainer>
       </SafeAreaView>
     </Provider>
+  );
+}
+
+function MainContent() {
+  const routeName = useNavigationState((state) => state?.routes[state.index]?.name);
+  const screensWithoutFooter = ['LoginScreen', '회원가입', '약관동의'];
+  const showFooter = !screensWithoutFooter.includes(routeName);
+
+  return (
+    <>
+      <StackNavigation />
+      {showFooter && <Footer />} 
+    </>
   );
 }
 

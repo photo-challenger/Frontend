@@ -73,15 +73,15 @@ const fetchLogin = async (email, password, isAutoLogin) => {
       }
 
       return jsessionId;
-    } else {
-      if(response.data.status === 404) {
-        return "존재하지 않는 이메일입니다.";
-      } else if(response.data.status === 400) {
-        return "비밀번호가 맞지 않습니다.";
-      }
     }
   } catch (error) {
-    console.log(error);
+    if(error.response.status === 400) {
+      return '비밀번호를 다시 확인해 주세요.';
+    } else if(error.response.status === 404) {
+      return '존재하지 않는 이메일입니다.';
+    } else {
+      console.log(error);
+    }
   }
 };
 
