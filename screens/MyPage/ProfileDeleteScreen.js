@@ -1,0 +1,150 @@
+import React, { useState, useEffect } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Modal, View, Image, ActivityIndicator } from 'react-native';
+import styled from 'styled-components/native';
+import Animated from 'react-native-reanimated';
+import { StyleSheetManager } from 'styled-components';
+
+const ProfileDeleteScreen = ({ route, navigation }) => {
+	const { nickname } = route.params;
+	const [deleteInputValue, setDeleteInputValue] = useState('');
+
+	return (
+		<ProfileDeleteContainer>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				style={styles.keyboardAvoidingView}
+			>
+				<Animated.View
+					style={[styles.animatedSheet]}
+				>
+					<Animated.ScrollView
+						style={styles.scrollView}
+						contentContainerStyle={styles.scrollViewContent}
+						keyboardShouldPersistTaps="always"
+					>
+						<DeleteHeaderText>{nickname}님,{'\n'}잠시만요!</DeleteHeaderText>
+						<DeleteSubHeaderText>더 나은 트립처 서비스를 위해 탈퇴 사유를 알려주세요!</DeleteSubHeaderText>
+
+						<SearchContent>
+							<SearchInput
+								placeholder="내용을 입력해주세요."
+								placeholderTextColor={"#B5B5B5"}
+								onChangeText={(text) => setDeleteInputValue(text)}
+								multiline={true}
+							/>
+						</SearchContent>
+
+						<InfoHeaderText>탈퇴하시면,</InfoHeaderText>
+						<InfoHeaderSubText>
+							•{'  '}탈퇴를 하실 경우 어떤 경우에도 포인트 복구는{'\n   '}불가능 합니다.{'\n'}
+							•{'  '}탈퇴를 하실 경우 결제하신 서비스 이용 권한 및 구매{'\n   '}내역을 포기한 것으로 간주됩니다.{'\n'}
+							•{'  '}탈퇴 시에도 회원님이 작성한 포스트, 댓글은 자동 삭제{'\n   '}되지 않습니다. 노출을 원하지 않는 경우 미리 삭제 후{'\n   '}탈퇴를 진행해주세요.
+						</InfoHeaderSubText>
+
+						<CheckText>정말 탈퇴하시겠습니까?</CheckText>
+					</Animated.ScrollView>
+				</Animated.View>
+				<DeleteButton deleteInputValue={deleteInputValue} activeOpacity={deleteInputValue !== '' ? 0.7 : 1}>
+					<DeleteButtonText>탈퇴하기</DeleteButtonText>
+				</DeleteButton>
+			</KeyboardAvoidingView>
+		</ProfileDeleteContainer>
+	);
+};
+
+export default ProfileDeleteScreen;
+
+const styles = StyleSheet.create({
+	keyboardAvoidingView: {
+		flexGrow: 1,
+	},
+	animatedSheet: {
+		flexGrow: 1,
+	},
+	scrollView: {
+		paddingTop: 12,
+		paddingLeft: 24,
+		paddingRight: 24,
+	},
+	scrollViewContent: {
+		flexGrow: 1,
+		paddingBottom: 24, // 스크롤 여유 공간을 위한 추가 패딩
+	},
+});
+
+const ProfileDeleteContainer = styled.View`
+  background: #F7F7F8;
+  height: 100%;
+`;
+
+const DeleteHeaderText = styled.Text`
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 500;
+`
+
+const DeleteSubHeaderText = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+`
+
+const SearchContent = styled.View`
+  display: flex;
+  height: 88px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  flex-direction: row;
+	border: 1.6px solid #B5B5B5;
+	margin-top: 24px;
+`;
+const SearchInput = styled.TextInput`
+  font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	text-align-vertical: top;
+`;
+
+const InfoHeaderText = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	color: #4F4F4F;
+	margin-bottom: 5px;
+	margin-top: 30px;
+`
+
+const InfoHeaderSubText = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	color: #4F4F4F;
+	line-height: 21px;
+`
+
+const CheckText = styled.Text`
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	color: #4F4F4F;
+	position: absolute;
+	bottom: 92px;
+`
+
+const DeleteButton = styled.TouchableOpacity`
+	position: absolute;
+	bottom: 0;
+	background-color: ${(props) => props.deleteInputValue !== '' ? "#4F4F4F" : "#B5B5B5"};
+	width: 100%;
+	height: 80px;
+	justify-content: center;
+	align-items: center;
+`
+
+const DeleteButtonText = styled.Text`
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 700;
+	color: #FFFFFF;
+`

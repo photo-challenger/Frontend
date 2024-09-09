@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import {
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
-  fetchLogin,
 } from '../service/api';
 
 const CommunityScreen = ({ route, navigation }) => {
@@ -12,7 +11,6 @@ const CommunityScreen = ({ route, navigation }) => {
   const [challList, setchallList] = useState([]);
 
   useEffect(() => {
-    // fetchLogin();
     getCommunityList();
   }, []);
 

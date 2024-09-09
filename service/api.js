@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const config = {
   publicUrl: process.env.REACT_PUBLIC_SERVER,
@@ -7,7 +8,41 @@ const config = {
   lang: 'ko-KR',
 };
 
-const fetchLogin = async () => {
+const axiosInstance = axios.create({
+  withCredentials: true,
+});
+
+const getSessionId = async () => {
+  try {
+    const sessionData = await AsyncStorage.getItem('userSessionData');
+    if (sessionData) {
+      const parsedData = JSON.parse(sessionData);
+      return parsedData.sessionId;
+    }
+  } catch (error) {
+    console.log('Error getting sessionId:', error);
+    return null;
+  }
+};
+
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const sessionId = await getSessionId();
+    if (sessionId) {
+      config.headers['Authorization'] = `Bearer ${sessionId}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+export const setCookie = (cookie) => {
+  axiosInstance.defaults.headers.Cookie = cookie;
+};
+
+const fetchLogin_before = async () => {
   try {
     const response = await axios.post('https://www.tripture.shop/login/true', {
       loginEmail: 'user1@example.com',
@@ -16,6 +51,114 @@ const fetchLogin = async () => {
     console.log(response.data);
   } catch (error) {
     console.error(error);
+  }
+};
+
+const fetchLogin = async (email, password, isAutoLogin) => {
+  try {
+    const response = await axiosInstance.post(
+      `${config.apiUrl}login/${isAutoLogin}`,
+      {
+        loginEmail: email,
+        loginPw: password,
+      },
+    );
+
+    if (response.status === 200) {
+      const setCookieHeader = response.headers['set-cookie'];
+      let jsessionId = '';
+      if (setCookieHeader) {
+        if (isAutoLogin) {
+          jsessionId = setCookieHeader[0]
+            .split(';')
+            .find((cookie) => cookie.trim().startsWith('mySessionId='))
+            .split('=')[1];
+
+          setCookie(`mySessionId=${jsessionId}`);
+          await AsyncStorage.multiSet([
+            ['loginTimestamp', new Date().getTime().toString()],
+            ['userSessionData', JSON.stringify({ sessionId: jsessionId })],
+          ]);
+        } else {
+          jsessionId = setCookieHeader[0]
+            .split(';')
+            .find((cookie) => cookie.trim().startsWith('JSESSIONID='))
+            .split('=')[1];
+          setCookie(`JSESSIONID=${jsessionId}`);
+        }
+      } else {
+        console.warn('No JSESSIONID found in response');
+      }
+
+      return jsessionId;
+    }
+  } catch (error) {
+    if(error.response.status === 400) {
+      return '비밀번호를 다시 확인해 주세요.';
+    } else if(error.response.status === 404) {
+      return '존재하지 않는 이메일입니다.';
+    } else {
+      console.log(error);
+    }
+  }
+};
+const fetchProfileEditForm = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/edit`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchDefaultProfile = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}profile/default`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchMyTicketList = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}purchase/ItemsBeforeUse`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchMyUsedTicketList = async () => {
+  try {
+    const response = await axios.get(`${config.apiUrl}purchase/ItemsAfterUse`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchMyTicketDetail = async (purchaseId) => {
+  try {
+    const response = await axios.get(
+      `${config.apiUrl}purchase/${purchaseId}/detail`,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchUseMyTicket = async (purchaseId) => {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/${purchaseId}/use`,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if (error.status == 303) console.log('success using ticket');
+    else console.error(error);
   }
 };
 
@@ -68,16 +211,17 @@ async function fetchCommunityDetail(postId) {
 }
 
 async function fetchSearchCommnunityRegion(params) {
-  let sendObj = params || {};
-  sendObj.searchOne = sendObj.searchOne || '';
+  try {
+    let sendObj = params || {};
+    sendObj.searchOne = sendObj.searchOne || '';
 
-  const queryStr = new URLSearchParams(sendObj).toString();
+    const queryStr = new URLSearchParams(sendObj).toString();
 
-  const response = await fetch(`${config.apiUrl}post/search?${queryStr}`);
-
-  console.log('response  >> ', response);
-
-  return response.json();
+    const response = await fetch(`${config.apiUrl}post/search?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function fetchSaveBookmark(postId) {
@@ -97,6 +241,57 @@ async function fetchDeletePost(postId) {
     return response.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+async function fetchSignUp(formData) {
+  try {
+    const response = await axiosInstance.post(`${config.apiUrl}login/new`, formData, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    if(error.response.status === 400) {
+      return error.response.data.message;
+    } else {
+      console.log(error);
+    }
+  }
+}
+
+async function fetchEmailAuthSend(email) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/mailSend`, {
+      email: email
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchEmailAuthCheck(email, authNum) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/mailAuthCheck`, {
+      email: email,
+      authNum: authNum
+    });
+
+    if (response.status === 200) {
+      return "true";
+    }
+  } catch (error) {
+    if(error.response.status === 400) {
+      return error.response.data.message;
+    } else {
+      console.error(error);
+    }
   }
 }
 
@@ -184,6 +379,35 @@ async function fetchPointStoreList(params) {
     console.error(error);
   }
 }
+
+const fetchBuyItem = async (params) => {
+  let sendObj = params || {};
+  try {
+    const response = await axios.post(`${config.apiUrl}item/buy`, sendObj);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if (error.status == 400) {
+      console.log(error);
+      return -1;
+    } else {
+      console.error(error);
+    }
+  }
+};
+const fetchBuyByPoint = async (params) => {
+  let sendObj = params || {};
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}purchase/order/pay`,
+      sendObj,
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 async function fetchSearchPointStoreList(params) {
   try {
@@ -289,10 +513,118 @@ async function fetchReport(params) {
   return response.json();
 }
 
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 작성한 게시글
+async function fetchMyPostList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    console.log('queryStr : ', queryStr);
+
+    const response = await axios.get(
+      `${config.apiUrl}post/myPostList?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 작성한 댓글
+async function fetchMyCommentList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(
+      `${config.apiUrl}comment/myCommentList?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 챌린지 탭 > 챌린지 참여현황
+async function fetchMyChallengeState() {
+  try {
+    const response = await axios.get(`${config.apiUrl}postCnt/cnt`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 포틴트 탭 > 적립 내역
+async function fetchMyDurationPointList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+    sendObj.startDate = sendObj.startDate || '';
+    sendObj.endDate = sendObj.endDate || '';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr  : ', queryStr);
+
+    const response = await axios.get(`${config.apiUrl}point/list?${queryStr}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 스크랩 탭 > 관광지
+async function fetchMyBookmarkSightList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+    console.log('queryStr  : ', queryStr);
+
+    const response = await axios.get(
+      `${config.apiUrl}bookmark/contents?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 마이페이지 > 프로필 및 환경설정 > 스크랩 탭 > 챌린지
+async function fetchMyBookmarkPostList(params) {
+  try {
+    let sendObj = params || {};
+    sendObj.page = sendObj.page || '0';
+
+    const queryStr = new URLSearchParams(sendObj).toString();
+
+    const response = await axios.get(
+      `${config.apiUrl}bookmark/photoChallenges?${queryStr}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
+  fetchBuyByPoint,
+  fetchLogin_before,
+  fetchBuyItem,
+  fetchUseMyTicket,
+  fetchMyTicketDetail,
+  fetchMyTicketList,
+  fetchMyUsedTicketList,
   fetchPointStoreList,
   fetchSearchPointStoreList,
   fetchPointStoreDetail,
+  fetchDefaultProfile,
+  fetchProfileEditForm,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentReplyList,
@@ -305,9 +637,18 @@ export {
   fetchPopularChallenge,
   fetchChallengeDetail,
   fetchLogin,
+  fetchSignUp,
   fetchAreaBasedList,
   fetchDetailCommon,
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
   fetchUserTotalPoint,
+  fetchMyPostList,
+  fetchMyCommentList,
+  fetchMyChallengeState,
+  fetchMyDurationPointList,
+  fetchMyBookmarkSightList,
+  fetchMyBookmarkPostList,
+  fetchEmailAuthSend,
+  fetchEmailAuthCheck,
 };

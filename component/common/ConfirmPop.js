@@ -18,6 +18,8 @@ const ConfirmPop = ({
       animationType="fade"
       onRequestOk={onOk}
       onRequestCancel={onCancel}
+      animationInTiming={0.2}
+      animationOutTiming={0.2}
     >
       <Overlay>
         <AlertContainer>
@@ -61,14 +63,15 @@ const AlertContainer = styled.View`
 `;
 
 const AlertContent = styled.View`
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 `;
 
 const AlertTitle = styled.Text`
   font-size: 20px;
   font-weight: bold;
   font-weight: 700;
-  margin: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
   color: #000;
   text-align: center;
 `;
@@ -76,36 +79,38 @@ const AlertTitle = styled.Text`
 const AlertMessage = styled.Text`
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 20px;
   text-align: center;
   color: #333;
+  line-height: 21px;
 `;
 
 const ButtonWrap = styled.View`
   flex-direction: row;
+  align-items: center;
+  width: 100%;
 `;
 
 const AlertButtonLeft = styled.TouchableOpacity`
   height: 48px;
-  width: 100px;
+  width: 48%;
   padding: 10px 20px;
   background-color: #ffffff;
   border-radius: 6px;
-  border: 1px solid #ca7ffe;
+  border: 1px solid #4F4F4F;
   align-items: center;
-  justify-content: center;
   margin-right: 12px;
+  justify-content: center;
 `;
 
 const LeftButtonText = styled.Text`
   font-size: 14px;
-  color: #ca7ffe;
+  color: #4F4F4F;
   font-weight: bold;
 `;
 
 const AlertButtonRight = styled.TouchableOpacity`
   height: 48px;
-  width: 100px;
+  width: 48%;
   padding: 10px 20px;
   background-color: #ca7ffe;
   border-radius: 6px;

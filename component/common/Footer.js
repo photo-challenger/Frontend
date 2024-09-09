@@ -18,8 +18,8 @@ const Footer = () => {
     setSelectedItem(item);
 
     switch (item) {
-      case 'Home':
-        // navigation.navigate('home');
+      case 'home':
+        navigation.navigate('main');
         break;
       case 'challenge':
         navigation.navigate('photoChallenge');
@@ -31,7 +31,7 @@ const Footer = () => {
         navigation.navigate('pointStore');
         break;
       case 'myPage':
-        // navigation.navigate('myPage');
+        navigation.navigate('mypage');
         break;
     }
   };

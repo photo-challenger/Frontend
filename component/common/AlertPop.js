@@ -61,7 +61,7 @@ const AlertTitle = styled.Text`
 
 const AlertMessage = styled.Text`
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 20px;
   text-align: center;
   color: #333;
