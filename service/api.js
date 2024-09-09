@@ -93,9 +93,9 @@ const fetchLogin = async (email, password, isAutoLogin) => {
       return jsessionId;
     }
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       return '비밀번호를 다시 확인해 주세요.';
-    } else if(error.response.status === 404) {
+    } else if (error.response.status === 404) {
       return '존재하지 않는 이메일입니다.';
     } else {
       console.log(error);
@@ -246,17 +246,21 @@ async function fetchDeletePost(postId) {
 
 async function fetchSignUp(formData) {
   try {
-    const response = await axiosInstance.post(`${config.apiUrl}login/new`, formData, {
-      headers: {
-        'content-type': 'multipart/form-data',
+    const response = await axiosInstance.post(
+      `${config.apiUrl}login/new`,
+      formData,
+      {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
       },
-    });
+    );
 
     if (response.status === 200) {
       return response.data;
     }
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       return error.response.data.message;
     } else {
       console.log(error);
@@ -267,7 +271,7 @@ async function fetchSignUp(formData) {
 async function fetchEmailAuthSend(email) {
   try {
     const response = await axios.post(`${config.apiUrl}login/mailSend`, {
-      email: email
+      email: email,
     });
 
     return response.data;
@@ -280,14 +284,14 @@ async function fetchEmailAuthCheck(email, authNum) {
   try {
     const response = await axios.post(`${config.apiUrl}login/mailAuthCheck`, {
       email: email,
-      authNum: authNum
+      authNum: authNum,
     });
 
     if (response.status === 200) {
-      return "true";
+      return 'true';
     }
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       return error.response.data.message;
     } else {
       console.error(error);
@@ -612,6 +616,36 @@ async function fetchMyBookmarkPostList(params) {
   }
 }
 
+// 챌린지 post 작성하기
+async function fetchWritePost(params) {
+  try {
+    const formData = new FormData();
+
+    formData.append('challengeId', params.challengeId);
+    formData.append('postContent', params.postContent);
+    formData.append('file', params.file);
+
+    const response = await axios.post(`${config.apiUrl}post/new`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 커뮤니티 글 좋아요
+async function fetchAddPostLike(postId) {
+  try {
+    const response = await axios.post(`${config.apiUrl}postLike/${postId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   fetchBuyByPoint,
   fetchLogin_before,
@@ -651,4 +685,6 @@ export {
   fetchMyBookmarkPostList,
   fetchEmailAuthSend,
   fetchEmailAuthCheck,
+  fetchWritePost,
+  fetchAddPostLike,
 };

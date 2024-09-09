@@ -11,6 +11,7 @@ import {
   fetchCommunityDetail,
   fetchDeletePost,
   fetchSaveBookmark,
+  fetchAddPostLike,
 } from '../service/api';
 import useConfirm from '../hooks/useConfirm';
 
@@ -20,6 +21,7 @@ const CommunityDetail = ({ route, navigation }) => {
   const [postInfo, setPostInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isBookmark, setIsBookmark] = useState(false);
+  const [isLike, setIsLike] = useState(false);
   const [showConfirm, ConfirmComponent] = useConfirm();
 
   const openModal = () => {
@@ -69,22 +71,28 @@ const CommunityDetail = ({ route, navigation }) => {
     setModalVisible(false);
   };
 
-  useEffect(() => {
-    getCommunityDetail();
-  }, []);
-
   async function getCommunityDetail() {
     try {
       const apiResponseData = await fetchCommunityDetail(postId);
       console.log(' apiResponseData   :', apiResponseData);
       setPostInfo(apiResponseData);
       setIsBookmark(apiResponseData.isSaveBookmark == 'true');
+      setIsLike(apiResponseData.isLike === 'true');
     } catch (error) {
       console.error('Failed to fetch community detail:', error);
     } finally {
       setLoading(false);
     }
   }
+
+  async function addPostLike() {
+    const apiResponseData = await fetchAddPostLike(postId);
+    setIsLike(apiResponseData.checkDeleteOrSave == 'Save');
+  }
+
+  useEffect(() => {
+    getCommunityDetail();
+  }, []);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -131,10 +139,10 @@ const CommunityDetail = ({ route, navigation }) => {
       </LocationBox>
 
       <ScoreBox>
-        <LikeBox>
+        <LikeBox onPress={addPostLike}>
           <Image
             source={
-              postInfo.isLike == 'true'
+              isLike
                 ? require('../assets/icon-like-on.png')
                 : require('../assets/icon-like.png')
             }
