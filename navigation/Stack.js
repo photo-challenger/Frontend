@@ -1,11 +1,17 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/user';
+import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapScreen from '../screens/MapScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
+import MyPageTicketScreen from '../screens/MyPage/MyPageTicketScreen';
+import MyPageTicketUseScreen from '../screens/MyPage/MyPageTicketUseScreen';
 import PointStoreScreen from '../screens/PointStoreScreen';
 import PointStoreDetail from '../screens/PointStoreDetail';
 import LoginScreen from '../screens/LoginScreen';
@@ -15,12 +21,15 @@ import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
 import MainSearchScreen from '../screens/MainSearchScreen';
 import MainDetailScreen from '../screens/MainDetailScreen';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
 import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
+import MypageScreen from '../screens/MyPage/MypageScreen';
+import SettingScreen from '../screens/MyPage/SettingScreen';
+import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
+import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/user';
 import { useSelector } from 'react-redux'
@@ -28,6 +37,12 @@ import { useSelector } from 'react-redux'
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
+
+  const defaultHeaderTitle = (title) => <Title>{title}</Title>;
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
 
   const defaultHeaderLeft = () => (
     <PrevButton onPress={() => navigation.goBack()}>
@@ -47,12 +62,6 @@ const StackNavigation = () => {
     </CloseButton>
   );
 
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -62,12 +71,16 @@ const StackNavigation = () => {
           const savedTime = await AsyncStorage.getItem('loginTimestamp');
 
           if (savedTime) {
-            const expirationPeriod = (3 * 30 * 24 * 60 * 60 * 1000) - (60 * 60 * 1000);
+            const expirationPeriod =
+              3 * 30 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000;
             const currentTime = new Date().getTime();
             const elapsedTime = currentTime - parseInt(savedTime, 10);
 
             if (elapsedTime >= expirationPeriod) {
-              await AsyncStorage.multiRemove(['loginTimestamp', 'userSessionData']);
+              await AsyncStorage.multiRemove([
+                'loginTimestamp',
+                'userSessionData',
+              ]);
               setIsLoggedIn(false);
             } else {
               dispatch(login({ sessionId: sessionData }));
@@ -101,16 +114,16 @@ const StackNavigation = () => {
     headerVisible,
     headerLeftVisible,
     headerRightVisible,
+    headerTitle,
   }) => ({
     headerBackVisible: false,
-    headerTitle: ({ children }) => <Title>{children}</Title>,
+    headerTitle: headerTitle ? defaultHeaderTitle(headerTitle) : '',
     headerTitleAlign: 'center',
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
     headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
     headerShadowVisible: false,
   });
-
 
   return (
     <Stack.Navigator>
@@ -129,10 +142,11 @@ const StackNavigation = () => {
         />
       )}
       <Stack.Screen
-        name="MainScreen"
+        name="main"
         component={MainScreen}
         options={() => ({
           ...naviOption({
+            headerTitle: '홈',
             headerLeftVisible: false,
             headerRightVisible: false,
             headerVisible: false,
@@ -188,6 +202,73 @@ const StackNavigation = () => {
             headerRightVisible: false,
           }),
         })}
+      />
+      <Stack.Screen
+        name="mypage"
+        component={MypageScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '프로필 및 환경설정',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="프로필 및 환경설정"
+        component={SettingScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '프로필 및 환경설정',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="challengeState"
+        component={ChallengeStateScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '챌린지 참여 현황',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+
+      <Stack.Screen
+        name="프로필 수정"
+        component={ProfileEditScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '프로필 수정',
+            headerLeftVisible: true,
+            headerRightVisible: '저장',
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="나의 티켓 보관함"
+        component={MyPageTicketScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+        initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
+      />
+      <Stack.Screen
+        name="나의 티켓"
+        component={MyPageTicketUseScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+        initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
       />
       <Stack.Screen
         name="pointStore"
@@ -255,6 +336,7 @@ const StackNavigation = () => {
         component={CommunityScreen}
         options={() => ({
           ...naviOption({
+            headerTitle: '커뮤니티',
             headerLeftVisible: false,
             headerRightVisible: false,
           }),
@@ -265,6 +347,7 @@ const StackNavigation = () => {
         component={CommunityDetail}
         options={() => ({
           ...naviOption({
+            headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),

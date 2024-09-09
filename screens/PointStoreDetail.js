@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, TouchableOpacity, View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components/native';
 import useConfirm from '../hooks/useConfirm';
-import { fetchPointStoreDetail, fetchLogin } from '../service/api';
+import {
+  fetchPointStoreDetail,
+  fetchLogin,
+  fetchBuyItem,
+} from '../service/api';
+
 const PointStoreDetail = ({ route, navigation }) => {
   const { itemId } = route.params;
-  // const { itemId } = { itemId: 1 };
   const [modalVisible, setModalVisible] = useState(false);
   const [buyCount, setBuyCount] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [item, setItem] = useState({});
-
   useEffect(() => {
     // fetchLogin();
     getItemDetail();
@@ -39,15 +42,47 @@ const PointStoreDetail = ({ route, navigation }) => {
     }
   };
 
-  const movePayment = (itemId, buyCount) => {
-    navigation.navigate('pointStorePayment', {
+  const [showConfirm, ConfirmComponent] = useConfirm();
+  const movePayment = async (itemId, buyCount) => {
+    const sendObj = {
       itemId: itemId,
       itemCount: buyCount,
-    });
+      // itemCount: 50000,
+    };
+
+    const result = await fetchBuyItem(sendObj);
+    // console.log('🚀 ~ movePayment ~ result:', result);
+    if (result == -1) {
+      showConfirm({
+        title: '잠시만요!',
+        msg: (
+          <Text>
+            <Text style={{ color: '#CA7FFE' }}>
+              회원님의 포인트나 재고가 부족
+            </Text>
+            하여 구매에 실패했습니다.
+          </Text>
+        ),
+        cancelText: '뒤로가기',
+        okText: '마이페이지로이동',
+        onOk: function () {
+          exitModal();
+          navigation.navigate('mypage');
+        },
+        setOnCancel: function () {
+          exitModal();
+        },
+      });
+    } else {
+      navigation.navigate('pointStorePayment', {
+        item: item,
+        pointInfo: result,
+      });
+    }
   };
 
   useEffect(() => {
-    setFinalPrice(item.itemPrice * buyCount);
+    setFinalPrice((item.itemPrice ?? 0) * (buyCount ?? 0));
   }, [buyCount]);
 
   return (
@@ -154,6 +189,7 @@ const PointStoreDetail = ({ route, navigation }) => {
           </ModalContent>
         </ModalContainer>
       </Modal>
+      <ConfirmComponent />
     </ItemDetailComponent>
   );
 };
