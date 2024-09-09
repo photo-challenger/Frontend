@@ -10,7 +10,7 @@ const { width } = Dimensions.get('window');
 
 const PhotoChallengeWrite = ({ route, navigation }) => {
   const { challengeInfo } = route.params;
-  const [content, seContent] = useState('');
+  const [content, setContent] = useState('');
   const [location, setLocation] = useState('');
   const [visitDate, setVisitDate] = useState('');
   const [imageInfo, setImageInfo] = useState('');
@@ -47,10 +47,10 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
     setVisitDate(date);
   }
 
-  function writeChallengeData() {
+  async function writeChallengeData() {
     if (imageInfo === undefined) return;
 
-    const result = fetchWritePost({
+    const result = await fetchWritePost({
       postContent: content,
       challengeId: challengeInfo.challengeId,
       file: imageInfo,
@@ -78,7 +78,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
           placeholder="문구를 작성해주세요"
           readOnly={false}
           inputType="default"
-          onChangeText={seContent}
+          onChangeText={(text) => setContent(text)}
         />
 
         <BaseInput
