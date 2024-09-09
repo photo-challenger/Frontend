@@ -251,7 +251,7 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
-        name="ProfileDeleteScreen"
+        name="profileDelete"
         component={ProfileDeleteScreen}
         options={() => ({
           ...naviOption({

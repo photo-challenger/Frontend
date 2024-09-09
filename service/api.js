@@ -42,18 +42,6 @@ export const setCookie = (cookie) => {
   axiosInstance.defaults.headers.Cookie = cookie;
 };
 
-const fetchLogin_before = async () => {
-  try {
-    const response = await axios.post('https://www.tripture.shop/login/true', {
-      loginEmail: 'user1@example.com',
-      loginPw: 'password1',
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const fetchLogin = async (email, password, isAutoLogin) => {
   try {
     const response = await axiosInstance.post(
@@ -697,7 +685,6 @@ async function fetchProfileDelete() {
 
 export {
   fetchBuyByPoint,
-  fetchLogin_before,
   fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
