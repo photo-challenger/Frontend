@@ -138,7 +138,7 @@ const StackNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="MyPageScreen"
+        name="myPage"
         component={MyPageScreen}
         options={() => ({
           ...naviOption({ headerVisible: false }),
