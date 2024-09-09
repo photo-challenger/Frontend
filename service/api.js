@@ -671,6 +671,30 @@ async function fetchAddPostLike(postId) {
   }
 }
 
+async function fetchLogout() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}login/logout`);
+  } catch (error) {
+    if(error.response.status === 303) {
+      return "로그아웃 성공";
+    } else {
+      console.error(error);
+    }
+  }
+}
+
+async function fetchProfileDelete() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}profile/delete`);
+  } catch (error) {
+    if(error.response.status === 303) {
+      return "탈퇴 성공";
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 export {
   fetchBuyByPoint,
   fetchLogin_before,
@@ -714,4 +738,6 @@ export {
   fetchEmailAuthCheck,
   fetchWritePost,
   fetchAddPostLike,
+  fetchLogout,
+  fetchProfileDelete,
 };

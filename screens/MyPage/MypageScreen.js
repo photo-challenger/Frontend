@@ -80,6 +80,8 @@ const MypageScreen = ({ route, navigation }) => {
             backgroundColor: '#CA7FFE', // 선택된 탭 아래의 Indicator 색상
             height: 3, // Indicator 높이
           },
+          lazy: true, // 탭이 처음 활성화될 때만 컴포넌트를 로드
+          lazyPreloadDistance: 0,
         }}
       >
         <Tab.Screen

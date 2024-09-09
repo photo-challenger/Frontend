@@ -12,11 +12,11 @@ import CommunityScreen from '../screens/CommunityScreen';
 import CommunityDetail from '../screens/CommunityDetail';
 import MyPageTicketScreen from '../screens/MyPage/MyPageTicketScreen';
 import MyPageTicketUseScreen from '../screens/MyPage/MyPageTicketUseScreen';
+import MyPageTermsOfServiceScreen from '../screens/MyPageTermsOfServiceScreen';
 import PointStoreScreen from '../screens/PointStoreScreen';
 import PointStoreDetail from '../screens/PointStoreDetail';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
-import SignUpAgreeScreen from '../screens/SignUpAgreeScreen';
 import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
 import MainSearchScreen from '../screens/MainSearchScreen';
@@ -24,21 +24,24 @@ import MainDetailScreen from '../screens/MainDetailScreen';
 import PhotoChallengeScreen from '../screens/PhotoChallengeScreen';
 import PhotoChallengeDetail from '../screens/PhotoChallengeDetail';
 import PhotoChallengeWrite from '../screens/PhotoChallengeWrite';
-import ReportScreen from '../screens/ReportScreen';
+import ReportScreen from '../screens/report/ReportScreen';
 import PointStorePaymentScreen from '../screens/PointStorePaymentScreen';
-import MypageScreen from '../screens/MyPage/MypageScreen';
+import MyPageScreen from '../screens/MyPage/MypageScreen';
 import SettingScreen from '../screens/MyPage/SettingScreen';
 import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
 import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
+import ProfileDeleteScreen from '../screens/MyPage/ProfileDeleteScreen';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 
   const defaultHeaderTitle = (title) => <Title>{title}</Title>;
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = useSelector((state) => state.user.value);
+  const sessionId = useSelector((state) => state.user.value.sessionId);
   const dispatch = useDispatch();
 
   const defaultHeaderLeft = () => (
@@ -57,6 +60,15 @@ const StackNavigation = () => {
         resizeMode="cover"
       />
     </CloseButton>
+  );
+  const SAVEHeaderRight = () => (
+    <SaveButton
+      onPress={() => {
+        navigation.goBack();
+      }}
+    >
+      <SaveText>저장</SaveText>
+    </SaveButton>
   );
 
   useEffect(() => {
@@ -118,13 +130,17 @@ const StackNavigation = () => {
     headerTitleAlign: 'center',
     headerShown: headerVisible !== false, // 기본값 true
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
-    headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
-    headerShadowVisible: false,
+    headerRight:
+      headerRightVisible === false
+        ? null
+        : headerRightVisible == '저장'
+        ? SAVEHeaderRight
+        : defaultHeaderRight,
   });
 
   return (
     <Stack.Navigator>
-      {!isLoggedIn && (
+      {(!isLoggedIn || sessionId === '') && (
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -132,30 +148,18 @@ const StackNavigation = () => {
             ...naviOption({
               headerLeftVisible: true,
               headerRightVisible: false,
-              headerVisible: false,
             }),
           })}
           setIsLoggedIn={setIsLoggedIn}
+          initialParams={{ headerVisible: false }}
         />
       )}
       <Stack.Screen
-        name="main"
+        name="MainScreen"
         component={MainScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: '홈',
             headerLeftVisible: false,
-            headerRightVisible: false,
-            headerVisible: false,
-          }),
-        })}
-      />
-      <Stack.Screen
-        name="회원가입"
-        component={SignUpScreen}
-        options={() => ({
-          ...naviOption({
-            headerLeftVisible: true,
             headerRightVisible: false,
           }),
         })}
@@ -166,16 +170,6 @@ const StackNavigation = () => {
         options={() => ({
           ...naviOption({
             headerLeftVisible: false,
-            headerRightVisible: false,
-          }),
-        })}
-      />
-      <Stack.Screen
-        name="약관동의"
-        component={SignUpAgreeScreen}
-        options={() => ({
-          ...naviOption({
-            headerLeftVisible: true,
             headerRightVisible: false,
           }),
         })}
@@ -201,11 +195,18 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
-        name="mypage"
-        component={MypageScreen}
+        name="myPage"
+        component={MyPageScreen}
+        options={() => ({
+          ...naviOption({ headerVisible: false }),
+        })}
+      />
+      <Stack.Screen
+        name="MyPageTermsOfServiceScreen"
+        component={MyPageTermsOfServiceScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: '프로필 및 환경설정',
+            headerTitle: '서비스 이용약관',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -215,8 +216,22 @@ const StackNavigation = () => {
         name="프로필 및 환경설정"
         component={SettingScreen}
         options={() => ({
+          ...naviOption,
+        })}
+      />
+      <Stack.Screen
+        name="프로필 수정"
+        component={ProfileEditScreen}
+        options={() => ({
+          ...naviOption({ headerRightVisible: '저장' }),
+        })}
+      />
+      <Stack.Screen
+        name="profileDelete"
+        component={ProfileDeleteScreen}
+        options={() => ({
           ...naviOption({
-            headerTitle: '프로필 및 환경설정',
+            headerTitle: '회원탈퇴',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -230,18 +245,6 @@ const StackNavigation = () => {
             headerTitle: '챌린지 참여 현황',
             headerLeftVisible: true,
             headerRightVisible: false,
-          }),
-        })}
-      />
-
-      <Stack.Screen
-        name="프로필 수정"
-        component={ProfileEditScreen}
-        options={() => ({
-          ...naviOption({
-            headerTitle: '프로필 수정',
-            headerLeftVisible: true,
-            headerRightVisible: '저장',
           }),
         })}
       />
@@ -409,4 +412,18 @@ const Title = styled.Text`
   font-weight: 700;
   letter-spacing: -0.36px;
   color: #373737;
+`;
+const SaveText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.36px;
+  color: #373737;
+`;
+const SaveButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 `;
