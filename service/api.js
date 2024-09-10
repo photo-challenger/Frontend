@@ -44,7 +44,7 @@ export const setCookie = (cookie) => {
 
 const fetchLogin_before = async () => {
   try {
-    const response = await axios.post('https://www.tripture.shop/login/true', {
+    const response = await axios.post('http://localhost:8080/login/true', {
       loginEmail: 'user1@example.com',
       loginPw: 'password1',
     });
@@ -106,6 +106,35 @@ const fetchProfileEditForm = async () => {
   try {
     const response = await axios.get(`${config.apiUrl}profile/edit`);
     console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchProfileEdit = async (params) => {
+  try {
+    console.log('🚀 ~ fetchProfileEdit ~ params:', params);
+    const formData = new FormData();
+
+    formData.append('profileNickname', params.profileNickname | '');
+    formData.append('loginPw', params.loginPw | '');
+    formData.append('file', params.file | '');
+
+    // const response = await axios.post(
+    //   `${config.apiUrl}profile/edit`,
+    //   formData,
+    //   {
+    //     headers: { 'Content-Type': 'multipart/form-data' },
+    //   },
+    // );
+    const response = await axios.post(
+      `http://localhost:8080/profile/edit`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+
     return response.data;
   } catch (error) {
     console.error(error);
@@ -502,12 +531,11 @@ async function fetchCommentReplyList(groupId) {
 
 async function fetchComment(groupId, postId, commentContent) {
   try {
-    const response = await axiosInstance.post(
-      `${config.apiUrl}comment`, {
-        groupId: groupId,
-        postId: postId,
-        commentContent: commentContent,
-      });
+    const response = await axiosInstance.post(`${config.apiUrl}comment`, {
+      groupId: groupId,
+      postId: postId,
+      commentContent: commentContent,
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -684,6 +712,7 @@ export {
   fetchPointStoreDetail,
   fetchDefaultProfile,
   fetchProfileEditForm,
+  fetchProfileEdit,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentList,
