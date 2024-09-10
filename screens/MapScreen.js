@@ -3,12 +3,16 @@ import { View, ActivityIndicator, Image, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import KakaoMap from '../component/map/KakaoMap';
 import * as Location from 'expo-location';
-import { fetchlocationBasedList } from '../service/api';
+import {
+  fetchlocationBasedList,
+  fetchLocationBasedChallengeList,
+} from '../service/api';
 import styled from 'styled-components/native';
 
 const MapScreen = ({ route, navigation }) => {
   const [coords, setCoords] = useState(null);
   const [tourList, setTourList] = useState([]);
+  const [challengeList, setChallengList] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [layerPopFlag, setLayerPopFlag] = useState(false);
   const [tourInfo, setTourInfo] = useState({});
@@ -32,23 +36,29 @@ const MapScreen = ({ route, navigation }) => {
         return;
       }
 
-      reloadCurrentLocation();
+      if (route.params?.coords) {
+        let _coords = route.params?.coords;
+        setCoords(_coords);
+      } else {
+        reloadCurrentLocation();
+      }
     })();
   }, []);
 
   useEffect(() => {
     if (coords != null) {
       searchTourList();
+      searchChallengList();
     }
   }, [coords]);
 
   async function reloadCurrentLocation() {
     let _location = await Location.getCurrentPositionAsync();
     let _coords = _location.coords;
-    // _coords = {
-    //   longitude: 126.9270184,
-    //   latitude: 37.5266715,
-    // };
+    _coords = {
+      longitude: 127.758664,
+      latitude: 37.858039,
+    };
 
     setCoords(_coords);
   }
@@ -62,11 +72,9 @@ const MapScreen = ({ route, navigation }) => {
 
     const apiResponseData = await fetchlocationBasedList(sendData);
 
-    console.log('apiResponseData  >> ', apiResponseData);
     const rdHeader = apiResponseData.response.header;
     const rdBody = apiResponseData.response.body;
     if (rdHeader.resultCode == '0000') {
-      console.log('rdbody items :  ', rdBody.items);
       if (rdBody.items != '') {
         setTourList(rdBody.items.item);
       } else {
@@ -75,33 +83,57 @@ const MapScreen = ({ route, navigation }) => {
     }
   }
 
-  // 관광지 상세정보 조회
-  async function searchTourDetailInfo() {
+  async function searchChallengList() {
     const sendData = {
-      mapX: coords.longitude,
-      mapY: coords.latitude,
+      lon: coords.longitude,
+      lat: coords.latitude,
     };
-    const apiResponseData = await fetchlocationBasedList(sendData);
-    const rdHeader = apiResponseData.response.header;
-    const rdBody = apiResponseData.response.body;
-    if (rdHeader.resultCode == '0000') {
-      setTourList(rdBody.items.item);
-    }
+
+    const responseData = await fetchLocationBasedChallengeList(sendData);
+
+    console.log(' searchChallengList responseData   :', responseData);
+
+    setChallengList(responseData.aroundChallenges);
   }
 
+  // 관광지 상세정보 조회
+  // async function searchTourDetailInfo() {
+  //   const sendData = {
+  //     mapX: coords.longitude,
+  //     mapY: coords.latitude,
+  //   };
+  //   const apiResponseData = await fetchlocationBasedList(sendData);
+  //   const rdHeader = apiResponseData.response.header;
+  //   const rdBody = apiResponseData.response.body;
+  //   if (rdHeader.resultCode == '0000') {
+  //     setTourList(rdBody.items.item);
+  //   }
+  // }
+
   // '자세히보기' 클릭 시 해당 관광지 상세 페이지로 이동
-  function moveToDetail() {}
+  function moveToDetail(obj) {
+    // console.log(obj);
+    navigation.navigate('MainDetailScreen', {
+      contentId: obj.contentid,
+    });
+  }
 
   // ‘포토챌린지 참여하기' 클릭 시 해당 포토챌린지 작성화면으로 이동
-  function writeChallenge() {}
+  function writeChallenge(obj) {
+    // console.log(obj);
+    navigation.navigate('photoChallengeWrite', {
+      challengeInfo: {
+        challengeName: '',
+        challengeId: '',
+      },
+    });
+  }
 
   // 마커 클릭 시
   function getMarkerInfo(obj) {
     console.log('getMarkerInfo', obj);
     setLayerPopFlag(obj != undefined);
     setTourInfo(obj || {});
-
-    // todo : 해당 관광지 조회 api 호출
   }
 
   return (
@@ -115,6 +147,7 @@ const MapScreen = ({ route, navigation }) => {
         <KakaoMap
           coords={coords}
           tourList={tourList}
+          challengeList={challengeList}
           style={{ flex: 1 }}
           setCoords={setCoords}
           getMarkerInfo={getMarkerInfo}
@@ -141,10 +174,10 @@ const MapScreen = ({ route, navigation }) => {
             </DetailInfoContView>
           </DetailInfoView>
           <DetailBtnView>
-            <BttmShtDetailBtn onPress={moveToDetail}>
+            <BttmShtDetailBtn onPress={() => moveToDetail(tourInfo)}>
               <BttmShtDetailBtnText>자세히 보기</BttmShtDetailBtnText>
             </BttmShtDetailBtn>
-            <BttmShtChllngBtn onPress={writeChallenge}>
+            <BttmShtChllngBtn onPress={() => writeChallenge(tourInfo)}>
               <BttmShtChllngBtnText>포토챌린지 참여하기</BttmShtChllngBtnText>
             </BttmShtChllngBtn>
           </DetailBtnView>
@@ -208,10 +241,10 @@ const CurrentBtnImage = styled.Image`
 
 const DetailBottomSheet = styled.View`
   display: flex;
-  width: 328px;
+  width: 92%;
   padding: 16px;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin: 16px;
   background-color: #fff;
   position: absolute;
@@ -220,7 +253,7 @@ const DetailBottomSheet = styled.View`
 `;
 
 const BttmShtDetailBtn = styled.TouchableOpacity`
-  width: 130px;
+  width: 40%;
   padding: 12px 9px;
   justify-content: center;
   align-items: center;
@@ -240,7 +273,7 @@ const BttmShtDetailBtnText = styled.Text`
 `;
 
 const BttmShtChllngBtn = styled.TouchableOpacity`
-  width: 130px;
+  width: 40%;
   padding: 12px 9px;
   justify-content: center;
   align-items: center;

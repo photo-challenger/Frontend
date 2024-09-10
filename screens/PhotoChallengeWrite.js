@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, Image, Dimensions, Animated, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import {
+  Text,
+  Image,
+  Dimensions,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 import ImagePickerItem from '../component/common/ImagePickerItem';
 import BaseInput from '../component/common/BaseInput';
@@ -16,7 +24,6 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   const [imageInfo, setImageInfo] = useState('');
 
   useEffect(() => {
-    console.log('challengeInfo >> ', challengeInfo);
     //연도 : 2022
     const _year = String(new Date().getFullYear());
     //월 : 4
@@ -72,50 +79,48 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: '#FFFFFF' }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
-      >
-    <Container>
-      <ImagePickerItem callbackResult={setImageResult} />
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Container>
+          <ImagePickerItem callbackResult={setImageResult} />
 
-      <InputContainer>
-        <BaseTextarea
-          placeholder="문구를 작성해주세요"
-          readOnly={false}
-          inputType="default"
-          onChangeText={(text) => setContent(text)}
-        />
+          <InputContainer>
+            <BaseTextarea
+              placeholder="문구를 작성해주세요"
+              readOnly={false}
+              inputType="default"
+              onChangeText={(text) => setContent(text)}
+            />
 
-        <BaseInput
-          title="위치"
-          value="Busan, Korea"
-          readOnly={true}
-          inputType="default"
-          onChangeText={setLocation}
-        />
-        <Title>참여한 챌린지</Title>
-        <NameTextBox>
-          <NameText>{challengeInfo.challengeName}</NameText>
-        </NameTextBox>
+            <BaseInput
+              title="위치"
+              value="Busan, Korea"
+              readOnly={true}
+              inputType="default"
+              onChangeText={setLocation}
+            />
+            <Title>참여한 챌린지</Title>
+            <NameTextBox>
+              <NameText>{challengeInfo.challengeName}</NameText>
+            </NameTextBox>
 
-        <Underline />
-        <BaseInput
-          title="다녀온 날짜"
-          readOnly={true}
-          placeholder="2024-01-01"
-          inputType="numeric"
-          value={visitDate}
-          onChangeText={changeToDate}
-        />
-      </InputContainer>
+            <Underline />
+            <BaseInput
+              title="다녀온 날짜"
+              readOnly={true}
+              placeholder="2024-01-01"
+              inputType="numeric"
+              value={visitDate}
+              onChangeText={changeToDate}
+            />
+          </InputContainer>
 
-      <ActionButton onPress={() => writeChallengeData()}>
-        <ButtonText>챌린지 등록하기</ButtonText>
-      </ActionButton>
-    </Container>
-    </ScrollView>
+          <ActionButton onPress={() => writeChallengeData()}>
+            <ButtonText>챌린지 등록하기</ButtonText>
+          </ActionButton>
+        </Container>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
