@@ -8,7 +8,7 @@ import styled from 'styled-components/native';
 
 const MapScreen = ({ route, navigation }) => {
   const [coords, setCoords] = useState(null);
-  const [tourList, setTourList] = useState(null);
+  const [tourList, setTourList] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [layerPopFlag, setLayerPopFlag] = useState(false);
   const [tourInfo, setTourInfo] = useState({});
@@ -32,35 +32,51 @@ const MapScreen = ({ route, navigation }) => {
         return;
       }
 
-      if (route.params) {
-        setCoords(route.params._coords);
-        searchTourList();
+      if (route.params?.coords) {
+        let _coords = route.params?.coords;
+        setCoords(_coords);
       } else {
         reloadCurrentLocation();
       }
     })();
   }, []);
 
+  useEffect(() => {
+    if (coords != null) {
+      searchTourList();
+    }
+  }, [coords]);
+
   async function reloadCurrentLocation() {
     let _location = await Location.getCurrentPositionAsync();
     let _coords = _location.coords;
+    // _coords = {
+    //   longitude: 126.9270184,
+    //   latitude: 37.5266715,
+    // };
+
     setCoords(_coords);
-    searchTourList();
   }
 
   async function searchTourList() {
+    console.log('coords   >> ', coords);
     const sendData = {
       mapX: coords.longitude,
       mapY: coords.latitude,
     };
 
     const apiResponseData = await fetchlocationBasedList(sendData);
+
+    console.log('apiResponseData  >> ', apiResponseData);
     const rdHeader = apiResponseData.response.header;
     const rdBody = apiResponseData.response.body;
     if (rdHeader.resultCode == '0000') {
-      setTourList(rdBody.items.item);
-
-      console.log(rdBody.items.item);
+      console.log('rdbody items :  ', rdBody.items);
+      if (rdBody.items != '') {
+        setTourList(rdBody.items.item);
+      } else {
+        setTourList([]);
+      }
     }
   }
 
@@ -98,7 +114,7 @@ const MapScreen = ({ route, navigation }) => {
       <StatusBar barStyle="default" />
       {errorMsg ? (
         <ErrorText>{errorMsg}</ErrorText>
-      ) : !coords || !tourList ? (
+      ) : !coords ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <KakaoMap

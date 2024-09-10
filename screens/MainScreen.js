@@ -49,6 +49,7 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    // fetchLogin('user2@example.com', 'password2', false);
     getDefaultProfile();
   }, []);
 
@@ -68,7 +69,7 @@ const MainScreen = ({ route, navigation }) => {
             />
             <SearchIconImg source={require('../assets/icon-search-home.png')} />
           </SearchContent>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('map')}>
             <MapIconImg source={require('../assets/map-01.png')} />
           </TouchableOpacity>
         </SearchContainer>

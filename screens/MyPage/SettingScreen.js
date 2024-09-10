@@ -9,21 +9,49 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import {
-  fetchCommunityDetail,
-  fetchDeletePost,
-  fetchSaveBookmark,
+  fetchLogout
 } from '../../service/api';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/user';
+import useAlert from '../../hooks/useAlert';
+import useConfirm from '../../hooks/useConfirm';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingScreen = ({ route, navigation }) => {
   const profileInfo = route.params;
+  const dispatch = useDispatch();
+  const [showConfirm, ConfirmComponent] = useConfirm();
+  const [showAlert, AlertComponent] = useAlert();
 
   const moveProfileEdit = () => {
     navigation.navigate('프로필 수정');
   };
 
   const moveProfileDelete = () => {
-    navigation.navigate('회원 탈퇴', { nickname: profileInfo.profileNickname });
+    navigation.navigate('profileDelete', { nickname: profileInfo.profileNickname });
   };
+
+  const moveTermsOfService = () => {
+    navigation.navigate('MyPageTermsOfServiceScreen', { type: 'service' });
+  };
+
+  const movePrivacyPolicy = () => {
+    navigation.navigate('MyPageTermsOfServiceScreen', { type: 'privacy' });
+  };
+
+  const handleLogout = () => {
+    showConfirm({
+      title: '로그아웃 안내',
+      msg: '앱에서 로그아웃 하시겠어요?',
+      onOk: async function () {
+        await AsyncStorage.clear();
+        dispatch(logout());
+        const response = await fetchLogout();
+        console.log(response);
+        navigation.navigate('LoginScreen');
+      },
+    });
+  }
 
   return (
     <SettingScreenComponent>
@@ -75,17 +103,17 @@ const SettingScreen = ({ route, navigation }) => {
 
       <SettingCategoryContainer>
         <SettingHeaderText>약관 및 정책</SettingHeaderText>
-        <SettingCategorySubContainer activeOpacity={0.5}>
+        <SettingCategorySubContainer activeOpacity={0.5} onPress={moveTermsOfService}>
           <SettingCategoryText>서비스 이용약관</SettingCategoryText>
         </SettingCategorySubContainer>
-        <SettingCategorySubContainer activeOpacity={0.5}>
+        <SettingCategorySubContainer activeOpacity={0.5} onPress={movePrivacyPolicy}>
           <SettingCategoryText>개인정보 처리방침</SettingCategoryText>
         </SettingCategorySubContainer>
       </SettingCategoryContainer>
 
       <SettingCategoryContainer>
         <SettingHeaderText>계정 정보</SettingHeaderText>
-        <SettingCategorySubContainer activeOpacity={0.5}>
+        <SettingCategorySubContainer activeOpacity={0.5} onPress={handleLogout}>
           <SettingCategoryText>로그아웃</SettingCategoryText>
         </SettingCategorySubContainer>
         <SettingCategorySubContainer
@@ -95,6 +123,8 @@ const SettingScreen = ({ route, navigation }) => {
           <SettingCategoryText>탈퇴하기</SettingCategoryText>
         </SettingCategorySubContainer>
       </SettingCategoryContainer>
+
+      <ConfirmComponent />
     </SettingScreenComponent>
   );
 };

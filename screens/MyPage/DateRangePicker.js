@@ -15,10 +15,7 @@ const formatDate = (date) => {
 };
 
 const DateRangePicker = (props) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerMode, setPickerMode] = useState('date'); // 'date' or 'time'
   const [isStartDatePicker, setIsStartDatePicker] = useState(true);
 
   const handleChange = (event, selectedDate) => {

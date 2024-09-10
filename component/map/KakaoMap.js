@@ -18,6 +18,8 @@ const KakaoMap = (props) => {
     ? tourList
     : JSON.parse(tourList || '[]');
 
+  console.log('kakao positions : ', positions);
+
   const html = useMemo(
     () => `
   <html>
@@ -41,7 +43,7 @@ const KakaoMap = (props) => {
           const positions = ${JSON.stringify(positions)};
           
           // Marker image source
-          const imageSrc = 'https://tripture.s3.ap-northeast-2.amazonaws.com/file/21237f7b-8bd1-473e-a354-4087fd8adc31-challengeImage.jpg'
+          const imageSrc = 'https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/default_mark.png'
 
           positions.forEach(item => {
             var imageSize = new kakao.maps.Size(35, 40); 

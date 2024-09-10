@@ -17,8 +17,8 @@ import MyPageTicketScreen from './MyPageTicketScreen';
 
 const PointComponent = ({ route, navigation }) => {
   const [myPoint, setMyPoint] = useState(1000);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(new Date('2024-09-02'));
+  const [endDate, setEndDate] = useState(new Date('2024-09-03'));
   const [pointHistory, setPointHistory] = useState([]);
 
   const [myPointPageNo, setMyPointPageNo] = useState(0);

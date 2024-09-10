@@ -44,7 +44,7 @@ export const setCookie = (cookie) => {
 
 const fetchLogin_before = async () => {
   try {
-    const response = await axios.post(`${config.apiUrl}login/true`, {
+    const response = await axios.post('https://www.tripture.shop/login/true', {
       loginEmail: 'user1@example.com',
       loginPw: 'password1',
     });
@@ -119,14 +119,6 @@ const fetchProfileEdit = async (params) => {
     formData.append('profileNickname', params.profileNickname);
     formData.append('loginPw', params.loginPw);
     formData.append('file', params.file);
-
-    // const response = await axios.post(
-    //   `${config.apiUrl}profile/edit`,
-    //   formData,
-    //   {
-    //     headers: { 'Content-Type': 'multipart/form-data' },
-    //   },
-    // );
     const response = await axios.post(
       `${config.apiUrl}profile/edit`,
       formData,
@@ -208,7 +200,7 @@ async function fetchlocationBasedList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   const response = await fetch(
-    `${config.baseUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
+    `${config.publicUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
   );
 
   return response.json();
@@ -716,9 +708,32 @@ async function fetchAddPostLike(postId) {
   }
 }
 
+async function fetchLogout() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}login/logout`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '로그아웃 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
+async function fetchProfileDelete() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}profile/delete`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '탈퇴 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 export {
   fetchBuyByPoint,
-  fetchLogin_before,
   fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
@@ -761,4 +776,6 @@ export {
   fetchEmailAuthCheck,
   fetchWritePost,
   fetchAddPostLike,
+  fetchLogout,
+  fetchProfileDelete,
 };
