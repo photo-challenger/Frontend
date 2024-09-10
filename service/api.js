@@ -746,6 +746,7 @@ async function fetchProfileDelete() {
 }
 
 export {
+  fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,
   fetchUseMyTicket,

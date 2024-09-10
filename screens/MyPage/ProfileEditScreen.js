@@ -13,11 +13,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
-import {
-  fetchProfileEditForm,
-  fetchProfileEdit,
-  fetchLogin_before,
-} from '../../service/api';
+import { fetchProfileEditForm, fetchProfileEdit } from '../../service/api';
 import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '../../redux/user';
 import ImagePickerProfile from '../../component/common/ImagePcikerProfile';
@@ -64,29 +60,32 @@ const ProfileEditScreen = ({ route, navigation }) => {
   ]);
 
   const saveData = async () => {
-    if (imageInfo || nickname) {
+    if (imageInfo != '' || nickname != '') {
       //닉네임 or 이미지 변경만 원할 경우
       const rtn = {
-        profileNickname: nickname ? nickname : profileInfo.nickname,
+        profileNickname: nickname,
         loginPw: null,
         file: imageInfo,
       };
-      console.log('🚀 ~ saveData ~ rtn:', rtn);
       const result = await fetchProfileEdit(rtn);
-      dispatch(
-        updateUserProfile({
-          profileImgName: result.profileImgName,
-          nickname: result.profileNickname,
-        }),
-      );
       // console.log('🚀 ~ saveData ~ result:', result);
       ToastAndroid.showWithGravity(
         '저장했습니다.',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
+      dispatch(
+        updateUserProfile({
+          profileImgName: result.profileImgName,
+          nickname: result.profileNickname,
+        }),
+      );
       navigation.push('mypage');
-    } else if (nickname && currentPassword && !passwordValid) {
+    } else if (
+      nickname != '' &&
+      currentPassword != '' &&
+      !passwordValid != ''
+    ) {
       //비밀번호 정규식 틀렸을 경우
       setSaveFlag(false);
       ToastAndroid.showWithGravity(
@@ -102,27 +101,27 @@ const ProfileEditScreen = ({ route, navigation }) => {
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
-    } else if (!passwordValid && password) {
+    } else if (!passwordValid && password != '') {
       //비밀번호 정규식 및 검사 모두 맞을 경우
       const rtn = {
-        profileNickname: nickname ? nickname : profileInfo.nickname,
+        profileNickname: nickname,
         loginPw: password,
         file: imageInfo,
       };
       const result = await fetchProfileEdit(rtn);
+      ToastAndroid.showWithGravity(
+        '저장했습니다.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
       dispatch(
         updateUserProfile({
           profileImgName: result.profileImgName,
           nickname: result.profileNickname,
         }),
       );
-      // console.log('🚀 ~ saveData ~ result:', result);
-      ToastAndroid.showWithGravity(
-        '저장했습니다.',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
       navigation.push('mypage');
+      // console.log('🚀 ~ saveData ~ result:', result);
     } else {
       //나머지 처리(저장에 실패했습니다. 다시 한 번 확인해주세요.)
       ToastAndroid.showWithGravity(
