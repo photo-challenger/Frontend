@@ -14,7 +14,7 @@ const PointStorePaymentScreen = ({ route, navigation }) => {
       itemId: item.itemId,
       usePoint: pointInfo.needPoint,
     });
-    navigation.navigate('나의 티켓 보관함');
+    navigation.navigate('MyPageTicketScreen');
   };
   return (
     <PointStorePaymentComponent>
@@ -81,20 +81,20 @@ const PointStorePaymentComponent = styled.View`
 
 const PaymentInfoContainer = styled.View`
   background-color: #ffffff;
-  padding: 24px;
+  padding: 10px 24px 24px 24px;
 `;
 
 const PaymentInfoHeaderText = styled.Text`
-  font-size: 18px;
+  font-size: 24px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 24px;
 `;
 
 const PaymentInfoSubContainer = styled.View`
   border-radius: 4px;
   border: 1px solid #b5b5b5;
-  padding: 16px 12px;
+  padding: 20px 30px;
 `;
 
 const PaymentInfoTitle = styled.Text`
@@ -112,7 +112,7 @@ const PaymentInfoAddress = styled.Text`
 `;
 
 const PaymentItemCount = styled.Text`
-  font-size: 16px;
+  font-size: 17px;
   font-style: normal;
   font-weight: 400;
   text-align: right;
@@ -155,16 +155,16 @@ const PaymentRemainingPointContainer = styled.View`
 `;
 
 const PaymentBuyPoint = styled.Text`
-  font-size: 14px;
+  font-size: 17px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 16px;
 `;
 
 const PaymentBuyPointNum = styled.Text`
-  font-size: 14px;
+  font-size: 17px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 16px;
   text-align: right;
 `;

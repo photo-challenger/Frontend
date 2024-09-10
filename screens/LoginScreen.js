@@ -66,7 +66,7 @@ const LoginScreen = ({ route, navigation }) => {
   };
 
   const moveSignUp = () => {
-    navigation.navigate('약관동의');
+    navigation.navigate('SignUpAgreeScreen');
   };
 
   const moveFindPassword = () => {

@@ -23,7 +23,7 @@ const TicketListComponent = ({ navigation }) => {
   }, []);
 
   const moveDetail = (id) => {
-    navigation.navigate('나의 티켓', { purchaseId: id });
+    navigation.navigate('MyPageTicketUseScreen', { purchaseId: id });
   };
 
   return (

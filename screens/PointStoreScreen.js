@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, StatusBar, Image, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components';
 import ScrollWrapper from '../component/common/ScrollWrapper';
@@ -36,7 +36,6 @@ const PointStoreScreen = ({ route, navigation }) => {
     let resultList = [];
 
     if (searchStr === '') {
-      const a = await fetchLogin_before();
       // console.log('🚀 ~ getPointStoreList ~ a:', a);
       resultData = await fetchPointStoreList(sendData);
       resultList = resultData.itemList;
@@ -82,6 +81,7 @@ const PointStoreScreen = ({ route, navigation }) => {
   return (
     <Container>
       <SearchContent>
+        <StatusBar barStyle="dark-content" backgroundColor="#f7f7f8" />
         <SearchIconImg source={require('../assets/icon-search.png')} />
         <SearchInput
           placeholder="원하시는 상품을 검색해 보세요!"
@@ -197,7 +197,7 @@ const SearchContent = styled.View`
   display: flex;
   height: 40px;
   padding: 9px 0px 9px 20px;
-  margin: 55px 24px 30px 24px;
+  margin: 28px 24px 30px 24px;
   border-radius: 8px;
   background: #ffffff;
   flex-direction: row;
