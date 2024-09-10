@@ -173,6 +173,19 @@ async function fetchlocationBasedList(params) {
   return response.json();
 }
 
+async function fetchLocationBasedChallengeList(params) {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}challenge/area_list`,
+      params,
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchPopularCommunityList(params) {
   let sendObj = params || {};
   sendObj.page = sendObj.page || 0;
@@ -291,12 +304,12 @@ async function fetchPasswordFind(password, email) {
   try {
     const response = await axios.post(`${config.apiUrl}login/password/change`, {
       password: password,
-      email: email
+      email: email,
     });
 
     return response.data;
   } catch (error) {
-    if(error.response.status === 404) {
+    if (error.response.status === 404) {
       return error.response.data.message;
     } else {
       console.error(error);
@@ -744,4 +757,5 @@ export {
   fetchAddPostLike,
   fetchLogout,
   fetchProfileDelete,
+  fetchLocationBasedChallengeList,
 };
