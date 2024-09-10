@@ -14,13 +14,12 @@ import {
 import styled from 'styled-components';
 import Animated from 'react-native-reanimated';
 import { fetchReport, fetchLogin } from '../service/api';
+import useAlert from '../hooks/useAlert';
 
 const ReportScreen = ({ route, navigation }) => {
-  const { reportType, postOrCommentId } = {
-    reportType: 'post',
-    postOrCommentId: 2,
-  };
-  // const { reportType, postOrCommentId } = route.params;
+  const { reportType, postOrCommentId, setReportLoading } = route.params;
+  const [showAlert, AlertComponent] = useAlert();
+
   const [reportText, setReportText] = useState('');
   const reportTypeList = [
     '스팸 또는 광고',
@@ -37,16 +36,20 @@ const ReportScreen = ({ route, navigation }) => {
   const [selectedReportCategory, setSelectedReportCategory] =
     useState('스팸 또는 광고');
   const ReportPerTypeContainer = (props) => {
-    const [showReplies, setShowReplies] = useState(false);
-    const toggleReplies = () => {
+
+    const handlePress = () => {
       setSelectedReportCategory(props.type);
-      setShowReplies(prevState => !prevState);
     };
 
     return (
-      <ReportTypePerContainer onPress={toggleReplies} showReplies={showReplies}>
-        <ReportTypeText showReplies={showReplies}>{props.type}</ReportTypeText>
-        {showReplies && (
+      <ReportTypePerContainer
+        onPress={handlePress}
+        isSelected={selectedReportCategory === props.type} // 선택된 항목인지 확인
+      >
+        <ReportTypeText isSelected={selectedReportCategory === props.type}>
+          {props.type}
+        </ReportTypeText>
+        {selectedReportCategory === props.type && (
           <ReportSelectImage source={require('../assets/check-circle.png')} />
         )}
       </ReportTypePerContainer>
@@ -78,8 +81,16 @@ const ReportScreen = ({ route, navigation }) => {
       reportCategory: selectedReportCategory,
       reportBlockChk: checkBoxValue,
     });
-    console.log(result);
-    setModalVisible(false);
+
+    if(result === 'Saved comment Report Successfully') {
+      showAlert({
+        title: '신고 접수 완료',
+        msg: '고객님의 신고가 접수되었습니다.',
+        onOk: async function () {
+          navigation.goBack();
+        },
+      });
+    }
   };
 
   return (
@@ -173,6 +184,8 @@ const ReportScreen = ({ route, navigation }) => {
             <SubmitButton activeOpacity={0.8} onPress={report}>
               <SubmitButtonText>제출하기</SubmitButtonText>
             </SubmitButton>
+            
+            <AlertComponent />
           </Animated.ScrollView>
         </Animated.View>
       </KeyboardAvoidingView>
@@ -239,8 +252,8 @@ const ReportTypeHeaderSubText = styled.Text`
 const ReportTypePerContainer = styled.TouchableOpacity`
   height: 54px;
   width: 100%;
-  background-color: ${(props) => (props.showReplies ? '#FFFFFF' : '#F7F7F8')};
-  border: 2px solid ${(props) => (props.showReplies ? '#CA7FFE' : '#B5B5B5')};
+  background-color: ${(props) => (props.isSelected ? '#FFFFFF' : '#F7F7F8')};
+  border: 2px solid ${(props) => (props.isSelected ? '#CA7FFE' : '#B5B5B5')};
   border-radius: 10px;
   margin-top: 10px;
   display: flex;
@@ -255,7 +268,7 @@ const ReportTypeText = styled.Text`
   font-style: normal;
   font-weight: 500;
   line-height: 50px;
-  color: ${(props) => (props.showReplies ? '#000000' : '#B5B5B5')};
+  color: ${(props) => (props.isSelected ? '#000000' : '#B5B5B5')};
 `;
 
 const ReportSelectImage = styled.Image`

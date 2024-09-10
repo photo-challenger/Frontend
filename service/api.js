@@ -553,9 +553,6 @@ async function fetchReport(params) {
   } catch (error) {
     console.error(error);
   }
-
-  console.log('response  >> ', response);
-
   return response.json();
 }
 
