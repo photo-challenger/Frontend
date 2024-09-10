@@ -15,6 +15,7 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.value = { sessionId: '' };
+      state.userInfo = {};
     },
     setUserProfile: (state, action) => {
       console.log('action.payload   >> ', action.payload);
