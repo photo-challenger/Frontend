@@ -206,6 +206,19 @@ async function fetchlocationBasedList(params) {
   return response.json();
 }
 
+async function fetchLocationBasedChallengeList(params) {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}challenge/area_list`,
+      params,
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchPopularCommunityList(params) {
   let sendObj = params || {};
   sendObj.page = sendObj.page || 0;
@@ -778,4 +791,5 @@ export {
   fetchAddPostLike,
   fetchLogout,
   fetchProfileDelete,
+  fetchLocationBasedChallengeList,
 };
