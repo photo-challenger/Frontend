@@ -147,7 +147,8 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
 
     const CommentReplyContainer = (props) => (
       <CommentReplyMapContainer>
-        <CommentProfileImage source={{ uri: props.comment.profileImgName }} />
+        {props.comment.profileImgName.split('/').pop() !== 'default' ? (<CommentProfileImage source={{ uri: props.comment.profileImgName }} />) 
+        : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
         <CommentDetailContainer>
           <CommentProfileContainer>
             <CommentProfileNickname>
@@ -164,7 +165,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
 
     return (
       <CommentContainer key={item.profileId}>
-        {item.profileImgName ? (<CommentProfileImage source={{ uri: item.profileImgName }} />)
+        {item.profileImgName.split('/').pop() !== 'default' ? (<CommentProfileImage source={{ uri: item.profileImgName }} />)
           : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
         <CommentDetailContainer>
           <CommentReportContainer>

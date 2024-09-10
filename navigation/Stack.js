@@ -209,8 +209,10 @@ const StackNavigation = () => {
         component={MainDetailScreen}
         options={() => ({
           ...naviOption({
-            headerLeftVisible: false,
+            headerTitle: '홈',
+            headerLeftVisible: true,
             headerRightVisible: false,
+            headerBackgroundColor: '#F7F7F8'
           }),
         })}
       />

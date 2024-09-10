@@ -41,7 +41,8 @@ const MainDetailScreen = ({ route, navigation }) => {
 					{regionDetailContent && (
 						<>
 							<RegionDetailContainer>
-								<RegionDetailImage source={{ uri: regionDetailContent.firstimage }} />
+								<RegionDetailImage source={ regionDetailContent.firstimage === '' ? (require('../assets/tripture-main-no-content.png')) 
+								: ({ uri: regionDetailContent.firstimage })} />
 
 								<RegionNameContainer>
 									{regionDetailContent.addr1 === '' ? (null) : (
@@ -49,8 +50,9 @@ const MainDetailScreen = ({ route, navigation }) => {
 											<RegionDetailText>{regionDetailContent.addr1.split(' ')[0]}</RegionDetailText>
 										</View>
 									)}
-									<RegionDetailName>{regionDetailContent.title}</RegionDetailName>
-									{regionDetailContent.addr1 === '' ? (null) : (<RegionDetailAddress>{regionDetailContent.addr1}</RegionDetailAddress>)}
+									<RegionDetailName isImage={regionDetailContent.firstimage !== ''}>{regionDetailContent.title}</RegionDetailName>
+									{regionDetailContent.addr1 !== '' 
+										&& (<RegionDetailAddress isImage={regionDetailContent.firstimage !== ''}>{regionDetailContent.addr1}</RegionDetailAddress>)}
 								</RegionNameContainer>
 
 							</RegionDetailContainer>
@@ -137,7 +139,7 @@ const RegionDetailName = styled.Text`
 	font-size: 24px;
 	font-style: normal;
 	font-weight: 500;
-	color: #FFFFFF;
+	color: ${(props) => props.isImage ? '#FFFFFF' : '#000000'};
 	margin-bottom: 2px;
 	margin-top: 9px;
 	padding-right: 16px;
@@ -147,7 +149,7 @@ const RegionDetailAddress = styled.Text`
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 400;
-	color: #FFFFFF;
+	color: ${(props) => props.isImage ? '#FFFFFF' : '#000000'};
 	padding-right: 16px;
 `
 

@@ -16,12 +16,13 @@ const RegionItemComopnent = React.memo(({ navigation, item }) => {
   };
 
   const moveDetail = (id) => {
-    navigation.navigate('홈', { contentId: id });
+    navigation.navigate('MainDetailScreen', { contentId: id });
   };
 
   return (
     <RegionItemContainer activeOpacity={0.6} onPress={() => moveDetail(item.contentid)}>
-      {item.firstimage === '' ? (<RegionImage source={require('../assets/tripture-no-content.png')} />) : (<RegionImage source={{ uri: item.firstimage }} />)}
+      {item.firstimage === '' ? (<RegionImage source={require('../assets/tripture-no-content.png')}/>) 
+      : (<RegionImage source={{ uri: item.firstimage }} />)}
       <RegionTextContainer>
         <View style={{ maxWidth: '90%' }}>
           <RegionName numberOfLines={1} ellipsizeMode="tail">{item.title}</RegionName>

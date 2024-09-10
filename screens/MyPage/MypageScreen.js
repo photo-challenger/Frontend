@@ -72,7 +72,11 @@ const MypageScreen = ({ route, navigation }) => {
           추억가득한 여행되세요!
         </MyPageHeaderText>
         <MyPageHeaderProfileImage
-          source={{ uri: profileInfo?.profileImgName }}
+          source={
+            profileInfo?.profileImgName
+              ? { uri: profileInfo.profileImgName }
+              : require('../../assets/profile-default-image.png')
+          }
         />
       </MyPageHeaderContainer>
       <Tab.Navigator

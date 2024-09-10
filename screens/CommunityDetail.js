@@ -108,7 +108,8 @@ const CommunityDetail = ({ route, navigation }) => {
     <CommunityDetailContainer>
       <TopBox>
         <UserProfile>
-          <UserImage source={{ uri: postInfo.profileImgUrl }} />
+          {postInfo.profileImgUrl.split('/').pop() !== 'default' ? (<UserImage source={{ uri: postInfo.profileImgUrl }} />) 
+          : (<UserImage source={require('../assets/profile-default-image.png')} />)}
           <UserInfo>
             <UserName>{postInfo.nickname}</UserName>
             <UserLevel>{postInfo.level}</UserLevel>
