@@ -43,7 +43,7 @@ const KakaoMap = (props) => {
           const positions = ${JSON.stringify(positions)};
           
           // Marker image source
-          const imageSrc = 'https://tripture.s3.ap-northeast-2.amazonaws.com/dummy/be_challenge.jpg'
+          const imageSrc = 'https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/default_mark.png'
 
           positions.forEach(item => {
             var imageSize = new kakao.maps.Size(35, 40); 

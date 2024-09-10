@@ -32,7 +32,12 @@ const MapScreen = ({ route, navigation }) => {
         return;
       }
 
-      reloadCurrentLocation();
+      if (route.params?.coords) {
+        let _coords = route.params?.coords;
+        setCoords(_coords);
+      } else {
+        reloadCurrentLocation();
+      }
     })();
   }, []);
 
