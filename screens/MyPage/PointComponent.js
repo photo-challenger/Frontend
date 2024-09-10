@@ -24,7 +24,7 @@ const PointComponent = ({ route, navigation }) => {
   const [myPointPageNo, setMyPointPageNo] = useState(0);
   const [myPointTotPageCnt, setmyPointTotPageCnt] = useState(null);
   const moveMyPageTicketScreen = () => {
-    navigation.navigate('나의 티켓 보관함');
+    navigation.navigate('MyPageTicketScreen');
   };
   const getPointHistory = async (pageNum) => {
     setMyPointPageNo(pageNum);

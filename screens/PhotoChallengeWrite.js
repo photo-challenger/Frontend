@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, Image, Dimensions, Animated } from 'react-native';
+import { Text, Image, Dimensions, Animated, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 import ImagePickerItem from '../component/common/ImagePickerItem';
 import BaseInput from '../component/common/BaseInput';
@@ -70,6 +70,13 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   }
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#FFFFFF' }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+      >
     <Container>
       <ImagePickerItem callbackResult={setImageResult} />
 
@@ -108,6 +115,8 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
         <ButtonText>챌린지 등록하기</ButtonText>
       </ActionButton>
     </Container>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -119,11 +128,13 @@ const Container = styled.View`
 `;
 
 const ActionButton = styled.TouchableOpacity`
+  height: 80px;
   bottom: 0;
   background-color: #ca7ffe;
   padding-vertical: 15px;
   margin-top: 20px;
   align-items: center;
+  justify-content: center;
 `;
 
 const ButtonText = styled.Text`
@@ -140,7 +151,7 @@ const InputContainer = styled.View`
 
 const Title = styled.Text`
   font-size: 18px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   color: #5f5f5f;
   font-weight: 600;
 `;
@@ -149,6 +160,7 @@ const Underline = styled.View`
   height: 1px;
   background-color: #e0e0e0;
   margin-top: 4px;
+  margin-bottom: 16px;
 `;
 
 const NameTextBox = styled.View`

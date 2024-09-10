@@ -46,7 +46,7 @@ const SignUpAgreeScreen = ({ route, navigation }) => {
 	};
 
 	const moveSignUp = () => {
-		navigation.navigate('회원가입');
+		navigation.navigate('SignUpScreen');
 	};
 
 	return (

@@ -31,7 +31,7 @@ const SearchItemComponent = ({ navigation, item }) => {
 
 const MainSearchScreen = ({ route, navigation }) => {
 	const { query } = route.params;
-	const [searchResult, setSearchResult] = useState();
+	const [searchResult, setSearchResult] = useState([]);
 	const [searchKeyword, setSearchKeyword] = useState(query);
 	const [loading, setLoading] = useState(true);
 	const [startLoading, setStartLoading] = useState(true);
@@ -95,7 +95,7 @@ const MainSearchScreen = ({ route, navigation }) => {
 	return (
 		<MainSearchContainer>
 			<SearchContainer>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.goBack()}>
 					<ChevronLeftImage source={require('../assets/btn-back.png')} />
 				</TouchableOpacity>
 				<SearchContent>
@@ -109,7 +109,7 @@ const MainSearchScreen = ({ route, navigation }) => {
 				</SearchContent>
 			</SearchContainer>
 			<SearchHeaderText><Text style={{ color: "#CA7FFE" }}>{totalCount}개</Text>의 장소를 찾았어요.</SearchHeaderText>
-			{searchResult.length !== 0 ? (
+			{Array.isArray(searchResult) && searchResult.length != 0 ? (
 				<FlatList
 					data={searchResult}
 					renderItem={({ item }) => <SearchItemComponent item={item} navigation={navigation} />}

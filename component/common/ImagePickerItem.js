@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, View, StyleSheet, Text, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+
+const { width } = Dimensions.get('window');
 
 export default function ImagePickerItem({ callbackResult, borderType }) {
   const [image, setImage] = useState(null);
@@ -37,6 +39,7 @@ export default function ImagePickerItem({ callbackResult, borderType }) {
       ) : (
         <TouchableOpacity onPress={pickImage} style={(borderType === 'circle') ? styles.buttonCircle : styles.buttonQuad} activeOpacity={0.8}>
           <Image source={require('../../assets/camera-icon.png')} style={styles.iconImage} />
+          {borderType !== 'circle' && <Text style={styles.textStyle}>사진 추가</Text>}
         </TouchableOpacity>
       )}
     </View>
@@ -50,8 +53,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: width * (0.75),
+    height: width * (0.75),
+    borderRadius: 5
   },
   profileImage: {
     width: 120,
@@ -69,17 +73,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonQuad: {
-    backgroundColor: 'rgba(196, 196, 196, 0.45)',
+    backgroundColor: 'transparent',
     borderWidth: 1,
     borderRadius: 5,
     borderColor: 'rgb(196, 196, 196)',
-    width: 110,
-    height: 110,
+    width: 100,
+    height: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconImage: {
     width: 30,
     height: 30
+  },
+  textStyle: {
+    fontSize: 12,
+    color: '#7A7A7A',
   }
 });

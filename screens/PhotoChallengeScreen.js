@@ -2,9 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   ScrollView,
   View,
+  Image,
   Dimensions,
   TouchableOpacity,
   Animated,
+  StatusBar,
 } from 'react-native';
 import styled from 'styled-components/native';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -114,6 +116,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
 
   return (
     <Container>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       {/* Points Section */}
       <PointsContainer>
         <PointsDetails>
@@ -122,7 +125,9 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
             {myPoint} <PointsText>포인트</PointsText>
           </PointsValue>
         </PointsDetails>
-        <PointsLink>전체 내역 보기</PointsLink>
+        <TouchableOpacity onPress={() => {navigation.navigate('mypage')}}>
+          <PointsLink>전체 내역 보기</PointsLink>
+        </TouchableOpacity>
       </PointsContainer>
 
       {/* 주변 포토챌린지 */}
@@ -138,7 +143,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
         <AnimatedCarouselContainer
           style={{ transform: [{ translateX: translateXSurround }] }}
         >
-          {surrondChallengList.map((item, index) => (
+          {surrondChallengList && surrondChallengList.map((item, index) => (
             <NearestCardWrapper
               key={item.challengeId}
               active={index === surroundCurrIndex}
@@ -212,26 +217,35 @@ const PointsDetails = styled.View`
 
 const PointsLabel = styled.Text`
   color: #000;
-  font-size: 14px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  margin-bottom: 2px;
 `;
 
 const PointsValue = styled.Text`
   color: #daff7c;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
 `;
 
 const PointsText = styled.Text`
-  font-size: 16px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
 `;
 
 const PointsLink = styled.Text`
   color: #ffffff;
   font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 23px;
 `;
 
 const SectionTitle = styled.Text`
-  padding: 8px 24px;
+  padding: 18px 24px;
   font-size: 18px;
   font-weight: bold;
   letter-spacing: -0.36px;
@@ -240,8 +254,7 @@ const SectionTitle = styled.Text`
 const GestureContainer = styled(GestureRecognizer)`
   flex: 1;
   justify-content: center;
-  height: 320px;
-  padding-left: 24px;
+  padding-left: 18px;
   margin: 0;
 `;
 
@@ -253,14 +266,14 @@ const AnimatedCarouselContainer = styled(Animated.View)`
 
 const NearestCardWrapper = styled.View`
   width: ${width * 0.5}px;
-  margin-horizontal: 10px;
+  margin-horizontal: 8px;
   opacity: ${(props) => (props.active ? 1 : 0.5)};
   transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
 `;
 
 const PopularCardWrapper = styled.View`
   width: ${width * 0.3}px;
-  margin-horizontal: 10px;
+  margin-horizontal: 8px;
   opacity: ${(props) => (props.active ? 1 : 0.5)};
   transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
 `;
