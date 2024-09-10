@@ -17,6 +17,7 @@ import PointStoreDetail from '../screens/PointStoreDetail';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SignUpAgreeScreen from '../screens/SignUpAgreeScreen';
+import PasswordFindScreen from '../screens/PasswordFindScreen';
 import MainScreen from '../screens/MainScreen';
 import MainRegionTabScreen from '../screens/MainRegionTabScreen';
 import MainSearchScreen from '../screens/MainSearchScreen';
@@ -181,6 +182,16 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
+        name="passwordFind"
+        component={PasswordFindScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
         name="MainDetailScreen"
         component={MainDetailScreen}
         options={() => ({
@@ -287,7 +298,6 @@ const StackNavigation = () => {
           }),
         })}
       />
-
       <Stack.Screen
         name="pointStoreDetail"
         component={PointStoreDetail}

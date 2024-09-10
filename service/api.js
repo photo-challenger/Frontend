@@ -299,6 +299,23 @@ async function fetchEmailAuthCheck(email, authNum) {
   }
 }
 
+async function fetchPasswordFind(password, email) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/password/change`, {
+      password: password,
+      email: email
+    });
+
+    return response.data;
+  } catch (error) {
+    if(error.response.status === 404) {
+      return error.response.data.message;
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 const regionCodes = {
   전체: '',
   서울: '1',
@@ -699,6 +716,7 @@ export {
   fetchChallengeDetail,
   fetchLogin,
   fetchSignUp,
+  fetchPasswordFind,
   fetchAreaBasedList,
   fetchDetailCommon,
   fetchSearchKeyword,
