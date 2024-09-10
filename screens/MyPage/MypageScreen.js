@@ -82,6 +82,8 @@ const MypageScreen = ({ route, navigation }) => {
             backgroundColor: '#CA7FFE', // 선택된 탭 아래의 Indicator 색상
             height: 3, // Indicator 높이
           },
+          lazy: true, // 탭이 처음 활성화될 때만 컴포넌트를 로드
+          lazyPreloadDistance: 0,
         }}
       >
         <Tab.Screen
@@ -108,7 +110,7 @@ const SettingImageContainer = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: flex-end;
   padding-top: 15px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 const SettingImage = styled.Image`
@@ -121,7 +123,7 @@ const MyPageHeaderContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: 20px 24px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 const MyPageHeaderText = styled.Text`

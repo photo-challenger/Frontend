@@ -114,21 +114,77 @@ const StackNavigation = () => {
     headerTitle,
     headerBackgroundColor,
   }) => ({
-      headerBackVisible: false,
-      headerTitle: headerTitle ? headerTitle : '',
-      headerTitleAlign: 'center',
-      headerShown: headerVisible !== false, // 기본값 true
-      headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
-      headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
-      headerShadowVisible: false,
-      headerTitleStyle: { color: '#373737', fontSize: 18, fontWeight: '700' }, // 제목 스타일
-      headerStyle: {
-        backgroundColor: headerBackgroundColor ? headerBackgroundColor : '#FFFFFF', // Background color for the header
-      },
+    headerBackVisible: false,
+    headerTitle: headerTitle ? headerTitle : '',
+    headerTitleAlign: 'center',
+    headerShown: headerVisible !== false, // 기본값 true
+    headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
+    headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
+    headerShadowVisible: false,
+    headerTitleStyle: { color: '#373737', fontSize: 18, fontWeight: '700' }, // 제목 스타일
+    headerStyle: {
+      backgroundColor: headerBackgroundColor
+        ? headerBackgroundColor
+        : '#FFFFFF', // Background color for the header
+    },
   });
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="myPage"
+        component={MyPageScreen}
+        options={() => ({
+          ...naviOption({ headerVisible: false }),
+        })}
+      />
+      <Stack.Screen
+        name="프로필 및 환경설정"
+        component={SettingScreen}
+        options={() => ({
+          ...naviOption,
+        })}
+      />
+      <Stack.Screen
+        name="프로필 수정"
+        component={ProfileEditScreen}
+        options={() => ({
+          ...naviOption({ headerRightVisible: '저장' }),
+        })}
+      />
+      <Stack.Screen
+        name="challengeState"
+        component={ChallengeStateScreen}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '챌린지 참여 현황',
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+      />
+      <Stack.Screen
+        name="나의 티켓 보관함"
+        component={MyPageTicketScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+        initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
+      />
+      <Stack.Screen
+        name="나의 티켓"
+        component={MyPageTicketUseScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: true,
+            headerRightVisible: false,
+          }),
+        })}
+        initialParams={{ backgroundColor: '#F7F7F8', showHeaderRight: false }}
+      />
       {!isLoggedIn && (
         <Stack.Screen
           name="LoginScreen"
@@ -160,7 +216,7 @@ const StackNavigation = () => {
         component={SignUpScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: "회원가입",
+            headerTitle: '회원가입',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -182,7 +238,7 @@ const StackNavigation = () => {
         component={SignUpAgreeScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: "약관동의",
+            headerTitle: '약관동의',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -269,10 +325,10 @@ const StackNavigation = () => {
         component={MyPageTicketScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: "나의 티켓 보관함",
+            headerTitle: '나의 티켓 보관함',
             headerLeftVisible: true,
             headerRightVisible: false,
-            headerBackgroundColor: '#f7f7f8'
+            headerBackgroundColor: '#f7f7f8',
           }),
         })}
       />
@@ -283,7 +339,7 @@ const StackNavigation = () => {
           ...naviOption({
             headerLeftVisible: true,
             headerRightVisible: false,
-            headerBackgroundColor: '#f7f7f8'
+            headerBackgroundColor: '#f7f7f8',
           }),
         })}
       />
@@ -324,7 +380,7 @@ const StackNavigation = () => {
         component={PhotoChallengeScreen}
         options={() => ({
           ...naviOption({
-            headerTitle: "포토챌린지",
+            headerTitle: '포토챌린지',
             headerLeftVisible: false,
             headerRightVisible: false,
           }),
@@ -335,7 +391,7 @@ const StackNavigation = () => {
         component={PhotoChallengeDetail}
         options={() => ({
           ...naviOption({
-            headerTitle: "포토챌린지",
+            headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
@@ -346,7 +402,7 @@ const StackNavigation = () => {
         component={PhotoChallengeWrite}
         options={() => ({
           ...naviOption({
-            headerTitle: "포토챌린지",
+            headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
           }),
