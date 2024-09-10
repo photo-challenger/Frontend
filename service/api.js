@@ -167,7 +167,7 @@ async function fetchlocationBasedList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   const response = await fetch(
-    `${config.baseUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
+    `${config.publicUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
   );
 
   return response.json();
@@ -490,12 +490,11 @@ async function fetchCommentReplyList(groupId) {
 
 async function fetchComment(groupId, postId, commentContent) {
   try {
-    const response = await axiosInstance.post(
-      `${config.apiUrl}comment`, {
-        groupId: groupId,
-        postId: postId,
-        commentContent: commentContent,
-      });
+    const response = await axiosInstance.post(`${config.apiUrl}comment`, {
+      groupId: groupId,
+      postId: postId,
+      commentContent: commentContent,
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -663,8 +662,8 @@ async function fetchLogout() {
   try {
     await axiosInstance.get(`${config.apiUrl}login/logout`);
   } catch (error) {
-    if(error.response.status === 303) {
-      return "로그아웃 성공";
+    if (error.response.status === 303) {
+      return '로그아웃 성공';
     } else {
       console.error(error);
     }
@@ -675,8 +674,8 @@ async function fetchProfileDelete() {
   try {
     await axiosInstance.get(`${config.apiUrl}profile/delete`);
   } catch (error) {
-    if(error.response.status === 303) {
-      return "탈퇴 성공";
+    if (error.response.status === 303) {
+      return '탈퇴 성공';
     } else {
       console.error(error);
     }

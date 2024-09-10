@@ -149,7 +149,7 @@ const StackNavigation = () => {
             ...naviOption({
               headerLeftVisible: true,
               headerRightVisible: false,
-              headerVisible: false
+              headerVisible: false,
             }),
           })}
           setIsLoggedIn={setIsLoggedIn}
@@ -387,6 +387,17 @@ const StackNavigation = () => {
           }),
         })}
       />
+
+      <Stack.Screen
+        name="report"
+        component={ReportScreen}
+        options={() => ({
+          ...naviOption({
+            headerLeftVisible: false,
+            headerRightVisible: true,
+          }),
+        })}
+      />
       <Stack.Screen
         name="map"
         component={MapScreen}
@@ -397,16 +408,6 @@ const StackNavigation = () => {
           }),
         })}
         initialParams={{ headerVisible: false }}
-      />
-      <Stack.Screen
-        name="report"
-        component={ReportScreen}
-        options={() => ({
-          ...naviOption({
-            headerLeftVisible: false,
-            headerRightVisible: true,
-          }),
-        })}
       />
     </Stack.Navigator>
   );

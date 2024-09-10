@@ -18,6 +18,8 @@ const KakaoMap = (props) => {
     ? tourList
     : JSON.parse(tourList || '[]');
 
+  console.log('kakao positions : ', positions);
+
   const html = useMemo(
     () => `
   <html>
