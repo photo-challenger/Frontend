@@ -21,7 +21,7 @@ export default function App() {
 
 function MainContent() {
   const routeName = useNavigationState((state) => state?.routes[state.index]?.name);
-  const screensWithoutFooter = ['LoginScreen', '회원가입', '약관동의'];
+  const screensWithoutFooter = ['LoginScreen', '회원가입', '약관동의', 'passwordFind'];
   const showFooter = !screensWithoutFooter.includes(routeName);
 
   return (

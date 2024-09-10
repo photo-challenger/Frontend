@@ -69,9 +69,13 @@ const LoginScreen = ({ route, navigation }) => {
     navigation.navigate('약관동의');
   };
 
+  const moveFindPassword = () => {
+    navigation.navigate('passwordFind');
+  }
+
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: '#FFFFFF' }}
     >
       <Animated.View style={{ flex: 1 }}>
@@ -80,6 +84,7 @@ const LoginScreen = ({ route, navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <LoginContainer>
+
             <LogoImageContainer>
               <LoginLogoImage source={require('../assets/tripture.png')} />
             </LogoImageContainer>
@@ -88,7 +93,7 @@ const LoginScreen = ({ route, navigation }) => {
               <SearchInput
                 placeholder="이메일을 입력해주세요."
                 onChangeText={(text) => setUserEmail(text)}
-                placeholderTextColor={'#B5B5B5'}
+                placeholderTextColor={"#B5B5B5"}
               />
             </SearchContent>
 
@@ -102,22 +107,19 @@ const LoginScreen = ({ route, navigation }) => {
               />
             </SearchContent>
 
-            <AutoLoginCheckBoxContainer>
-              <CheckBox checkBoxValue={checkBoxValue} />
-              <AutoLoginText>자동 로그인</AutoLoginText>
-            </AutoLoginCheckBoxContainer>
-            <LoginButton activeOpacity={0.8} onPress={handleLoginFetch}>
-              <LoginButtonText>로그인</LoginButtonText>
-            </LoginButton>
-
             <SubButtonContainer>
-              <SubButton activeOpacity={0.8}>
-                <SubButtonText>아이디 찾기</SubButtonText>
-              </SubButton>
-              <SubButton activeOpacity={0.8}>
+              <AutoLoginCheckBoxContainer>
+                <CheckBox checkBoxValue={checkBoxValue} />
+                <AutoLoginText>자동 로그인</AutoLoginText>
+              </AutoLoginCheckBoxContainer>
+
+              <SubButton activeOpacity={0.8} onPress={moveFindPassword}>
                 <SubButtonText>비밀번호 찾기</SubButtonText>
               </SubButton>
             </SubButtonContainer>
+            <LoginButton activeOpacity={0.8} onPress={handleLoginFetch}>
+              <LoginButtonText>로그인</LoginButtonText>
+            </LoginButton>
 
             {/*<KakaoButton activeOpacity={0.5} onPress={handleKakaoLogin}>
 								<KakaoButtonText>카카오 로그인 하기</KakaoButtonText>
@@ -127,14 +129,9 @@ const LoginScreen = ({ route, navigation }) => {
             </SignUpButton>
 
             <NoticeTextContainer>
-              <NoticeText>로그인 시 </NoticeText>
-              <TermsOfUseButton>
-                <TermsOfUseButtonText>이용약관</TermsOfUseButtonText>
-              </TermsOfUseButton>
-              <NoticeText>과 </NoticeText>
-              <TermsOfUseButton>
-                <TermsOfUseButtonText>개인정보처리방침</TermsOfUseButtonText>
-              </TermsOfUseButton>
+              <NoticeText>로그인 시 {' '}</NoticeText>
+              <TermsOfUseButton><TermsOfUseButtonText>이용약관</TermsOfUseButtonText></TermsOfUseButton><NoticeText>과{' '}</NoticeText>
+              <TermsOfUseButton><TermsOfUseButtonText>개인정보처리방침</TermsOfUseButtonText></TermsOfUseButton>
               <NoticeText>에 동의하게 됩니다.</NoticeText>
             </NoticeTextContainer>
           </LoginContainer>
@@ -142,6 +139,7 @@ const LoginScreen = ({ route, navigation }) => {
           <AlertComponent />
         </Animated.ScrollView>
       </Animated.View>
+
     </KeyboardAvoidingView>
   );
 };
@@ -237,15 +235,15 @@ const LoginButtonText = styled.Text`
 `;
 
 const SubButtonContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  margin-top: 14px;
-  justify-content: flex-end;
-`;
+	display: flex;
+	flex-direction: row;
+  justify-content: space-between;
+`
 
 const SubButton = styled.TouchableOpacity`
-  margin-left: 24px;
-`;
+	margin-right: 5px;
+  display: flex;
+`
 
 const SubButtonText = styled.Text`
   font-size: 14px;
