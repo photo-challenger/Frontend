@@ -75,8 +75,8 @@ const ProfileEditScreen = ({ route, navigation }) => {
       const result = await fetchProfileEdit(rtn);
       dispatch(
         updateUserProfile({
-          profileImgName: imageInfo.uri | profileInfo.profileImgName,
-          nickname: nickname | profileInfo.nickname,
+          profileImgName: result.profileImgName,
+          nickname: result.profileNickname,
         }),
       );
       // console.log('🚀 ~ saveData ~ result:', result);
@@ -112,8 +112,8 @@ const ProfileEditScreen = ({ route, navigation }) => {
       const result = await fetchProfileEdit(rtn);
       dispatch(
         updateUserProfile({
-          profileImgName: result.profileImgName | profileInfo.profileImgName,
-          nickname: result.profileNickname | profileInfo.nickname,
+          profileImgName: result.profileImgName,
+          nickname: result.profileNickname,
         }),
       );
       // console.log('🚀 ~ saveData ~ result:', result);
@@ -145,10 +145,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
   }, [navigation]);
 
   const getProfileEditForm = async () => {
-    //TODO:
-    await fetchLogin_before();
     const result = await fetchProfileEditForm();
-    // console.log('🚀 ~ result:', result);
     setProfileInfo(result);
   };
   useEffect(() => {
@@ -161,7 +158,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
     console.log('Rs : ', rs.assets[0]);
     const file = {
       uri: rs.assets[0].uri,
-      type: rs.assets[0].type,
+      type: 'image/jpeg',
       name: rs.assets[0].fileName || rs.assets[0].uri.split('/').pop(),
     };
     setImageInfo(file);

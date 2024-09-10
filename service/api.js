@@ -44,7 +44,7 @@ export const setCookie = (cookie) => {
 
 const fetchLogin_before = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/login/true', {
+    const response = await axios.post(`${config.apiUrl}login/true`, {
       loginEmail: 'user1@example.com',
       loginPw: 'password1',
     });
@@ -113,12 +113,12 @@ const fetchProfileEditForm = async () => {
 };
 const fetchProfileEdit = async (params) => {
   try {
-    console.log('🚀 ~ fetchProfileEdit ~ params:', params);
+    // console.log('🚀 ~ fetchProfileEdit ~ params:', params);
     const formData = new FormData();
 
-    formData.append('profileNickname', params.profileNickname | '');
-    formData.append('loginPw', params.loginPw | '');
-    formData.append('file', params.file | '');
+    formData.append('profileNickname', params.profileNickname);
+    formData.append('loginPw', params.loginPw);
+    formData.append('file', params.file);
 
     // const response = await axios.post(
     //   `${config.apiUrl}profile/edit`,
@@ -128,7 +128,7 @@ const fetchProfileEdit = async (params) => {
     //   },
     // );
     const response = await axios.post(
-      `http://localhost:8080/profile/edit`,
+      `${config.apiUrl}profile/edit`,
       formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -332,12 +332,12 @@ async function fetchPasswordFind(password, email) {
   try {
     const response = await axios.post(`${config.apiUrl}login/password/change`, {
       password: password,
-      email: email
+      email: email,
     });
 
     return response.data;
   } catch (error) {
-    if(error.response.status === 404) {
+    if (error.response.status === 404) {
       return error.response.data.message;
     } else {
       console.error(error);
