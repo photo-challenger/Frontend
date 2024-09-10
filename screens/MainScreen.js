@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
-import { fetchDefaultProfile, fetchLogin_before } from '../service/api';
+import { fetchDefaultProfile } from '../service/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile } from '../redux/user';
 
@@ -33,7 +33,6 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   const getDefaultProfile = async () => {
-    await fetchLogin_before();
     const result = await fetchDefaultProfile();
 
     dispatch(setUserProfile(result));

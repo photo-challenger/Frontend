@@ -44,7 +44,7 @@ export const setCookie = (cookie) => {
 
 const fetchLogin_before = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/login/true', {
+    const response = await axios.post(`${config.apiUrl}login/true`, {
       loginEmail: 'user1@example.com',
       loginPw: 'password1',
     });
@@ -114,21 +114,15 @@ const fetchProfileEditForm = async () => {
 const fetchProfileEdit = async (params) => {
   try {
     console.log('🚀 ~ fetchProfileEdit ~ params:', params);
+    console.log(params.file);
     const formData = new FormData();
 
-    formData.append('profileNickname', params.profileNickname | '');
-    formData.append('loginPw', params.loginPw | '');
-    formData.append('file', params.file | '');
+    formData.append('profileNickname', params.profileNickname);
+    formData.append('loginPw', params.loginPw);
+    formData.append('file', params.file);
 
-    // const response = await axios.post(
-    //   `${config.apiUrl}profile/edit`,
-    //   formData,
-    //   {
-    //     headers: { 'Content-Type': 'multipart/form-data' },
-    //   },
-    // );
     const response = await axios.post(
-      `http://localhost:8080/profile/edit`,
+      `${config.apiUrl}profile/edit`,
       formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -741,6 +735,7 @@ async function fetchProfileDelete() {
 }
 
 export {
+  fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,
   fetchUseMyTicket,
