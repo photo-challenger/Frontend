@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableOpacity, View, Text } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { Modal, TouchableOpacity, View, Text, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 import useConfirm from '../hooks/useConfirm';
 import {
@@ -60,11 +59,11 @@ const PointStoreDetail = ({ route, navigation }) => {
             <Text style={{ color: '#CA7FFE' }}>
               회원님의 포인트나 재고가 부족
             </Text>
-            하여 구매에 실패했습니다.
+            하여{'\n'} 구매에 실패했습니다.
           </Text>
         ),
         cancelText: '뒤로가기',
-        okText: '마이페이지로이동',
+        okText: '마이페이지 이동',
         onOk: function () {
           exitModal();
           navigation.navigate('mypage');
@@ -92,10 +91,13 @@ const PointStoreDetail = ({ route, navigation }) => {
         <ItemImage source={{ uri: item.itemImgName }} />
 
         <ItemDetailHeader>
-          <ButtonImage
-            source={require('../assets/btn-back.png')}
-            resizeMode="cover"
-          />
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ position: 'absolute', left: 22 }}>
+            <ButtonImage
+              source={require('../assets/btn-back.png')}
+            />
+          </TouchableOpacity>
           <ItemName>{item.itemName}</ItemName>
         </ItemDetailHeader>
 
@@ -111,10 +113,13 @@ const PointStoreDetail = ({ route, navigation }) => {
       </ItemImageWrapper>
 
       <BottomOutContainer visible={modalVisible}>
-        <ItemDescriptionContainer>
-          <ItemDescriptionText>이곳은요</ItemDescriptionText>
-          <ItemDescription>{item.itemDescription}</ItemDescription>
-        </ItemDescriptionContainer>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}>
+          <ItemDescriptionContainer>
+            <ItemDescriptionText>이곳은요</ItemDescriptionText>
+            <ItemDescription>{item.itemDescription}</ItemDescription>
+          </ItemDescriptionContainer>
+        </ScrollView>
+
 
         <ItemPurchaseButton activeOpacity={0.9} onPress={() => openModal()}>
           <PurchaseButtonText>구매하기</PurchaseButtonText>
@@ -204,10 +209,10 @@ const ItemDetailComponent = styled.View`
 
 const ItemDetailHeader = styled.View`
   position: absolute;
-  top: 44px;
+  top: 25px;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -218,8 +223,6 @@ const ItemDetailHeader = styled.View`
 const ButtonImage = styled.Image`
   width: 32px;
   height: 32px;
-  position: absolute;
-  left: 22px;
 `;
 
 const ItemName = styled.Text`
@@ -291,6 +294,7 @@ const ItemDetailPrice = styled.Text`
 
 const ItemDescriptionContainer = styled.View`
   padding: 24px;
+  flex: 1;
 `;
 
 const ItemDescriptionText = styled.Text`
@@ -329,7 +333,7 @@ const ModalContainer = styled.View`
 
 const ModalDragImage = styled.Image`
   width: 30px;
-  resizemode: contain;
+  height: 30px;
 `;
 
 const ModalContent = styled.View`
@@ -339,7 +343,7 @@ const ModalContent = styled.View`
 `;
 
 const ModalHeaderTextWrapper = styled.TouchableOpacity`
-  padding: 8px 0;
+  padding: 20px 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

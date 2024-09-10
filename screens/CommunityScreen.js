@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, StatusBar } from 'react-native';
 import styled from 'styled-components';
 import {
   fetchPopularCommunityList,
@@ -37,6 +37,7 @@ const CommunityScreen = ({ route, navigation }) => {
 
   return (
     <ListContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <SearchContent>
         <SearchIconImg source={require('../assets/icon-search.png')} />
         <SearchInput

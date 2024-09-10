@@ -12,7 +12,7 @@ import styled from 'styled-components/native';
 
 const Footer = () => {
   const navigation = useNavigation();
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState('home');
 
   const handlePress = (item) => {
     setSelectedItem(item);
@@ -45,6 +45,7 @@ const Footer = () => {
               ? require('../../assets/icon-home-selected.png') // 선택된 경우
               : require('../../assets/home-01.png')
           }
+          selected={selectedItem === 'home'}
         />
         <FooterItemText isSelected={selectedItem === 'home'}>홈</FooterItemText>
       </FooterItem>
@@ -55,6 +56,7 @@ const Footer = () => {
               ? require('../../assets/icon-challenge-selected.png') // 선택된 경우
               : require('../../assets/image-02.png')
           }
+          selected={selectedItem === 'challenge'}
         />
         <FooterItemText isSelected={selectedItem === 'challenge'}>
           포토챌린지
@@ -67,6 +69,7 @@ const Footer = () => {
               ? require('../../assets/icon-chat-selected.png') // 선택된 경우
               : require('../../assets/message-chat-circle.png')
           }
+          selected={selectedItem === 'community'}
         />
         <FooterItemText isSelected={selectedItem === 'community'}>
           커뮤니티
@@ -79,6 +82,7 @@ const Footer = () => {
               ? require('../../assets/icon-gift-selected.png') // 선택된 경우
               : require('../../assets/gift-01.png')
           }
+          selected={selectedItem === 'store'}
         />
         <FooterItemText isSelected={selectedItem === 'store'}>
           포인트상점
@@ -91,6 +95,7 @@ const Footer = () => {
               ? require('../../assets/icon-my-selected.png') // 선택된 경우
               : require('../../assets/user-02.png')
           }
+          selected={selectedItem === 'myPage'}
         />
         <FooterItemText isSelected={selectedItem === 'myPage'}>
           마이페이지
@@ -124,10 +129,12 @@ const FooterItemText = styled.Text`
   font-weight: 700;
   margin-top: 8%;
   color: ${(props) => (props.isSelected ? '#CA7FFE' : '#000000')};
+  opacity: ${(props) => (props.isSelected ? 1 : 0.3)};
 `;
 
 const FooterImg = styled.Image`
   width: 27px;
   height: 27px;
   resizemode: 'contain';
+  opacity: ${(props) => (props.selected ? 1 : 0.3)};
 `;

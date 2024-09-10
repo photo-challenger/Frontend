@@ -1,12 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Modal, View, Image, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, Modal, View, Image, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
 import { StyleSheetManager } from 'styled-components';
+import { fetchProfileDelete } from '../../service/api';
+import useConfirm from '../../hooks/useConfirm';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/user';
 
 const ProfileDeleteScreen = ({ route, navigation }) => {
 	const { nickname } = route.params;
+	const dispatch = useDispatch();
 	const [deleteInputValue, setDeleteInputValue] = useState('');
+	const [showConfirm, ConfirmComponent] = useConfirm();
+
+	const handleDeleteProfile = async () => {
+		showConfirm({
+			title: '회원탈퇴',
+			msg: <Text>정말 <Text style={{color: '#CA7FFE'}}>Tripture</Text>를 탈퇴하시겠어요?</Text>,
+			onOk: async function () {
+			  await AsyncStorage.clear();
+			  dispatch(logout());
+			  const response = await fetchProfileDelete();
+			  console.log(response);
+			  navigation.navigate('LoginScreen');
+			},
+		  });
+	}
 
 	return (
 		<ProfileDeleteContainer>
@@ -38,15 +59,16 @@ const ProfileDeleteScreen = ({ route, navigation }) => {
 						<InfoHeaderSubText>
 							•{'  '}탈퇴를 하실 경우 어떤 경우에도 포인트 복구는{'\n   '}불가능 합니다.{'\n'}
 							•{'  '}탈퇴를 하실 경우 결제하신 서비스 이용 권한 및 구매{'\n   '}내역을 포기한 것으로 간주됩니다.{'\n'}
-							•{'  '}탈퇴 시에도 회원님이 작성한 포스트, 댓글은 자동 삭제{'\n   '}되지 않습니다. 노출을 원하지 않는 경우 미리 삭제 후{'\n   '}탈퇴를 진행해주세요.
+							•{'  '}탈퇴 시에는 회원님이 작성한 포스트, 댓글은 자동 삭제{'\n   '}됩니다.
 						</InfoHeaderSubText>
 
 						<CheckText>정말 탈퇴하시겠습니까?</CheckText>
 					</Animated.ScrollView>
 				</Animated.View>
-				<DeleteButton deleteInputValue={deleteInputValue} activeOpacity={deleteInputValue !== '' ? 0.7 : 1}>
+				<DeleteButton deleteInputValue={deleteInputValue} activeOpacity={deleteInputValue !== '' ? 0.7 : 1} onPress={handleDeleteProfile}>
 					<DeleteButtonText>탈퇴하기</DeleteButtonText>
 				</DeleteButton>
+				<ConfirmComponent />
 			</KeyboardAvoidingView>
 		</ProfileDeleteContainer>
 	);

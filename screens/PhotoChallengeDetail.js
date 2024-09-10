@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, Image, Dimensions, Animated } from 'react-native';
+import { Text, Image, Dimensions, Animated, ScrollView } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
 import { fetchChallengeDetail } from '../service/api';
@@ -35,10 +35,12 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
       <ImageWrapper key={challengeDetail?.challengeId}>
         <StyledImage source={{ uri: challengeDetail?.challengeImgUrl }} />
       </ImageWrapper>
+      <ScrollView>
       <DescriptionContainer>
         <DescriptionTitle>이곳은요</DescriptionTitle>
         <Description>{challengeDetail?.challengeContent}</Description>
       </DescriptionContainer>
+      </ScrollView>
       <GuideContainer>
         <GuideTop>지금 참여하면</GuideTop>
         <GuideBottom>{challengeDetail?.challengePoint} Point</GuideBottom>
@@ -79,13 +81,13 @@ const AnimatedCarouselContainer = styled(Animated.View)`
 `;
 
 const ImageWrapper = styled.View`
-  width: ${width * 0.6}px;
-  margin-horizontal: 12px;
+  width: 100%;
+  align-items: center;
 `;
 
 const StyledImage = styled.Image`
-  width: 272px;
-  height: 300px;
+  width: ${width * 0.7}px;
+  height: 360px;
   border-radius: 10px;
   margin-bottom: 10px;
 `;
@@ -118,6 +120,7 @@ const GuideContainer = styled.View`
   height: 80px;
   padding: 14px 24px;
   flex-direction: column;
+  background-color: #FFFFFF;
 `;
 
 const GuideTop = styled.Text`
@@ -132,8 +135,9 @@ const GuideBottom = styled.Text`
 
 const ActionButton = styled.TouchableOpacity`
   background-color: #ca7ffe;
-  padding-vertical: 15px;
-  margin-top: 20px;
+  align-items: center;
+  height: 80px;
+  justify-content: center;
   align-items: center;
 `;
 

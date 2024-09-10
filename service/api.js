@@ -208,7 +208,7 @@ async function fetchlocationBasedList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   const response = await fetch(
-    `${config.baseUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
+    `${config.publicUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
   );
 
   return response.json();
@@ -321,6 +321,23 @@ async function fetchEmailAuthCheck(email, authNum) {
     }
   } catch (error) {
     if (error.response.status === 400) {
+      return error.response.data.message;
+    } else {
+      console.error(error);
+    }
+  }
+}
+
+async function fetchPasswordFind(password, email) {
+  try {
+    const response = await axios.post(`${config.apiUrl}login/password/change`, {
+      password: password,
+      email: email,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 404) {
       return error.response.data.message;
     } else {
       console.error(error);
@@ -699,9 +716,32 @@ async function fetchAddPostLike(postId) {
   }
 }
 
+async function fetchLogout() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}login/logout`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '로그아웃 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
+async function fetchProfileDelete() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}profile/delete`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '탈퇴 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 export {
   fetchBuyByPoint,
-  fetchLogin_before,
   fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
@@ -728,6 +768,7 @@ export {
   fetchChallengeDetail,
   fetchLogin,
   fetchSignUp,
+  fetchPasswordFind,
   fetchAreaBasedList,
   fetchDetailCommon,
   fetchSearchKeyword,
@@ -743,4 +784,6 @@ export {
   fetchEmailAuthCheck,
   fetchWritePost,
   fetchAddPostLike,
+  fetchLogout,
+  fetchProfileDelete,
 };

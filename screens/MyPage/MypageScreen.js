@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  StatusBar,
   TouchableOpacity,
   Modal,
   View,
@@ -29,7 +30,7 @@ const MypageScreen = ({ route, navigation }) => {
   }, []);
 
   const moveDetail = (id) => {
-    navigation.navigate('프로필 및 환경설정', profileInfo);
+    navigation.navigate('setting', profileInfo);
   };
 
   const CustomTabBar = ({ state, descriptors, navigation }) => {
@@ -61,7 +62,8 @@ const MypageScreen = ({ route, navigation }) => {
 
   return (
     <MyPageScreen>
-      <SettingImageContainer onPress={moveDetail}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <SettingImageContainer activeOpacity={0.9} onPress={moveDetail}>
         <SettingImage source={require('../../assets/setting-icon.png')} />
       </SettingImageContainer>
       <MyPageHeaderContainer>
@@ -80,6 +82,8 @@ const MypageScreen = ({ route, navigation }) => {
             backgroundColor: '#CA7FFE', // 선택된 탭 아래의 Indicator 색상
             height: 3, // Indicator 높이
           },
+          lazy: true, // 탭이 처음 활성화될 때만 컴포넌트를 로드
+          lazyPreloadDistance: 0,
         }}
       >
         <Tab.Screen
@@ -105,7 +109,8 @@ const SettingImageContainer = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  margin-top: 40px;
+  padding-top: 15px;
+  background-color: #FFFFFF;
 `;
 
 const SettingImage = styled.Image`
@@ -118,6 +123,7 @@ const MyPageHeaderContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: 20px 24px;
+  background-color: #FFFFFF;
 `;
 
 const MyPageHeaderText = styled.Text`
@@ -141,7 +147,7 @@ const TabListContainer = styled.View`
 const TabListFirstView = styled.TouchableOpacity`
   width: 33.3%;
   border-bottom-width: 2px;
-  padding: 12px 39px;
+  padding: 12px 0 12px 0;
   align-items: center;
   border-bottom-color: ${(props) => (props.isFocused ? '#CA7FFE' : '#F0F0F0')};
 `;

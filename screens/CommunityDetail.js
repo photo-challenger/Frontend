@@ -347,12 +347,14 @@ const ModalOption = styled.TouchableOpacity`
 `;
 
 const ModalIcon = styled.Image`
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   margin-right: 12px;
 `;
 
 const ModalText = styled.Text`
   font-size: 16px;
-  color: #333;
+  color: #4F4F4F;
+  font-weight: 700;
+  line-height: 22px;
 `;
