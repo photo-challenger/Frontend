@@ -128,12 +128,12 @@ const LoginScreen = ({ route, navigation }) => {
               <KakaoButtonText>회원가입</KakaoButtonText>
             </SignUpButton>
 
-            <NoticeTextContainer>
+            {/* <NoticeTextContainer>
               <NoticeText>로그인 시 {' '}</NoticeText>
               <TermsOfUseButton><TermsOfUseButtonText>이용약관</TermsOfUseButtonText></TermsOfUseButton><NoticeText>과{' '}</NoticeText>
               <TermsOfUseButton><TermsOfUseButtonText>개인정보처리방침</TermsOfUseButtonText></TermsOfUseButton>
               <NoticeText>에 동의하게 됩니다.</NoticeText>
-            </NoticeTextContainer>
+            </NoticeTextContainer> */}
           </LoginContainer>
 
           <AlertComponent />

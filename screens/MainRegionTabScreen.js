@@ -186,9 +186,9 @@ const MainRegionTabScreen = ({ route, navigation }) => {
             />
             <SearchIconImg source={require('../assets/icon-search-home.png')} />
           </SearchContent>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <MapIconImg source={require('../assets/map-01.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </SearchContainer>
         <RegionTouristHeaderText>지역별 관광지</RegionTouristHeaderText>
         {/* tab List */}

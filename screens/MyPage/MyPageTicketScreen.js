@@ -26,6 +26,12 @@ const TicketListComponent = ({ navigation }) => {
     navigation.navigate('MyPageTicketUseScreen', { purchaseId: id });
   };
 
+  const goToBuyTicket = () => {
+    console.log('여기요');
+    navigation.navigate('pointStore');
+  };
+  
+
   return (
     <MyPageTicketComponent>
       {itemList.length !== 0 ? (
@@ -57,7 +63,7 @@ const TicketListComponent = ({ navigation }) => {
             포인트를 이용해서{'\n'}
             티켓을 구매해보세요.
           </TicketListNotExistText>
-          <TicketListNotExistButton activeOpacity={0.9}>
+          <TicketListNotExistButton activeOpacity={0.9} onPress={goToBuyTicket}>
             <TicketListNotExistButtonText>
               티켓 사러가기
             </TicketListNotExistButtonText>
@@ -67,12 +73,8 @@ const TicketListComponent = ({ navigation }) => {
     </MyPageTicketComponent>
   );
 };
-const goToBuyTicket = () => {
-  console.log('여기요');
-  navigation.navigate('pointStore');
-};
 
-const UseTicketComponent = () => {
+const UseTicketComponent = ({ navigation }) => {
   const [itemUsedList, setItemList] = useState([]);
   const getMyTicketList = async () => {
     const result = await fetchMyUsedTicketList();
