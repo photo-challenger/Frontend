@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
-import { fetchDefaultProfile, fetchLogin } from '../service/api';
+import { fetchDefaultProfile } from '../service/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile } from '../redux/user';
 
@@ -33,6 +33,7 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   const getDefaultProfile = async () => {
+    await fetchLogin_before();
     const result = await fetchDefaultProfile();
 
     dispatch(setUserProfile(result));
@@ -48,6 +49,7 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    // fetchLogin('user2@example.com', 'password2', false);
     getDefaultProfile();
   }, []);
 
@@ -67,7 +69,7 @@ const MainScreen = ({ route, navigation }) => {
             />
             <SearchIconImg source={require('../assets/icon-search-home.png')} />
           </SearchContent>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('map')}>
             <MapIconImg source={require('../assets/map-01.png')} />
           </TouchableOpacity>
         </SearchContainer>

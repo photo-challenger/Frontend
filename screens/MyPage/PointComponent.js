@@ -17,8 +17,8 @@ import MyPageTicketScreen from './MyPageTicketScreen';
 
 const PointComponent = ({ route, navigation }) => {
   const [myPoint, setMyPoint] = useState(1000);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(new Date('2024-09-02'));
+  const [endDate, setEndDate] = useState(new Date('2024-09-03'));
   const [pointHistory, setPointHistory] = useState([]);
 
   const [myPointPageNo, setMyPointPageNo] = useState(0);
@@ -26,6 +26,7 @@ const PointComponent = ({ route, navigation }) => {
   const moveMyPageTicketScreen = () => {
     navigation.navigate('MyPageTicketScreen');
   };
+
   const getPointHistory = async (pageNum) => {
     setMyPointPageNo(pageNum);
 
@@ -52,24 +53,61 @@ const PointComponent = ({ route, navigation }) => {
     }
   };
 
+  const changeStartDateFomat = (str) => {
+    let _year = '';
+    let _month = '';
+    let _date = '';
+    if (str === undefined) {
+      _year = new Date().getFullYear();
+      _month = new Date().getMonth();
+      _date = new Date().getDate();
+    } else {
+      _year = new Date(str).getFullYear();
+      _month = new Date(str).getMonth();
+      _date = new Date(str).getDate();
+    }
+
+    const formattedStartDate = `${String(_year)}-${String(_month).padStart(
+      2,
+      '0',
+    )}-${String(_date).padStart(2, '0')}`;
+
+    setStartDate(formattedStartDate);
+  };
+
+  const changeEndDateFomat = (str) => {
+    let _year = '';
+    let _month = '';
+    let _date = '';
+    if (str === undefined) {
+      _year = new Date().getFullYear();
+      _month = new Date().getMonth();
+      _date = new Date().getDate();
+    } else {
+      _year = new Date(str).getFullYear();
+      _month = new Date(str).getMonth();
+      _date = new Date(str).getDate();
+    }
+
+    const formattedEndDate = `${String(_year)}-${String(_month + 1).padStart(
+      2,
+      '0',
+    )}-${String(_date).padStart(2, '0')}`;
+
+    setEndDate(formattedEndDate);
+  };
+
   useEffect(() => {
-    const _year = new Date().getFullYear();
-    const _month = new Date().getMonth();
-    const _date = new Date().getDate();
+    changeStartDateFomat();
+    changeEndDateFomat();
+  }, []);
 
-    setStartDate(
-      `${String(_year)}-${String(_month).padStart(2, '0')}-${String(
-        _date,
-      ).padStart(2, '0')}`,
-    );
-    setEndDate(
-      `${String(_year)}-${String(_month + 1).padStart(2, '0')}-${String(
-        _date,
-      ).padStart(2, '0')}`,
-    );
-
-    getPointHistory(0);
-  }, [startDate]);
+  useEffect(() => {
+    // startDate와 endDate가 변경될 때마다 호출
+    if (startDate && endDate) {
+      getPointHistory(0);
+    }
+  }, [startDate, endDate]);
 
   return (
     <ChallengeTabContainer>
@@ -102,12 +140,12 @@ const PointComponent = ({ route, navigation }) => {
           <PointHistoryContainer>
             <PointHeaderContainer>
               <PointHistoryHeaderText>사용 및 적립 내역</PointHistoryHeaderText>
-              {startDate.length !== 0 && endDate !== 0 ? (
+              {startDate && endDate ? (
                 <DateRangePicker
-                  startDate={startDate}
-                  endDate={endDate}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
+                  startDate={new Date(startDate)}
+                  endDate={new Date(endDate)}
+                  setStartDate={(val) => changeStartDateFomat(val)}
+                  setEndDate={(val) => changeEndDateFomat(val)}
                 />
               ) : null}
             </PointHeaderContainer>

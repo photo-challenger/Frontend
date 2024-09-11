@@ -57,7 +57,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
 
       <ChallengeContainer>
         {challengeEngList.map((challenge, index) => (
-          <ChallengeSubContainer onPress={moveToMap(challenge)}>
+          <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
             <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
             <ChallengeStateNum>
               <Text style={{ color: '#CA7FFE' }}>
@@ -67,7 +67,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
             </ChallengeStateNum>
           </ChallengeSubContainer>
         ))}
-        <JeJuContainer onPress={moveToMap('je')}>
+        <JeJuContainer onPress={() => moveToMap('je')}>
           <ChallengeNameText>제주</ChallengeNameText>
           <ChallengeStateNum>
             <Text style={{ color: '#CA7FFE' }}>
@@ -150,7 +150,7 @@ const ChallengeStateNum = styled.Text`
   font-weight: 600;
 `;
 
-const JeJuContainer = styled.View`
+const JeJuContainer = styled.TouchableOpacity`
   width: 98.5%;
   height: 100px;
   background-color: #ffffff;

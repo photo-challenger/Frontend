@@ -4,7 +4,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components';
 import ScrollWrapper from '../component/common/ScrollWrapper';
 import {
-  fetchLogin_before,
   fetchPointStoreList,
   fetchSearchPointStoreList,
 } from '../service/api';

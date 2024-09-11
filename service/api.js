@@ -111,6 +111,27 @@ const fetchProfileEditForm = async () => {
     console.error(error);
   }
 };
+const fetchProfileEdit = async (params) => {
+  try {
+    // console.log('🚀 ~ fetchProfileEdit ~ params:', params);
+    const formData = new FormData();
+
+    formData.append('profileNickname', params.profileNickname);
+    formData.append('loginPw', params.loginPw);
+    formData.append('file', params.file);
+    const response = await axios.post(
+      `${config.apiUrl}profile/edit`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const fetchDefaultProfile = async () => {
   try {
     const response = await axios.get(`${config.apiUrl}profile/default`);
@@ -179,10 +200,23 @@ async function fetchlocationBasedList(params) {
   const queryStr = new URLSearchParams(sendObj).toString();
 
   const response = await fetch(
-    `${config.baseUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
+    `${config.publicUrl}locationBasedList1?serviceKey=${config.key}&${queryStr}`,
   );
 
   return response.json();
+}
+
+async function fetchLocationBasedChallengeList(params) {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}challenge/area_list`,
+      params,
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function fetchPopularCommunityList(params) {
@@ -303,12 +337,12 @@ async function fetchPasswordFind(password, email) {
   try {
     const response = await axios.post(`${config.apiUrl}login/password/change`, {
       password: password,
-      email: email
+      email: email,
     });
 
     return response.data;
   } catch (error) {
-    if(error.response.status === 404) {
+    if (error.response.status === 404) {
       return error.response.data.message;
     } else {
       console.error(error);
@@ -519,12 +553,11 @@ async function fetchCommentReplyList(groupId) {
 
 async function fetchComment(groupId, postId, commentContent) {
   try {
-    const response = await axiosInstance.post(
-      `${config.apiUrl}comment`, {
-        groupId: groupId,
-        postId: postId,
-        commentContent: commentContent,
-      });
+    const response = await axiosInstance.post(`${config.apiUrl}comment`, {
+      groupId: groupId,
+      postId: postId,
+      commentContent: commentContent,
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -685,9 +718,33 @@ async function fetchAddPostLike(postId) {
   }
 }
 
+async function fetchLogout() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}login/logout`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '로그아웃 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
+async function fetchProfileDelete() {
+  try {
+    await axiosInstance.get(`${config.apiUrl}profile/delete`);
+  } catch (error) {
+    if (error.response.status === 303) {
+      return '탈퇴 성공';
+    } else {
+      console.error(error);
+    }
+  }
+}
+
 export {
-  fetchBuyByPoint,
   fetchLogin_before,
+  fetchBuyByPoint,
   fetchBuyItem,
   fetchUseMyTicket,
   fetchMyTicketDetail,
@@ -698,6 +755,7 @@ export {
   fetchPointStoreDetail,
   fetchDefaultProfile,
   fetchProfileEditForm,
+  fetchProfileEdit,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentList,
@@ -729,4 +787,7 @@ export {
   fetchEmailAuthCheck,
   fetchWritePost,
   fetchAddPostLike,
+  fetchLogout,
+  fetchProfileDelete,
+  fetchLocationBasedChallengeList,
 };
