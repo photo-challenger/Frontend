@@ -33,7 +33,6 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   const getDefaultProfile = async () => {
-    await fetchLogin_before();
     const result = await fetchDefaultProfile();
 
     dispatch(setUserProfile(result));

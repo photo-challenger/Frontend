@@ -131,7 +131,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
       </PointsContainer>
 
       {/* 주변 포토챌린지 */}
-      <SectionTitle>주변 포토챌린지</SectionTitle>
+      {/* <SectionTitle>주변 포토챌린지</SectionTitle>
       <GestureContainer
         onSwipeLeft={onSurroundSwipeLeft}
         onSwipeRight={onSurroundSwipeRight}
@@ -162,7 +162,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
             </NearestCardWrapper>
           ))}
         </AnimatedCarouselContainer>
-      </GestureContainer>
+      </GestureContainer> */}
 
       {/* 인기 포토챌린지 */}
       <SectionTitle>인기 포토챌린지</SectionTitle>

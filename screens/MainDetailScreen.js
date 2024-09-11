@@ -108,9 +108,6 @@ const MainDetailScreen = ({ route, navigation }) => {
               <MapButtonText>지도보기</MapButtonText>
             </MapButton>
           )}
-          <MapButton onPress={moveToMap}>
-            <MapButtonText>지도보기</MapButtonText>
-          </MapButton>
         </ButtonContainer>
       </Animated.View>
     </MainDetailContainer>

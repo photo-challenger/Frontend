@@ -48,7 +48,7 @@ const MapScreen = ({ route, navigation }) => {
   useEffect(() => {
     if (coords != null) {
       searchTourList();
-      searchChallengList();
+      // searchChallengList();
     }
   }, [coords]);
 
@@ -168,8 +168,12 @@ const MapScreen = ({ route, navigation }) => {
               source={tourInfo.firstimage ? { uri: tourInfo.firstimage } : ''}
             />
             <DetailInfoContView>
-              <Text>{tourInfo.title}</Text>
-              <Text>{tourType[tourInfo.contenttypeid]}</Text>
+              <DetailInfoTitle>
+                <Text style={{fontSize: 16, fontWeight: 700}}>{tourInfo.title}</Text>
+                <Text style={{fontSize: 12, fontWeight: 500, color: '#878787', marginLeft: 10}}>
+                  {tourType[tourInfo.contenttypeid]}
+                </Text>
+              </DetailInfoTitle>
               <Text>{tourInfo.addr1}</Text>
             </DetailInfoContView>
           </DetailInfoView>
@@ -210,7 +214,6 @@ const RefreshBtn = styled.TouchableOpacity`
   padding-horizontal: 20px;
   border-radius: 50px;
   elevation: 3;
-  width: 147px;
   height: 38px;
   justify-content: center;
   align-items: center;
@@ -220,11 +223,11 @@ const RefreshBtnText = styled.Text`
   color: #000;
   font-size: 16px;
   font-weight: 700;
+  line-height: 21px;
 `;
 
 const CurrentBtn = styled.TouchableOpacity`
   position: absolute;
-  bottom: 30px;
   right: 30px;
   background-color: #ffffff;
   width: 46px;
@@ -237,12 +240,13 @@ const CurrentBtn = styled.TouchableOpacity`
 const CurrentBtnImage = styled.Image`
   width: 24px;
   height: 24px;
+  elevation: 3;
 `;
 
 const DetailBottomSheet = styled.View`
   display: flex;
   width: 92%;
-  padding: 16px;
+  padding: 16px 24px;
   flex-direction: column;
   align-items: center;
   margin: 16px;
@@ -250,10 +254,12 @@ const DetailBottomSheet = styled.View`
   position: absolute;
   bottom: 0px;
   justify-content: center;
+  border-radius: 12px;
 `;
 
 const BttmShtDetailBtn = styled.TouchableOpacity`
-  width: 40%;
+  width: 50%;
+  height: 48px;
   padding: 12px 9px;
   justify-content: center;
   align-items: center;
@@ -273,7 +279,7 @@ const BttmShtDetailBtnText = styled.Text`
 `;
 
 const BttmShtChllngBtn = styled.TouchableOpacity`
-  width: 40%;
+  width: 50%;
   padding: 12px 9px;
   justify-content: center;
   align-items: center;
@@ -294,6 +300,7 @@ const BttmShtChllngBtnText = styled.Text`
 
 const DetailBtnView = styled.View`
   flex-direction: row;
+  margin-top: 10px;
 `;
 
 const DetailInfoView = styled.View`
@@ -306,6 +313,12 @@ const DetailInfoView = styled.View`
 const DetailInfoContView = styled.View`
   margin-left: 12px;
 `;
+
+const DetailInfoTitle = styled.Text`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
 
 const DetailInfoImage = styled.Image`
   width: 90px;
