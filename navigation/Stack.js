@@ -38,7 +38,6 @@ const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 
-  const defaultHeaderTitle = (title) => <Title>{title}</Title>;
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = useSelector((state) => state.user.value);
@@ -135,7 +134,7 @@ const StackNavigation = () => {
 
   return (
     <Stack.Navigator>
-      {(!isLoggedIn || sessionId === '') && (
+      {!isLoggedIn && (
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -455,13 +454,4 @@ const CloseButton = styled.TouchableOpacity`
 const ButtonImage = styled.ImageBackground`
   width: 100%;
   height: 100%;
-`;
-
-const Title = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  letter-spacing: -0.36px;
-  color: #373737;
 `;

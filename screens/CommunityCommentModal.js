@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   StatusBar,
@@ -16,6 +16,8 @@ import {
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { fetchCommentReplyList, fetchCommentList, fetchComment } from '../service/api';
+import { useSelector } from 'react-redux';
+
 const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, postId, navigation }) => {
   // 댓글 리스트
   const [commentList, setCommentList] = useState([]);
@@ -26,6 +28,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
   const [replyCommentId, setReplyCommentId] = useState(0);
   const [replyCommentNickname, setReplyCommentNickname] = useState('');
   const [replyCommentIndex, setReplyCommentIndex] = useState();
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   const flatListRef = useRef(null);  // FlatList를 참조할 ref
   const inputRef = useRef(null);
@@ -40,6 +43,14 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
 
     flatListRef.current?.scrollToIndex({ index, animated: true });
   };
+
+  const resetModalState = useCallback(() => {
+    setCommentList([]);
+    setReplyCommentId(0);
+    setPage(0);
+    setFirstLoading(true);
+    setTotalPage(0);
+  }, []);
 
   const handleKeyboardDidHide = () => {
     if (inputRef.current) {
@@ -62,6 +73,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
 
   const fetchAllCommentList = async () => {
     if (page <= totalPage) {
+      console.log(page)
       setLoading(true);
       const apiResponseData = await fetchCommentList(postId, page);
       setCommentList(prevList => [...prevList, ...apiResponseData?.result]);
@@ -73,10 +85,11 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
   }
 
   useEffect(() => {
-    if (commentModalVisible) {
+    if(commentModalVisible) {
+      resetModalState();
       fetchAllCommentList();
     }
-  }, []);
+  }, [commentModalVisible]);
 
   useEffect((index) => {
     if (firstLoading) {
@@ -123,10 +136,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
     const apiResponseData = await fetchComment(replyCommentId, postId, content);
     console.log(apiResponseData);
 
-    setCommentList([]);
-    setReplyCommentId(0);
-    setPage(0);
-    setReplyCommentNickname('');
+    resetModalState();
     inputRef.current.clear();
     setFirstLoading(true);
   }
@@ -146,24 +156,34 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
     };
 
     const CommentReplyContainer = (props) => (
-      <CommentReplyMapContainer>
+      !props.comment.blockChk && (<CommentReplyMapContainer>
         {props.comment.profileImgName.split('/').pop() !== 'default' ? (<CommentProfileImage source={{ uri: props.comment.profileImgName }} />) 
         : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
         <CommentDetailContainer>
-          <CommentProfileContainer>
-            <CommentProfileNickname>
-              {props.comment.nickname}
-            </CommentProfileNickname>
-            <CommentDuration>
-              {props.comment.commentCalculatedDate}
-            </CommentDuration>
-          </CommentProfileContainer>
-          <CommentContent>{props.comment.commentContent}</CommentContent>
+          <CommentReportContainer>
+            <View>
+              <CommentProfileContainer>
+                <CommentProfileNickname>
+                  {props.comment.nickname}
+                </CommentProfileNickname>
+                <CommentDuration>
+                  {props.comment.commentCalculatedDate}
+                </CommentDuration>
+              </CommentProfileContainer>
+              <CommentContent>{props.comment.commentContent}</CommentContent>
+            </View>
+            {props.comment.nickname !== userInfo.profileNickname &&
+              <TouchableOpacity onPress={() => reportComment(props.comment.commentId)}>
+                <CommentReportButtonImage
+                  source={require('../assets/alert-triangle.png')}
+                />
+              </TouchableOpacity>}
+          </CommentReportContainer>
         </CommentDetailContainer>
       </CommentReplyMapContainer>
-    );
+    ));
 
-    return (
+    return (!item.blockChk && (
       <CommentContainer key={item.profileId}>
         {item.profileImgName.split('/').pop() !== 'default' ? (<CommentProfileImage source={{ uri: item.profileImgName }} />)
           : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
@@ -180,11 +200,12 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
               </CommentProfileContainer>
               <CommentContent>{item.commentContent}</CommentContent>
             </View>
-            <TouchableOpacity onPress={() => reportComment(item.commentId)}>
-              <CommentReportButtonImage
-                source={require('../assets/alert-triangle.png')}
-              />
-            </TouchableOpacity>
+            {item.nickname !== userInfo.profileNickname &&
+              <TouchableOpacity onPress={() => reportComment(item.commentId)}>
+                <CommentReportButtonImage
+                  source={require('../assets/alert-triangle.png')}
+                />
+              </TouchableOpacity>}
           </CommentReportContainer>
           <CommentReplyButton
             activeOpacity={0.8}
@@ -217,7 +238,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
           </View>
         </CommentDetailContainer>
       </CommentContainer>
-    );
+    ));
   };
 
   return (
@@ -245,9 +266,9 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
               </CloseImageButton>
             </CommentHeaderContainer>
 
-            { firstLoading ? (<View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator color={'#CA7FFE'} />
-              </View>) : commentList.length !== 0 ? (
+            {firstLoading ? (<View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator color={'#CA7FFE'} />
+            </View>) : commentList.length !== 0 ? (
               <FlatList
                 data={commentList}
                 renderItem={({ item, index }) => <Comment item={item} onReplyPress={focusOnInput} focusOnInput={focusOnInput} index={index} />}
@@ -264,7 +285,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
                 extraData={commentList}
               />
             ) : (
-            <View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ backgroundColor: '#FFFFFF', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontSize: 15, textAlign: 'center', color: '#7A7A7A' }}>댓글이 존재하지 않습니다.{'\n'}게시물에 다른 유저의 포토 챌린지에 대한{'\n'}댓글을 남겨보세요!</Text>
               </View>
             )}
@@ -272,8 +293,8 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
 
           <View style={styles.inputContainer}>
             {replyCommentId != 0 ? (
-              <View style={{marginLeft: 15, marginBottom: 10}}>
-                <Text><Text style={{color: '#CA7FFE'}}>{replyCommentNickname}</Text>님에게 답글 보내는 중</Text>
+              <View style={{ marginLeft: 15, marginBottom: 10 }}>
+                <Text><Text style={{ color: '#CA7FFE' }}>{replyCommentNickname}</Text>님에게 답글 보내는 중</Text>
               </View>
             ) : (null)}
             <InputComponent />

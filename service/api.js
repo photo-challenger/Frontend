@@ -42,6 +42,18 @@ export const setCookie = (cookie) => {
   axiosInstance.defaults.headers.Cookie = cookie;
 };
 
+const fetchLogin_before = async () => {
+  try {
+    const response = await axios.post('https://www.tripture.shop/login/true', {
+      loginEmail: 'user1@example.com',
+      loginPw: 'password1',
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const fetchLogin = async (email, password, isAutoLogin) => {
   try {
     const response = await axiosInstance.post(
@@ -94,6 +106,27 @@ const fetchProfileEditForm = async () => {
   try {
     const response = await axios.get(`${config.apiUrl}profile/edit`);
     console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchProfileEdit = async (params) => {
+  try {
+    // console.log('🚀 ~ fetchProfileEdit ~ params:', params);
+    const formData = new FormData();
+
+    formData.append('profileNickname', params.profileNickname);
+    formData.append('loginPw', params.loginPw);
+    formData.append('file', params.file);
+    const response = await axios.post(
+      `${config.apiUrl}profile/edit`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+
     return response.data;
   } catch (error) {
     console.error(error);
@@ -171,6 +204,19 @@ async function fetchlocationBasedList(params) {
   );
 
   return response.json();
+}
+
+async function fetchLocationBasedChallengeList(params) {
+  try {
+    const response = await axios.post(
+      `${config.apiUrl}challenge/area_list`,
+      params,
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function fetchPopularCommunityList(params) {
@@ -291,12 +337,12 @@ async function fetchPasswordFind(password, email) {
   try {
     const response = await axios.post(`${config.apiUrl}login/password/change`, {
       password: password,
-      email: email
+      email: email,
     });
 
     return response.data;
   } catch (error) {
-    if(error.response.status === 404) {
+    if (error.response.status === 404) {
       return error.response.data.message;
     } else {
       console.error(error);
@@ -540,9 +586,6 @@ async function fetchReport(params) {
   } catch (error) {
     console.error(error);
   }
-
-  console.log('response  >> ', response);
-
   return response.json();
 }
 
@@ -700,6 +743,7 @@ async function fetchProfileDelete() {
 }
 
 export {
+  fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,
   fetchUseMyTicket,
@@ -711,6 +755,7 @@ export {
   fetchPointStoreDetail,
   fetchDefaultProfile,
   fetchProfileEditForm,
+  fetchProfileEdit,
   fetchReport,
   fetchlocationBasedList,
   fetchCommentList,
@@ -744,4 +789,5 @@ export {
   fetchAddPostLike,
   fetchLogout,
   fetchProfileDelete,
+  fetchLocationBasedChallengeList,
 };

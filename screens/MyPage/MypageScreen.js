@@ -114,7 +114,7 @@ const SettingImageContainer = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: flex-end;
   padding-top: 15px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 const SettingImage = styled.Image`
@@ -127,7 +127,7 @@ const MyPageHeaderContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: 20px 24px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 `;
 
 const MyPageHeaderText = styled.Text`

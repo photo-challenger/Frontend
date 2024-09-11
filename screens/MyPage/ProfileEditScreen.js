@@ -9,12 +9,15 @@ import {
   Image,
   ActivityIndicator,
   Platform,
+  ToastAndroid,
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
-import { fetchProfileEditForm } from '../../service/api';
+import { fetchProfileEditForm, fetchProfileEdit } from '../../service/api';
 import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '../../redux/user';
+import ImagePickerProfile from '../../component/common/ImagePcikerProfile';
+import useConfirm from '../../hooks/useConfirm';
 
 const SaveButtonComponent = ({ onSave }) => (
   <SaveButton onPress={onSave}>
@@ -31,6 +34,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [passwordValid, setPasswordValid] = useState();
   const [checkPasswordIsValid, setCheckPasswordIsValid] = useState();
+  const [imageInfo, setImageInfo] = useState('');
 
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
@@ -40,18 +44,100 @@ const ProfileEditScreen = ({ route, navigation }) => {
     }
   }, [password]);
 
+  // nickname, password, checkPassword, passwordValid;
+  const [saveFlag, setSaveFlag] = useState(false);
+  useEffect(() => {
+    if (saveFlag) {
+      saveData();
+    }
+  }, [
+    profileInfo,
+    nickname,
+    passwordValid,
+    currentPassword,
+    checkPasswordIsValid,
+    saveFlag,
+  ]);
+
   const saveData = async () => {
-    dispatch(
-      updateUserProfile({
-        profileImgName: profileInfo.profileImgName,
-        nickname: nickname,
-      }),
-    );
+    if (imageInfo != '' || nickname != '') {
+      //닉네임 or 이미지 변경만 원할 경우
+      const rtn = {
+        profileNickname: nickname,
+        loginPw: null,
+        file: imageInfo,
+      };
+      const result = await fetchProfileEdit(rtn);
+      // console.log('🚀 ~ saveData ~ result:', result);
+      ToastAndroid.showWithGravity(
+        '저장했습니다.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      dispatch(
+        updateUserProfile({
+          profileImgName: result.profileImgName,
+          nickname: result.profileNickname,
+        }),
+      );
+      navigation.push('mypage');
+    } else if (
+      nickname != '' &&
+      currentPassword != '' &&
+      !passwordValid != ''
+    ) {
+      //비밀번호 정규식 틀렸을 경우
+      setSaveFlag(false);
+      ToastAndroid.showWithGravity(
+        '비밀번호는 특수문자, 숫자 포함 8자 이상 입력해주세요.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    } else if (!checkPasswordIsValid) {
+      //비밀번호 검사 틀렸을 경우
+      setSaveFlag(false);
+      ToastAndroid.showWithGravity(
+        '새로운 비밀번호를 다시 확인해주세요.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    } else if (!passwordValid && password != '') {
+      //비밀번호 정규식 및 검사 모두 맞을 경우
+      const rtn = {
+        profileNickname: nickname,
+        loginPw: password,
+        file: imageInfo,
+      };
+      const result = await fetchProfileEdit(rtn);
+      ToastAndroid.showWithGravity(
+        '저장했습니다.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      dispatch(
+        updateUserProfile({
+          profileImgName: result.profileImgName,
+          nickname: result.profileNickname,
+        }),
+      );
+      navigation.push('mypage');
+      // console.log('🚀 ~ saveData ~ result:', result);
+    } else {
+      //나머지 처리(저장에 실패했습니다. 다시 한 번 확인해주세요.)
+      ToastAndroid.showWithGravity(
+        '저장에 실패했습니다. 다시 한 번 확인해주세요.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      setSaveFlag(false);
+    }
   };
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <SaveButtonComponent onSave={saveData} />,
+      headerRight: () => (
+        <SaveButtonComponent onSave={() => setSaveFlag(true)} />
+      ),
     });
 
     getProfileEditForm();
@@ -59,7 +145,6 @@ const ProfileEditScreen = ({ route, navigation }) => {
 
   const getProfileEditForm = async () => {
     const result = await fetchProfileEditForm();
-    // console.log('🚀 ~ result:', result);
     setProfileInfo(result);
   };
   useEffect(() => {
@@ -67,6 +152,16 @@ const ProfileEditScreen = ({ route, navigation }) => {
       setCheckPasswordIsValid(password === checkPassword);
     }
   }, [checkPassword]);
+
+  function setImageResult(rs) {
+    console.log('Rs : ', rs.assets[0]);
+    const file = {
+      uri: rs.assets[0].uri,
+      type: 'image/jpeg',
+      name: rs.assets[0].fileName || rs.assets[0].uri.split('/').pop(),
+    };
+    setImageInfo(file);
+  }
 
   return (
     <ProfileEditComponent>
@@ -82,14 +177,10 @@ const ProfileEditScreen = ({ route, navigation }) => {
           >
             <ProfileHeaderText>프로필</ProfileHeaderText>
             <ProfileDetailContainer>
-              <View style={{ position: 'relative' }}>
-                <ProfileImage source={{ uri: profileInfo.profileImgName }} />
-                <ProfileImageEditButton activeOpacity={0.8}>
-                  <ProfileImageEditImage
-                    source={require('../../assets/profile-edit-icon.png')}
-                  />
-                </ProfileImageEditButton>
-              </View>
+              <ImagePickerProfile
+                callbackResult={setImageResult}
+                profileImage={profileInfo.profileImgName}
+              />
               <ProfileNicknameContainer>
                 <ProfileNickname>{profileInfo.profileNickname}</ProfileNickname>
                 {profileInfo.loginType == 'KAKAO' ? (
@@ -200,30 +291,6 @@ const ProfileDetailContainer = styled.View`
   align-items: center;
   padding: 24px;
   margin-bottom: 16px;
-`;
-
-const ProfileImage = styled.Image`
-  width: 100px;
-  height: 100px;
-  border: 6px solid #ca7ffe;
-  border-radius: 90px;
-`;
-
-const ProfileImageEditButton = styled.TouchableOpacity`
-  background-color: #4f4f4f;
-  width: 36px;
-  height: 36px;
-  border-radius: 30px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ProfileImageEditImage = styled.Image`
-  width: 24px;
-  height: 24px;
 `;
 
 const ProfileNickname = styled.Text`
