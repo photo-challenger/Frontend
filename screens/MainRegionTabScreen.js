@@ -257,9 +257,9 @@ const TabListFirstView = styled.TouchableOpacity`
 `
 
 const TabListFirstText = styled.Text`
+  font-family: ${(props) => (props.isFocused ? 'Bold' : 'Medium')};
 	font-size: 16px;
   font-style: normal;
-  font-weight: 700;
 	color: #121212;
 `
 
@@ -302,15 +302,16 @@ const SearchIconImg = styled.Image`
 `;
 
 const SearchInput = styled.TextInput`
+  font-family: Regular;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
 `;
 
 const RegionTouristHeaderText = styled.Text`
+  font-family: Bold;
   font-size: 20px;
   font-style: normal;
-  font-weight: 700;
   margin: 15px 0 18px 24px;
 `
 
@@ -341,17 +342,17 @@ const RegionImage = styled.Image`
 `;
 
 const RegionName = styled.Text`
+  font-family: Bold;
   font-size: 16px;
   font-style: normal;
-  font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 1px;
   margin-top: 8px;
 `;
 
 const RegionAddress = styled.Text`
+  font-family: Regular;
   font-size: 12px;
   font-style: normal;
-  font-weight: 400;
   color: #A6A6A6;
 `;
 

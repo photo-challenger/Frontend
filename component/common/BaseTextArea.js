@@ -23,19 +23,21 @@ const BaseTextarea = forwardRef(
 );
 
 const Container = styled.View`
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.Text`
   font-size: 14px;
   color: #555;
   margin-bottom: 4px;
+  font-family: Semibold;
 `;
 
 const Textarea = styled.TextInput`
   font-size: 16px;
   color: #000;
   padding: 4px 0;
+  font-family: Regular;
 `;
 
 const Underline = styled.View`

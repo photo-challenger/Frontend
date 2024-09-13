@@ -52,8 +52,7 @@ const AlertContent = styled.View`
 
 const AlertTitle = styled.Text`
   font-size: 20px;
-  font-weight: bold;
-  font-weight: 700;
+  font-family: Bold;
   margin: 8px;
   color: #000;
   text-align: center;
@@ -61,7 +60,7 @@ const AlertTitle = styled.Text`
 
 const AlertMessage = styled.Text`
   font-size: 14px;
-  font-weight: 500;
+  font-family: Semibold;
   margin-bottom: 20px;
   text-align: center;
   color: #333;
@@ -80,5 +79,5 @@ const AlertButton = styled.TouchableOpacity`
 const ButtonText = styled.Text`
   font-size: 14px;
   color: white;
-  font-weight: bold;
+  font-family: Bold;
 `;

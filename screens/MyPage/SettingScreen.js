@@ -143,7 +143,7 @@ const SettingProfileContainer = styled.View`
 const SettingHeaderProfileText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   margin-bottom: 28px;
 `;
 
@@ -166,13 +166,13 @@ const ProfileDetailContainer = styled.View`
 const SettingProfileNickname = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
 `;
 
 const SettingProfileEmail = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #7a7a7a;
   marging-bottom: 12px;
 `;
@@ -187,7 +187,7 @@ const SettingProfileEditButton = styled.TouchableOpacity`
 const SettingProfileEditButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #7a7a7a;
   line-height: 18px;
 `;
@@ -206,7 +206,7 @@ const SettingCategoryContainer = styled.View`
 const SettingHeaderText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #4f4f4f;
   padding: 12px 24px 0 24px;
 `;
@@ -221,7 +221,7 @@ const SettingCategorySubContainer = styled.TouchableOpacity`
 const SettingCategoryText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
   color: #373737;
   padding-left: 24px;
   padding-right: 24px;

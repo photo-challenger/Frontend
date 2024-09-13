@@ -228,19 +228,20 @@ const ChallengeLevelContainer = styled.View`
   flex-direction: column;
   justify-content: space-between;
   margin-top: 12px;
+  elevation: 2;
 `;
 
 const ChallengeLevelText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ffffff;
 `;
 
 const ChallengeLevelSubText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #daff7c;
 `;
 
@@ -259,7 +260,7 @@ const CurrentChallengeButtonImage = styled.Image`
 const CurrentChallengeButtonText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   line-height: 22px;
   color: #f7f7f8;
 `;
@@ -272,7 +273,7 @@ const ChallengePostContainer = styled.View`
 const ChallengePostHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-bottom: 20px;
 `;
 
@@ -290,7 +291,7 @@ const NoChallengeListText = styled.Text`
   text-align: center;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #b3b3b3;
 `;
 
@@ -307,7 +308,7 @@ const NoChallengeButton = styled.TouchableOpacity`
 const NoChallengeButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
   line-height: 39px;
 `;
@@ -333,7 +334,7 @@ const CommentContainer = styled.View`
 const CommentHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-left: 24px;
   margin-bottom: 8px;
 `;
@@ -355,13 +356,13 @@ const CommentText = styled.Text`
   flex: 1;
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
 `;
 
 const CommentDurationText = styled.Text`
   font-size: 12px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #b5b5b5;
   margin-left: 7px;
 `;

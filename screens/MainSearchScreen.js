@@ -108,7 +108,7 @@ const MainSearchScreen = ({ route, navigation }) => {
 					/>
 				</SearchContent>
 			</SearchContainer>
-			<SearchHeaderText><Text style={{ color: "#CA7FFE" }}>{totalCount}개</Text>의 장소를 찾았어요.</SearchHeaderText>
+			<SearchHeaderText><Text style={{ color: "#CA7FFE", fontFamily: 'Bold' }}>{totalCount}개</Text>의 장소를 찾았어요.</SearchHeaderText>
 			{Array.isArray(searchResult) && searchResult.length != 0 ? (
 				<FlatList
 					data={searchResult}
@@ -185,15 +185,15 @@ const SearchContent = styled.View`
 `;
 
 const SearchInput = styled.TextInput`
+	font-family: Regular;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
 `;
 
 const SearchHeaderText = styled.Text`
+	font-family: Regular;
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
 	color: #858585;
 	margin-left: 24px;
 	margin-top: 18px;
@@ -218,15 +218,15 @@ const SearchResultItemDetail = styled.View`
 `
 
 const SearchResultName = styled.Text`
+	font-family: Bold;
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 700;
 `
 
 const SearchResultRegion = styled.Text`
+	font-family: Semibold;
 	font-size: 13px;
 	font-style: normal;
-	font-weight: 600;
 	color: #FFFFFF;
 	background-color: #B5B5B5;
 	padding: 6px 14px;
@@ -236,9 +236,9 @@ const SearchResultRegion = styled.Text`
 `
 
 const SearchResultAddress = styled.Text`
+	font-family: Regular;
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
 	color: #A6A6A6;
 `
 

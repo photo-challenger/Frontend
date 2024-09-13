@@ -68,8 +68,7 @@ const AlertContent = styled.View`
 
 const AlertTitle = styled.Text`
   font-size: 20px;
-  font-weight: bold;
-  font-weight: 700;
+  font-family: Bold;
   margin-bottom: 8px;
   padding: 8px;
   color: #000;
@@ -78,7 +77,7 @@ const AlertTitle = styled.Text`
 
 const AlertMessage = styled.Text`
   font-size: 14px;
-  font-weight: 700;
+  font-family: Bold;
   text-align: center;
   color: #333;
   line-height: 21px;
@@ -105,7 +104,7 @@ const AlertButtonLeft = styled.TouchableOpacity`
 const LeftButtonText = styled.Text`
   font-size: 14px;
   color: #4F4F4F;
-  font-weight: bold;
+  font-family: Bold;
 `;
 
 const AlertButtonRight = styled.TouchableOpacity`
@@ -121,5 +120,5 @@ const AlertButtonRight = styled.TouchableOpacity`
 const RightButtonText = styled.Text`
   font-size: 14px;
   color: white;
-  font-weight: bold;
+  font-family: Bold;
 `;

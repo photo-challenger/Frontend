@@ -219,35 +219,35 @@ const PointsLabel = styled.Text`
   color: #000;
   font-size: 18px;
   font-style: normal;
-  font-weight: 400;
   margin-bottom: 2px;
+  font-family: Medium;
 `;
 
 const PointsValue = styled.Text`
   color: #daff7c;
   font-size: 40px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Medium;
 `;
 
 const PointsText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Medium;
 `;
 
 const PointsLink = styled.Text`
   color: #ffffff;
   font-size: 12px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 23px;
+  line-height: 23.5px;
+  font-family: Medium;
 `;
 
 const SectionTitle = styled.Text`
   padding: 18px 24px;
   font-size: 18px;
-  font-weight: bold;
+  font-family: Bold;
   letter-spacing: -0.36px;
 `;
 

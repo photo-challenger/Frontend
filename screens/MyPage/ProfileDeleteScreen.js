@@ -18,7 +18,7 @@ const ProfileDeleteScreen = ({ route, navigation }) => {
 	const handleDeleteProfile = async () => {
 		showConfirm({
 			title: '회원탈퇴',
-			msg: <Text>정말 <Text style={{color: '#CA7FFE'}}>Tripture</Text>를 탈퇴하시겠어요?</Text>,
+			msg: <Text style={{fontFamily: 'Bold'}}>정말 <Text style={{color: '#CA7FFE'}}>Tripture</Text>를 탈퇴하시겠어요?</Text>,
 			onOk: async function () {
 			  await AsyncStorage.clear();
 			  dispatch(logout());
@@ -65,7 +65,7 @@ const ProfileDeleteScreen = ({ route, navigation }) => {
 						<CheckText>정말 탈퇴하시겠습니까?</CheckText>
 					</Animated.ScrollView>
 				</Animated.View>
-				<DeleteButton deleteInputValue={deleteInputValue} activeOpacity={deleteInputValue !== '' ? 0.7 : 1} onPress={handleDeleteProfile}>
+				<DeleteButton deleteInputValue={deleteInputValue} activeOpacity={deleteInputValue !== '' ? 0.7 : 1} onPress={deleteInputValue !== '' ? handleDeleteProfile : ''}>
 					<DeleteButtonText>탈퇴하기</DeleteButtonText>
 				</DeleteButton>
 				<ConfirmComponent />
@@ -102,13 +102,13 @@ const ProfileDeleteContainer = styled.View`
 const DeleteHeaderText = styled.Text`
 	font-size: 24px;
 	font-style: normal;
-	font-weight: 500;
+	font-family: Semibold;
 `
 
 const DeleteSubHeaderText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
+	font-family: Medium;
 `
 
 const SearchContent = styled.View`
@@ -124,14 +124,14 @@ const SearchContent = styled.View`
 const SearchInput = styled.TextInput`
   font-size: 14px;
 	font-style: normal;
-	font-weight: 500;
+	font-family: Medium;
 	text-align-vertical: top;
 `;
 
 const InfoHeaderText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 700;
+	font-family: Bold;
 	color: #4F4F4F;
 	margin-bottom: 5px;
 	margin-top: 30px;
@@ -140,7 +140,7 @@ const InfoHeaderText = styled.Text`
 const InfoHeaderSubText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
+	font-family: Medium;
 	color: #4F4F4F;
 	line-height: 21px;
 `
@@ -148,7 +148,7 @@ const InfoHeaderSubText = styled.Text`
 const CheckText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 700;
+	font-family: Bold;
 	color: #4F4F4F;
 	position: absolute;
 	bottom: 92px;
@@ -167,6 +167,6 @@ const DeleteButton = styled.TouchableOpacity`
 const DeleteButtonText = styled.Text`
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 700;
+	font-family: Bold;
 	color: #FFFFFF;
 `

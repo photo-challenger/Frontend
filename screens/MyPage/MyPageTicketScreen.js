@@ -196,7 +196,7 @@ const TabListFirstView = styled.TouchableOpacity`
 const TabListFirstText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   color: ${(props) => (props.isFocused ? '#000000' : '#ADADAE')};
 `;
 
@@ -248,7 +248,7 @@ const TicketListNotExistText = styled.Text`
   color: #b3b3b3;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
   margin-top: 25%;
 `;
 
@@ -266,8 +266,8 @@ const TicketListNotExistButton = styled.TouchableOpacity`
 const TicketListNotExistButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Bold;
   color: #ffffff;
   text-align: center;
-  line-height: 40px;
+  line-height: 35px;
 `;

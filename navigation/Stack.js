@@ -124,7 +124,7 @@ const StackNavigation = () => {
     headerLeft: headerLeftVisible === false ? null : defaultHeaderLeft, // headerLeft visible 여부
     headerRight: headerRightVisible === false ? null : defaultHeaderRight, // headerRight visible 여부
     headerShadowVisible: false,
-    headerTitleStyle: { color: '#373737', fontSize: 18, fontWeight: '700' }, // 제목 스타일
+    headerTitleStyle: { color: '#373737', fontSize: 18, fontFamily: 'Bold' }, // 제목 스타일
     headerStyle: {
       backgroundColor: headerBackgroundColor
         ? headerBackgroundColor

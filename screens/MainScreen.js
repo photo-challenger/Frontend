@@ -80,7 +80,7 @@ const MainScreen = ({ route, navigation }) => {
           >
             <HomeHeaderContainer>
               <HomeHeaderText>
-                <Text style={{ fontWeight: 700 }}>
+                <Text style={{ fontWeight: 700, fontFamily: 'Bold' }}>
                   {userInfo?.profileNickname}님,
                 </Text>{' '}
                 트립처와 함께{'\n'}추억가득한 여행되세요!
@@ -176,6 +176,7 @@ const SearchInput = styled.TextInput`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  font-family: Regular;
 `;
 
 const HomeHeaderContainer = styled.View`
@@ -189,9 +190,11 @@ const HomeHeaderText = styled.Text`
   font-weight: 400;
   margin-bottom: 17px;
   margin-top: 10px;
+  font-family: Regular;
 `;
 
 const HomeHeaderSubText = styled.Text`
+  font-family: Semibold;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -217,6 +220,7 @@ const RegionSubContainer = styled.TouchableOpacity`
 `;
 
 const RegionNameText = styled.Text`
+  font-family: Semibold;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;

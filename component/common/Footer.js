@@ -126,7 +126,7 @@ const FooterItem = styled.TouchableOpacity`
 const FooterItemText = styled.Text`
   font-size: 11px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   margin-top: 8%;
   color: ${(props) => (props.isSelected ? '#CA7FFE' : '#000000')};
   opacity: ${(props) => (props.isSelected ? 1 : 0.3)};

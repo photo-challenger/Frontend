@@ -55,8 +55,8 @@ const PointStoreDetail = ({ route, navigation }) => {
       showConfirm({
         title: '잠시만요!',
         msg: (
-          <Text>
-            <Text style={{ color: '#CA7FFE' }}>
+          <Text style={{ fontFamily: 'Bold' }}>
+            <Text style={{ color: '#CA7FFE', fontFamily: 'Bold' }}>
               회원님의 포인트나 재고가 부족
             </Text>
             하여{'\n'} 구매에 실패했습니다.
@@ -107,7 +107,7 @@ const PointStoreDetail = ({ route, navigation }) => {
             <ItemDetailAddress>{item.itemPosition}</ItemDetailAddress>
           </ItemDetailSubTitle>
           <ItemDetailPrice>
-            {new Intl.NumberFormat().format(item.itemPrice)}원
+            {new Intl.NumberFormat().format(item.itemPrice)} 포인트
           </ItemDetailPrice>
         </ItemDetailTitle>
       </ItemImageWrapper>
@@ -228,7 +228,7 @@ const ButtonImage = styled.Image`
 const ItemName = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const ItemImageWrapper = styled.View`
@@ -276,19 +276,19 @@ const ItemDetailSubTitle = styled.View`
 const ItemDetailName = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Medium;
   color: #ffffff;
 `;
 const ItemDetailAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #ffffff;
 `;
 const ItemDetailPrice = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Medium;
   color: #ffffff;
 `;
 
@@ -300,11 +300,13 @@ const ItemDescriptionContainer = styled.View`
 const ItemDescriptionText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-bottom: 14px;
 `;
 
-const ItemDescription = styled.Text``;
+const ItemDescription = styled.Text`
+  font-family: Regular;
+`;
 
 const ItemPurchaseButton = styled.TouchableOpacity`
   position: absolute;
@@ -322,7 +324,7 @@ const PurchaseButtonText = styled.Text`
   color: #ffffff;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 /* Modal Styles */
@@ -353,7 +355,7 @@ const ModalHeaderTextWrapper = styled.TouchableOpacity`
 const ModalHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const ModalDetailContainer = styled.View`
@@ -376,13 +378,13 @@ const ModalDetailSubContainer = styled.View`
 const ModalDetailName = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const ModalDetailAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   margin-top: 5.76px;
 `;
 const ModalSelectCountContainer = styled.View`
@@ -396,7 +398,7 @@ const ModalSelectCountContainer = styled.View`
 const ModalSelectText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const ModalSelectCountSubContainer = styled.View`
@@ -425,7 +427,7 @@ const ModalSelectCount = styled.View`
 const ModalSelectCountNum = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #4f4f4f;
 `;
 
@@ -450,7 +452,7 @@ const ModalSelectPriceContainer = styled.View`
 const ModalFinalPrice = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #ca7ffe;
 `;
 
@@ -465,6 +467,6 @@ const ModalSelectButton = styled.TouchableOpacity`
 const ModalSelectButtonText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #ffffff;
 `;

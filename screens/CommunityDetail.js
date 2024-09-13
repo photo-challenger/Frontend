@@ -240,12 +240,13 @@ const UserImage = styled.Image`
 
 const UserName = styled.Text`
   color: #000;
-  font-weight: bold;
+  font-family: Bold;
   font-size: 16px;
 `;
 
 const UserLevel = styled.Text`
   color: #999;
+  font-family: Medium;
   font-size: 14px;
 `;
 
@@ -270,6 +271,8 @@ const ContentText = styled.Text`
   color: #333;
   font-size: 14px;
   line-height: 20px;
+  font-family: Medium;
+  line-height: 16.8px;
 `;
 
 const LocationBox = styled.View`
@@ -326,6 +329,7 @@ const ScoreText = styled.Text`
   color: #666;
   font-size: 14px;
   padding-left: 8px;
+  font-family: Bold;
 `;
 
 /* Modal Styles */
@@ -358,6 +362,6 @@ const ModalIcon = styled.Image`
 const ModalText = styled.Text`
   font-size: 16px;
   color: #4F4F4F;
-  font-weight: 700;
   line-height: 22px;
+  font-family: Bold;
 `;

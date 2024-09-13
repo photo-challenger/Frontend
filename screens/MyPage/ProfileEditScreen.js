@@ -282,7 +282,7 @@ const ProfileEditComponent = styled.View`
 const ProfileHeaderText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
 `;
 
 const ProfileDetailContainer = styled.View`
@@ -296,7 +296,7 @@ const ProfileDetailContainer = styled.View`
 const ProfileNickname = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   line-height: 32px;
 `;
 
@@ -316,7 +316,7 @@ const KakaoImage = styled.Image`
 const ProfileNicknameHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Bold;
   margin-bottom: 20px;
 `;
 
@@ -342,6 +342,7 @@ const EmailInputContent = styled.View`
 
 const NicknameInput = styled.TextInput`
   padding-left: 16px;
+  font-family: Regular;
 `;
 
 const PasswordContent = styled.View`
@@ -381,7 +382,7 @@ const SaveText = styled.Text`
   text-align: center;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   letter-spacing: -0.36px;
   color: #373737;
 `;

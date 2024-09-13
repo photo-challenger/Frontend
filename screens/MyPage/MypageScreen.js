@@ -133,7 +133,7 @@ const MyPageHeaderContainer = styled.View`
 const MyPageHeaderText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
 `;
 
 const MyPageHeaderProfileImage = styled.Image`
@@ -159,6 +159,6 @@ const TabListFirstView = styled.TouchableOpacity`
 const TabListFirstText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: ${(props) => (props.isFocused ? '#000000' : '#ADADAE')};
 `;

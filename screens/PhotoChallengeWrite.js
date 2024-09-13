@@ -156,7 +156,7 @@ const ActionButton = styled.TouchableOpacity`
   bottom: 0;
   background-color: #ca7ffe;
   padding-vertical: 15px;
-  margin-top: 20px;
+  margin-top: 10px;
   align-items: center;
   justify-content: center;
 `;
@@ -165,8 +165,8 @@ const ButtonText = styled.Text`
   color: #fff;
   text-align: center;
   font-size: 18px;
-  font-weight: 700;
   letter-spacing: -0.36px;
+  font-family: Bold;
 `;
 
 const InputContainer = styled.View`
@@ -177,7 +177,7 @@ const Title = styled.Text`
   font-size: 18px;
   margin-bottom: 8px;
   color: #5f5f5f;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const Underline = styled.View`
@@ -202,5 +202,6 @@ const NameText = styled.Text`
   text-align: left;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
+  letter-spacing: -0.154px;
 `;

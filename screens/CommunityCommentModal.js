@@ -374,7 +374,7 @@ const CloseImage = styled.Image`
 const CommentHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const CommentContainer = styled.View`
@@ -404,7 +404,7 @@ const CommentProfileContainer = styled.View`
 const CommentProfileNickname = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-bottom: 3px;
   margin-right: 8px;
 `;
@@ -412,14 +412,14 @@ const CommentProfileNickname = styled.Text`
 const CommentDuration = styled.Text`
   font-size: 12px;
   font-style: normal;
-  font-weight: 500;
   color: #a9a9a9;
+  font-family: Medium;
 `;
 
 const CommentContent = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
 `;
 
 const CommentReplyButton = styled.TouchableOpacity`
@@ -430,8 +430,8 @@ const CommentReplyButton = styled.TouchableOpacity`
 
 const CommentReplyButtonText = styled.Text`
   font-size: 12px;
-  ont-style: normal;
-  font-weight: 500;
+  font-style: normal;
+  font-family: Medium;
   color: #666666;
 `;
 
@@ -452,6 +452,7 @@ const CommentReplyMoreButton = styled.TouchableOpacity`
 const CommentReplyMoreButtonText = styled.Text`
   font-size: 12px;
   color: #666666;
+  font-family: Medium;
 `;
 
 const SearchContent = styled.View`
@@ -473,6 +474,7 @@ const SearchIconImg = styled.Image`
 const SearchInput = styled.TextInput`
   padding-left: 10px;
   flex: 1;
+  font-family: Regular;
 `;
 
 const CommentReplyMapContainer = styled.View`

@@ -55,29 +55,29 @@ const MainDetailScreen = ({ route, navigation }) => {
     });
   };
 
-  if(loading) {
+  if (loading) {
     return (
-      <MainDetailContainer style={{alignItems: 'center', justifyContent: 'center'}}>
+      <MainDetailContainer style={{ alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size={'large'} color={'#CA7FFE'} />
       </MainDetailContainer>
     )
   }
 
-	return (
-		<MainDetailContainer>
-			<Animated.View
-				style={[styles.animatedSheet]}
-			>
-				<Animated.ScrollView
-					style={styles.scrollView}
-					contentContainerStyle={styles.scrollViewContent}
-					keyboardShouldPersistTaps="always"
-				>
-					{regionDetailContent && (
-						<>
-							<RegionDetailContainer>
-              <RegionDetailImage source={ regionDetailContent.firstimage === '' ? (require('../assets/tripture-main-no-content.png')) 
-								: ({ uri: regionDetailContent.firstimage })} />
+  return (
+    <MainDetailContainer>
+      <Animated.View
+        style={[styles.animatedSheet]}
+      >
+        <Animated.ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="always"
+        >
+          {regionDetailContent && (
+            <>
+              <RegionDetailContainer>
+                <RegionDetailImage source={regionDetailContent.firstimage === '' ? (require('../assets/tripture-main-no-content.png'))
+                  : ({ uri: regionDetailContent.firstimage })} />
 
                 <RegionNameContainer>
                   {regionDetailContent.addr1 === '' ? null : (
@@ -99,26 +99,18 @@ const MainDetailScreen = ({ route, navigation }) => {
               </RegionDetailContainer>
               <DescriptionContainer>
                 <RegionDetailHeaderText>이곳은요</RegionDetailHeaderText>
-                <Text>{regionDetailContent.overview}</Text>
+                <Text style={{ fontFamily: 'Regular', lineHeight: 21 }}>{regionDetailContent.overview}</Text>
               </DescriptionContainer>
             </>
           )}
         </Animated.ScrollView>
         <ButtonContainer>
-          {isPhotoChallenge ? (
-            <>
-              <ChallengeButton>
-                <ChallengeText>챌린지 참여</ChallengeText>
-              </ChallengeButton>
-              <MapButton onPress={moveToMap}>
-                <MapButtonText>지도보기</MapButtonText>
-              </MapButton>
-            </>
-          ) : (
-            <MapButton style={{ width: '100%' }} onPress={moveToMap}>
-              <MapButtonText>지도보기</MapButtonText>
-            </MapButton>
-          )}
+          <ChallengeButton>
+            <ChallengeText>챌린지 참여</ChallengeText>
+          </ChallengeButton>
+          <MapButton onPress={moveToMap}>
+            <MapButtonText>지도보기</MapButtonText>
+          </MapButton>
         </ButtonContainer>
       </Animated.View>
     </MainDetailContainer>
@@ -165,9 +157,9 @@ const RegionNameContainer = styled.View`
 `;
 
 const RegionDetailText = styled.Text`
+  font-family: Medium;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
   color: #ffffff;
   background-color: #ca7ffe;
   padding: 6px 14px;
@@ -176,9 +168,9 @@ const RegionDetailText = styled.Text`
 `;
 
 const RegionDetailName = styled.Text`
+  font-family: Medium;
 	font-size: 24px;
 	font-style: normal;
-	font-weight: 500;
 	color: ${(props) => props.isImage ? '#ffffff' : '#000000'};
 	margin-bottom: 2px;
 	margin-top: 9px;
@@ -186,9 +178,9 @@ const RegionDetailName = styled.Text`
 `
 
 const RegionDetailAddress = styled.Text`
+  font-family: Regular;
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
 	color: ${(props) => props.isImage ? '#ffffff' : '#000000'};
 	padding-right: 16px;
 `
@@ -198,9 +190,9 @@ const DescriptionContainer = styled.View`
 `;
 
 const RegionDetailHeaderText = styled.Text`
+  font-family: Semibold;
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
   margin-bottom: 12px;
 `;
 
@@ -218,9 +210,9 @@ const ChallengeButton = styled.TouchableOpacity`
 `;
 
 const ChallengeText = styled.Text`
+  font-family: Bold;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
   color: #ca7ffe;
 `;
 
@@ -233,8 +225,8 @@ const MapButton = styled.TouchableOpacity`
 `;
 
 const MapButtonText = styled.Text`
+  font-family: Bold;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
   color: #ffffff;
 `;

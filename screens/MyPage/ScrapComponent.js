@@ -213,7 +213,7 @@ const NoChallengeListText = styled.Text`
   text-align: center;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #b3b3b3;
 `;
 
@@ -230,9 +230,9 @@ const NoChallengeButton = styled.TouchableOpacity`
 const NoChallengeButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
-  line-height: 39px;
+  line-height: 35px;
 `;
 
 const ChallengeImageContainer = styled.View`
@@ -257,7 +257,7 @@ const ChallengeTabContainer = styled.View`
 const ScrapContentHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-top: 33px;
   margin-bottom: 20px;
 `;
@@ -351,7 +351,7 @@ const ScrapContentChevronImage = styled.Image`
 const ScrapChallengeHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin-top: 39px;
   margin-bottom: 20px;
 `;

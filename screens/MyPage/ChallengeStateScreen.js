@@ -94,13 +94,13 @@ const ListContainer = styled.View`
 const ChallengeStateHeaderText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
 `;
 
 const ChallengeStateSubHeaderText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   margin-bottom: 24px;
 `;
 
@@ -126,7 +126,7 @@ const ChallengeSubContainer = styled.TouchableOpacity`
 const ChallengeNameText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Bold;
   margin-bottom: 10px;
 `;
 
@@ -147,7 +147,7 @@ const JeJuChallengeIcon = styled.Image`
 const ChallengeStateNum = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Bold;
 `;
 
 const JeJuContainer = styled.TouchableOpacity`
@@ -164,7 +164,7 @@ const JeJuContainer = styled.TouchableOpacity`
 const InfoText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   color: #b5b5b5;
   text-align: center;
   margin-top: 20px;

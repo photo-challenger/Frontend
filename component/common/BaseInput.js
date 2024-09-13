@@ -25,20 +25,21 @@ const BaseInput = forwardRef(
 );
 
 const Container = styled.View`
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.Text`
   font-size: 18px;
   margin-bottom: 4px;
   color: #5f5f5f;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const Input = styled.TextInput`
   font-size: 16px;
   color: #000;
   padding: 4px 0;
+  font-family: Regular;
 `;
 
 const Underline = styled.View`

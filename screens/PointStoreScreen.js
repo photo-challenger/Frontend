@@ -104,7 +104,7 @@ const PointStoreScreen = ({ route, navigation }) => {
             textStyle={textStyle}
             listMode="SCROLLVIEW"
             labelStyle={{ marginRight: -10 }}
-            selectedItemLabelStyle={{ fontWeight: 'bold', paddingLeft: 10 }}
+            selectedItemLabelStyle={{ paddingLeft: 10, fontFamily: 'Bold' }}
             ArrowDownIconComponent={() => (
               <ArrowIcon source={require('../assets/icon-dropdown.png')} />
             )}
@@ -134,7 +134,7 @@ const PointStoreScreen = ({ route, navigation }) => {
                     <ItemAddress>{item.itemPosition}</ItemAddress>
                   </View>
                   <ItemPrice>
-                    {new Intl.NumberFormat().format(item.itemPrice)}원
+                    {new Intl.NumberFormat().format(item.itemPrice)} 포인트
                   </ItemPrice>
                 </ItemDetails>
               </ItemContainer>
@@ -179,17 +179,19 @@ const ItemDetails = styled.View`
 const ItemName = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
+
 const ItemAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
 `;
+
 const ItemPrice = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const SearchContent = styled.View`
@@ -201,12 +203,15 @@ const SearchContent = styled.View`
   background: #ffffff;
   flex-direction: row;
 `;
+
 const SearchIconImg = styled.Image`
   width: 20px;
   height: 20px;
 `;
+
 const SearchInput = styled.TextInput`
   padding-left: 10px;
+  font-family: Regular;
 
   &::placeholder {
     color: #b5b5b5;
@@ -226,7 +231,7 @@ const ItemListHeader = styled.View`
 const ItemListText = styled.Text`
   font-size: 19px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const dropdownStyle = {
@@ -247,7 +252,7 @@ const dropdownContainerStyle = {
 
 const textStyle = {
   fontSize: 14,
-  fontWeight: 500,
+  fontFamily: 'Medium',
   color: '#7A7A7A',
   lineHeight: 20,
   textAlign: 'center',

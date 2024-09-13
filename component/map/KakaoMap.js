@@ -33,7 +33,7 @@ const KakaoMap = (props) => {
       <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${MAP_APP_KEY}&libraries=services,clusterer,drawing"></script>
     </head>
     <body>
-      <div id="map" style="width:100%;height:100%;"></div>
+      <div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0;"></div>
       <script type="text/javascript">
         (function () {
           var mapContainer = document.getElementById('map'), // Div to display the map
@@ -65,7 +65,7 @@ const KakaoMap = (props) => {
               clickable: true 
             });
 
-            var content = '<div class="label" style="margin-top:10px"><span class="left"></span><span class="center" style="font-size:14px; color: #CA7FFE;font-weight: 700;font-family: Pretendard;">' + item.title + '</span><span class="right"></span></div>';
+            var content = '<div class="label" style="margin-top:10px"><span class="left"></span><span class="center" style="font-size:12px; color: #CA7FFE;font-weight: 500;font-family: Pretendard;">' + item.title + '</span><span class="right"></span></div>';
 
             var customOverlay = new kakao.maps.CustomOverlay({
               position: latlng,
@@ -103,7 +103,7 @@ const KakaoMap = (props) => {
               clickable: true 
             });
 
-            var content = '<div class="label" style="margin-top:10px"><span class="left"></span><span class="center" style="font-size:14px; color: #CA7FFE;font-weight: 700;font-family: Pretendard;">' + item.challengName + '</span><span class="right"></span></div>';
+            var content = '<div class="label" style="margin-top:10px"><span class="left"></span><span class="center" style="font-size:12px; color: #CA7FFE;font-weight: 500;font-family: Pretendard;">' + item.challengName + '</span><span class="right"></span></div>';
 
             var customOverlay = new kakao.maps.CustomOverlay({
               position: latlng,

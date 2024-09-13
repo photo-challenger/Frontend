@@ -100,6 +100,7 @@ const SearchIconImg = styled.Image`
 `;
 const SearchInput = styled.TextInput`
   padding-left: 10px;
+  font-family: Regular;
 
   &::placeholder {
     color: #b5b5b5;

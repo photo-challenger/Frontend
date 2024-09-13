@@ -60,14 +60,16 @@ const PrivacyPolicy = () => {
 export default PrivacyPolicy;
 
 const HeaderText = styled.Text`
-    font-weight: 700;
+    font-family: Bold;
     font-size: 16px;
     text-align: center;
 `
 
 const SubHeaderText = styled.Text`
-	font-weight: 600;
+	font-family: Semibold;
   font-size: 14px;
 `
 
-const ContentText = styled.Text``
+const ContentText = styled.Text`
+	font-family: Medium;
+`
