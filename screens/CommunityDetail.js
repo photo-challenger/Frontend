@@ -108,8 +108,8 @@ const CommunityDetail = ({ route, navigation }) => {
     <CommunityDetailContainer>
       <TopBox>
         <UserProfile>
-          {postInfo.profileImgUrl.split('/').pop() !== 'default' ? (<UserImage source={{ uri: postInfo.profileImgUrl }} />) 
-          : (<UserImage source={require('../assets/profile-default-image.png')} />)}
+          {postInfo.profileImgUrl.split('/').pop() !== 'default' ? (<UserImage source={{ uri: postInfo.profileImgUrl }} />)
+            : (<UserImage source={require('../assets/profile-default-image.png')} />)}
           <UserInfo>
             <UserName>{postInfo.nickname}</UserName>
             <UserLevel>{postInfo.level}</UserLevel>
@@ -130,7 +130,7 @@ const CommunityDetail = ({ route, navigation }) => {
       <ContentBox>
         <ContentText>{postInfo.postContent}</ContentText>
       </ContentBox>
-
+      {/* 
       <LocationBox>
         <LocationImage source={require('../assets/img-beach.png')} />
         <LocationDetails>
@@ -143,7 +143,7 @@ const CommunityDetail = ({ route, navigation }) => {
             style={{ width: 24, height: 24 }}
           />
         </MoreButton>
-      </LocationBox>
+      </LocationBox> */}
 
       <ScoreBox>
         <LikeBox onPress={addPostLike}>
@@ -161,8 +161,8 @@ const CommunityDetail = ({ route, navigation }) => {
           <Image
             source={
               postInfo.postCommentCount == 0
-              ? require('../assets/icon-annotation.png')
-              : require('../assets/icon-annotation-on.png')}
+                ? require('../assets/icon-annotation.png')
+                : require('../assets/icon-annotation-on.png')}
             style={{ width: 24, height: 24 }}
           />
           <ScoreText>{postInfo.postCommentCount}</ScoreText>
@@ -174,22 +174,24 @@ const CommunityDetail = ({ route, navigation }) => {
         <TouchableWithoutFeedback onPress={closeModal}>
           <ModalContainer>
             <ModalContent>
-              {postInfo.isMyPost == 'true' && (
+              {/* {postInfo.isMyPost == 'true' && (
                 <ModalOption onPress={editPost}>
                   <ModalIcon source={require('../assets/icon-edit.png')} />
                   <ModalText>수정하기</ModalText>
                 </ModalOption>
-              )}
+              )} */}
               {postInfo.isMyPost != 'true' && (
                 <ModalOption onPress={reportPost}>
                   <ModalIcon source={require('../assets/icon-report.png')} />
                   <ModalText>신고하기</ModalText>
                 </ModalOption>
               )}
-              <ModalOption onPress={savePost}>
-                <ModalIcon source={require('../assets/icon-save.png')} />
-                <ModalText>저장하기</ModalText>
-              </ModalOption>
+              {postInfo.isMyPost != 'true' && (
+                <ModalOption onPress={savePost}>
+                  <ModalIcon source={require('../assets/icon-save.png')} />
+                  <ModalText>저장하기</ModalText>
+                </ModalOption>
+              )}
               {postInfo.isMyPost == 'true' && (
                 <ModalOption onPress={deletePost}>
                   <ModalIcon source={require('../assets/icon-delete.png')} />

@@ -693,9 +693,11 @@ async function fetchWritePost(params) {
   try {
     const formData = new FormData();
 
-    formData.append('challengeId', params.challengeId);
+    formData.append('contentId', params.contentId);
     formData.append('postContent', params.postContent);
     formData.append('file', params.file);
+    formData.append('challengeName', params.challengeName);
+    formData.append('areaCode', params.areaCode);
 
     const response = await axios.post(`${config.apiUrl}post/new`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

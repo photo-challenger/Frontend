@@ -13,6 +13,7 @@ import ImagePickerItem from '../component/common/ImagePickerItem';
 import BaseInput from '../component/common/BaseInput';
 import BaseTextarea from '../component/common/BaseTextArea';
 import { fetchWritePost } from '../service/api';
+import useAlert from '../hooks/useAlert';
 
 const { width } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   const [location, setLocation] = useState('');
   const [visitDate, setVisitDate] = useState('');
   const [imageInfo, setImageInfo] = useState('');
+  const [showAlert, AlertComponent] = useAlert();
 
   useEffect(() => {
     //연도 : 2022
@@ -55,22 +57,37 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   }
 
   async function writeChallengeData() {
-    if (imageInfo === undefined) return;
-
-    const result = await fetchWritePost({
-      postContent: content,
-      challengeId: challengeInfo.challengeId,
-      file: imageInfo,
-    });
-
-    console.log(result);
+    if (!imageInfo) {
+      showAlert({
+        title: "포토 챌린지 오류!",
+        msg: '사진 첨부는 필수 입니다!'
+      });
+    } else {
+      const result = await fetchWritePost({
+        postContent: content,
+        contentId: challengeInfo.contentId,
+        file: imageInfo,
+        challengeName: challengeInfo.challengeName,
+        areaCode: challengeInfo.areaCode
+      });
+  
+      if(result === 'Post Add Successful') {
+        showAlert({
+          title: "포토 챌린지 참여 완료!",
+          msg: '포토 챌린지가 참여 완료 되었습니다 :)',
+          onOk: async function () {
+            navigation.goBack();
+          },
+        });
+      }
+    }
   }
 
   function setImageResult(rs) {
     console.log('Rs : ', rs.assets[0]);
     const file = {
       uri: rs.assets[0].uri,
-      type: rs.assets[0].type,
+      type: 'image/jpeg',
       name: rs.assets[0].fileName || rs.assets[0].uri.split('/').pop(),
     };
     setImageInfo(file);
@@ -95,7 +112,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
 
             <BaseInput
               title="위치"
-              value="Busan, Korea"
+              value={challengeInfo.addr}
               readOnly={true}
               inputType="default"
               onChangeText={setLocation}
@@ -119,6 +136,8 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
           <ActionButton onPress={() => writeChallengeData()}>
             <ButtonText>챌린지 등록하기</ButtonText>
           </ActionButton>
+
+          <AlertComponent />
         </Container>
       </ScrollView>
     </KeyboardAvoidingView>

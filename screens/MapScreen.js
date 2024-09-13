@@ -120,11 +120,12 @@ const MapScreen = ({ route, navigation }) => {
 
   // ‘포토챌린지 참여하기' 클릭 시 해당 포토챌린지 작성화면으로 이동
   function writeChallenge(obj) {
-    // console.log(obj);
     navigation.navigate('photoChallengeWrite', {
       challengeInfo: {
-        challengeName: '',
-        challengeId: '',
+        challengeName: obj.title,
+        contentId: obj.contentid,
+        areaCode: obj.areacode,
+        addr: obj.addr1 || ""
       },
     });
   }
