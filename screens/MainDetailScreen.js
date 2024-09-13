@@ -23,21 +23,24 @@ const MainDetailScreen = ({ route, navigation }) => {
   const { contentId } = route.params;
   const [regionDetailContent, setRegionDetailContent] = useState();
   const [isPhotoChallenge, setIsPhotoChallenge] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getRegionDetailContent = async () => {
       try {
+        setLoading(true);
         const apiResponseData = await fetchDetailCommon(contentId);
         const isPhotoChallenge = await fetchIsPhotoChallenge(contentId);
         setRegionDetailContent(apiResponseData);
         setIsPhotoChallenge(isPhotoChallenge);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch region detail content:', error);
       }
     };
 
     getRegionDetailContent();
-  }, []);
+  }, [contentId]);
 
   const moveDetail = () => {
     navigation.navigate('MainRegionTabScreen');
@@ -51,6 +54,14 @@ const MainDetailScreen = ({ route, navigation }) => {
       },
     });
   };
+
+  if(loading) {
+    return (
+      <MainDetailContainer style={{alignItems: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size={'large'} color={'#CA7FFE'} />
+      </MainDetailContainer>
+    )
+  }
 
 	return (
 		<MainDetailContainer>

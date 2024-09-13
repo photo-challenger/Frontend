@@ -15,8 +15,10 @@ import {
 } from '../../service/api';
 import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
+import { useSelector } from 'react-redux';
 
 const ChallengeComponent = ({ route, navigation }) => {
+  const [loading, setLoading] = useState(route.params?.loading);
   const [challengeLevel, setChallengeLevel] = useState('Lv.1 찰칵 루키');
   const [myPostImageList, setMyPostImageList] = useState([]);
   const [commentList, setCommentList] = useState([]);
@@ -26,6 +28,8 @@ const ChallengeComponent = ({ route, navigation }) => {
   const [myPostTotPageCnt, setmyPostTotPageCnt] = useState(null);
   const [myCommentPageNo, setMyCommentPageNo] = useState(0);
   const [myCommentTotPageCnt, setmyCommentTotPageCnt] = useState(null);
+
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   const moveChallengeState = () => {
     navigation.navigate('challengeState');
@@ -85,7 +89,7 @@ const ChallengeComponent = ({ route, navigation }) => {
   useEffect(() => {
     getMyPostList(0);
     getMyCommentList(0);
-  }, []);
+  }, [route.params]);
 
   return (
     <ChallengeTabContainer>
@@ -99,7 +103,7 @@ const ChallengeComponent = ({ route, navigation }) => {
           <ChallengeLevelContainer>
             <View>
               <ChallengeLevelText>
-                {route.params.profileNickname}님은 지금,
+                {userInfo.profileNickname}님은 지금,
               </ChallengeLevelText>
               <ChallengeLevelSubText>{challengeLevel}</ChallengeLevelSubText>
             </View>

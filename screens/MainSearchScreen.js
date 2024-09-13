@@ -7,7 +7,7 @@ import { fetchSearchKeyword } from '../service/api';
 const SearchItemComponent = ({ navigation, item }) => {
 
 	const moveDetail = (id) => {
-    navigation.navigate('홈', { contentId: id });
+    navigation.navigate('MainDetailScreen', { contentId: id });
   };
 
 	return (
