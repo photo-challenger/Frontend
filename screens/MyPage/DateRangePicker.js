@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Button, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styled from 'styled-components/native';
+import useAlert from '../../hooks/useAlert';
 
 const formatDate = (date) => {
 	if (!(date instanceof Date) || isNaN(date.getTime())) {
@@ -17,8 +18,10 @@ const formatDate = (date) => {
 const DateRangePicker = (props) => {
   const [showPicker, setShowPicker] = useState(false);
   const [isStartDatePicker, setIsStartDatePicker] = useState(true);
+  const [showAlert, AlertComponent] = useAlert();
 
   const handleChange = (event, selectedDate) => {
+    console.log(selectedDate);
     const currentDate = selectedDate || new Date();
     setShowPicker(Platform.OS === 'ios');
 
@@ -29,8 +32,10 @@ const DateRangePicker = (props) => {
       props.setStartDate(currentDate);
     } else {
       if (currentDate < props.startDate) {
-        // Prevent setting end date before start date
-        alert("End date cannot be before the start date.");
+        showAlert({
+          title: "날짜 선택 오류",
+          msg: '종료 날짜는 시작 날짜보다 빠를 수 없습니다.',
+        });
       } else {
         props.setEndDate(currentDate);
       }
@@ -58,10 +63,12 @@ const DateRangePicker = (props) => {
         <DateTimePicker
           value={isStartDatePicker ? props.startDate : props.endDate}
           mode="date"
-          display="default"
+          display="spinner"
           onChange={handleChange}
         />
       )}
+
+      <AlertComponent />
     </DurationButtonContainer>
   );
 };

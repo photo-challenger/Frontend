@@ -67,7 +67,7 @@ const PointComponent = ({ route, navigation }) => {
       _date = new Date(str).getDate();
     }
 
-    const formattedStartDate = `${String(_year)}-${String(_month).padStart(
+    const formattedStartDate = `${String(_year)}-${String(_month + 1).padStart(
       2,
       '0',
     )}-${String(_date).padStart(2, '0')}`;

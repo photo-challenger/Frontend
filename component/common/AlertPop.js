@@ -47,7 +47,7 @@ const AlertContainer = styled.View`
 `;
 
 const AlertContent = styled.View`
-  margin-bottom: 16px;
+  margin-bottom: 5px;
 `;
 
 const AlertTitle = styled.Text`
