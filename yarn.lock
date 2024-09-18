@@ -4946,6 +4946,11 @@ expo-location@~17.0.1:
   resolved "https://registry.npmjs.org/expo-location/-/expo-location-17.0.1.tgz"
   integrity sha512-m+OzotzlAXO3ZZ1uqW5GC25nXW868zN+ROyBA1V4VF6jGay1ZEs4URPglCVUDzZby2F5wt24cMzqDKw2IX6nRw==
 
+expo-mail-composer@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.npmjs.org/expo-mail-composer/-/expo-mail-composer-13.0.1.tgz"
+  integrity sha512-JmlQLS7Bk7vBf+xpdNIcG80/GzwLoFgk7ZmL4qD78CxRuolvb4jwH97nS54l6W/pKBa2TH1eUV1V8ZjKzQLf0A==
+
 expo-modules-autolinking@>=0.8.1, expo-modules-autolinking@1.11.2:
   version "1.11.2"
   resolved "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-1.11.2.tgz"
