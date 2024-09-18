@@ -19,7 +19,7 @@ import {
   fetchUserTotalPoint,
 } from '../service/api';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const PhotoChallengeScreen = ({ route, navigation }) => {
   const [surrondChallengList, setSurrondChallengList] = useState([]);
@@ -36,33 +36,16 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
   // Animation functions for each section
   const animateToSurroundIndex = (index) => {
     Animated.spring(translateXSurround, {
-      toValue: -index * (width * 0.5 + 10), // Adjust to desired width
+      toValue: -index * (width * 0.7 + 10), // Adjust to desired width
       useNativeDriver: true,
     }).start();
   };
 
   const animateToPopularIndex = (index) => {
     Animated.spring(translateXPopular, {
-      toValue: -index * (width * 0.5 + 10), // Adjust to desired width
+      toValue: -index * (width * 0.71), // Adjust to desired width
       useNativeDriver: true,
     }).start();
-  };
-
-  // Swipe handlers for surrounding challenges
-  const onSurroundSwipeLeft = () => {
-    if (surroundCurrIndex < surrondChallengList.length - 1) {
-      const newIndex = surroundCurrIndex + 1;
-      setSurroundCurrIndex(newIndex);
-      animateToSurroundIndex(newIndex);
-    }
-  };
-
-  const onSurroundSwipeRight = () => {
-    if (surroundCurrIndex > 0) {
-      const newIndex = surroundCurrIndex - 1;
-      setSurroundCurrIndex(newIndex);
-      animateToSurroundIndex(newIndex);
-    }
   };
 
   // Swipe handlers for popular challenges
@@ -84,8 +67,6 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
 
   // Fetching data functions
   const getSurroundingChallenge = async () => {
-    const surronds = await fetchSurroundingChallenge();
-    setSurrondChallengList(surronds);
     getPopularChallenge();
   };
 
@@ -130,40 +111,6 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </PointsContainer>
 
-      {/* 주변 포토챌린지 */}
-      {/* <SectionTitle>주변 포토챌린지</SectionTitle>
-      <GestureContainer
-        onSwipeLeft={onSurroundSwipeLeft}
-        onSwipeRight={onSurroundSwipeRight}
-        config={{
-          velocityThreshold: 0.3,
-          directionalOffsetThreshold: 80,
-        }}
-      >
-        <AnimatedCarouselContainer
-          style={{ transform: [{ translateX: translateXSurround }] }}
-        >
-          {surrondChallengList && surrondChallengList.map((item, index) => (
-            <NearestCardWrapper
-              key={item.challengeId}
-              active={index === surroundCurrIndex}
-            >
-              <TouchableOpacity
-                onPress={() => moveChallegeDetail(item.challengeId)}
-              >
-                <NearestCardItem
-                  imageUrl={{ uri: item.challengeImgName }}
-                  region={item.challengeRegion}
-                  place={item.challengePoint}
-                  distance={item.distance_meter + 'm'}
-                  participants={item.participants}
-                />
-              </TouchableOpacity>
-            </NearestCardWrapper>
-          ))}
-        </AnimatedCarouselContainer>
-      </GestureContainer> */}
-
       {/* 인기 포토챌린지 */}
       <SectionTitle>인기 포토챌린지</SectionTitle>
       <GestureContainer
@@ -186,6 +133,8 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
                 <PopularCardItem
                   imageUrl={{ uri: item.postImgName }}
                   place={item.challengePoint}
+                  contentId={item.contentId}
+                  likeCount={item.likeCount}
                 />
               </TouchableOpacity>
             </PopularCardWrapper>
@@ -245,8 +194,8 @@ const PointsLink = styled.Text`
 `;
 
 const SectionTitle = styled.Text`
-  padding: 18px 24px;
-  font-size: 18px;
+  padding: 18px 0 35px 24px;
+  font-size: 19px;
   font-family: Bold;
   letter-spacing: -0.36px;
 `;
@@ -254,8 +203,7 @@ const SectionTitle = styled.Text`
 const GestureContainer = styled(GestureRecognizer)`
   flex: 1;
   justify-content: center;
-  padding-left: 18px;
-  margin: 0;
+  margin-left: ${width * 0.1}px;
 `;
 
 const AnimatedCarouselContainer = styled(Animated.View)`
@@ -264,16 +212,10 @@ const AnimatedCarouselContainer = styled(Animated.View)`
   align-items: center;
 `;
 
-const NearestCardWrapper = styled.View`
-  width: ${width * 0.5}px;
-  margin-horizontal: 8px;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
-  transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
-`;
-
 const PopularCardWrapper = styled.View`
-  width: ${width * 0.3}px;
-  margin-horizontal: 8px;
+  width: ${width * 0.7}px;
+  height: ${height * 0.5}px;
+  margin-left: ${width * 0.025}px;
   opacity: ${(props) => (props.active ? 1 : 0.5)};
   transform: ${(props) => (props.active ? 'scale(1)' : 'scale(0.9)')};
 `;
