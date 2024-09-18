@@ -342,7 +342,7 @@ const SignUpContainer = styled.View`
 const SignUpHeaderText = styled.Text`
 	font-size: 24px;
 	font-style: normal;
-	font-weight: 500;
+	font-family: Medium;
 	margin-bottom: 26px;
 `
 
@@ -354,7 +354,7 @@ const InputLabelText = styled.Text`
 	margin-bottom: 4px;
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #5F5F5F;
 `
 
@@ -392,7 +392,7 @@ const EmailInputContent = styled.View`
 const EmailNotValidText = styled.Text`
 	font-size: 12px;
 	font-style: normal;
-	font-weight: 400;
+	font-family: Regular;
 	color: #CB1400;
 	margin-top: 4px;
 `
@@ -451,14 +451,14 @@ const EmailButton = styled.TouchableOpacity`
 	justify-content: center;
 	border-radius: 8px;
 	margin-left: 16px;
+	line-height: 40px;
 `
 
 const EmailButtonText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #999999;
-	line-height: 40px;
 `
 
 const SignUpButton = styled.TouchableOpacity`
@@ -473,7 +473,7 @@ const SignUpButton = styled.TouchableOpacity`
 const SignUpButtonText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #FFFFFF;
 	line-height: 40px;
 `

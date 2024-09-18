@@ -65,7 +65,7 @@ const SignUpAgreeScreen = ({ route, navigation }) => {
 				</TermsOfServiceContent>
 				<CheckboxTextContainer>
 					<CheckBox type={'personal'} checkBoxValue={checkBoxPersonal} />
-					<TermsOfServiceHeaderText>개인정보 처리방침<Text style={{ color: '#CA7FFE' }}>(필수)</Text></TermsOfServiceHeaderText>
+					<TermsOfServiceHeaderText>개인정보 처리방침 <Text style={{ color: '#CA7FFE' }}>(필수)</Text></TermsOfServiceHeaderText>
 				</CheckboxTextContainer>
 				<TermsOfServiceContent>
 					<PrivacyPolicy />
@@ -96,7 +96,7 @@ const Container = styled.View`
 const TermsOfServiceHeaderText = styled.Text`
 	font-size: 16px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	flex-shrink: 1;
 	line-height: 22px;
 `
@@ -133,7 +133,7 @@ const CheckBoxIconImage = styled.Image`
 const AllCheckText = styled.Text`
 	font-size: 15px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	flex-shrink: 1;
 `
 
@@ -152,5 +152,5 @@ const NextButtonText = styled.Text`
 	color: #FFFFFF;
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 700;
+	font-family: Bold;
 `
