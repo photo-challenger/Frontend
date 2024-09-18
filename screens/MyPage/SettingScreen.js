@@ -8,9 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
-import {
-  fetchLogout
-} from '../../service/api';
+import * as MailComposer from 'expo-mail-composer';
+import { fetchLogout } from '../../service/api';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/user';
 import useAlert from '../../hooks/useAlert';
@@ -28,7 +27,31 @@ const SettingScreen = ({ route, navigation }) => {
   };
 
   const moveProfileDelete = () => {
-    navigation.navigate('profileDelete', { nickname: profileInfo.profileNickname });
+    navigation.navigate('profileDelete', {
+      nickname: profileInfo.profileNickname,
+    });
+  };
+
+  const handleSendMail = async () => {
+    MailComposer.composeAsync({
+      subject: '[Tripture] 문의해요 👋',
+      recipients: ['photochallenger.dev@gmail.com'],
+      ccRecipients: ['syyoon3342@gmail.com'],
+      body: `<h3>안녕하세요.</h3>
+            <p>서비스를 이용해 주셔서 감사합니다.</p>
+            <p>개선했으면 하는 부분 혹은 추가되었으면 하는 기능은 적극 반영해 보겠습니다!</p>
+            <p>문의에 대한 답변은 빠른 시일내에 전송해 주신 메일로 회신해 드리겠습니다.</p>
+            <p>-----------------------------------------------------------------</p>`,
+      isHtml: true,
+    }).catch((error) => {
+      console.log('🚀 mail - ', error);
+      showAlert({
+        title: '문의하기 오류',
+        msg: `메일앱이 존재하지 않습니다.
+          \nphotochallenger.dev@gmail.com
+          \n해당 메일로 문의를 직접 남겨주시면\n감사하겠습니다.`,
+      });
+    });
   };
 
   const moveTermsOfService = () => {
@@ -51,7 +74,7 @@ const SettingScreen = ({ route, navigation }) => {
         navigation.navigate('LoginScreen');
       },
     });
-  }
+  };
 
   return (
     <SettingScreenComponent>
@@ -81,7 +104,10 @@ const SettingScreen = ({ route, navigation }) => {
 
       <SettingCategoryContainer>
         <SettingHeaderText>문의</SettingHeaderText>
-        <SettingCategorySubContainer activeOpacity={0.5}>
+        <SettingCategorySubContainer
+          activeOpacity={0.5}
+          onPress={handleSendMail}
+        >
           <SettingCategoryText>문의하기</SettingCategoryText>
         </SettingCategorySubContainer>
       </SettingCategoryContainer>
@@ -103,10 +129,16 @@ const SettingScreen = ({ route, navigation }) => {
 
       <SettingCategoryContainer>
         <SettingHeaderText>약관 및 정책</SettingHeaderText>
-        <SettingCategorySubContainer activeOpacity={0.5} onPress={moveTermsOfService}>
+        <SettingCategorySubContainer
+          activeOpacity={0.5}
+          onPress={moveTermsOfService}
+        >
           <SettingCategoryText>서비스 이용약관</SettingCategoryText>
         </SettingCategorySubContainer>
-        <SettingCategorySubContainer activeOpacity={0.5} onPress={movePrivacyPolicy}>
+        <SettingCategorySubContainer
+          activeOpacity={0.5}
+          onPress={movePrivacyPolicy}
+        >
           <SettingCategoryText>개인정보 처리방침</SettingCategoryText>
         </SettingCategorySubContainer>
       </SettingCategoryContainer>
@@ -125,6 +157,7 @@ const SettingScreen = ({ route, navigation }) => {
       </SettingCategoryContainer>
 
       <ConfirmComponent />
+      <AlertComponent />
     </SettingScreenComponent>
   );
 };
