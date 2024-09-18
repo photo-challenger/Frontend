@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, SafeAreaView, StyleSheet, Text } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer, useNavigationState, useScrollToTop } from '@react-navigation/native';
 import StackNavigation from './navigation/Stack';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import { setCustomText } from "react-native-global-props";
 
 import Footer from './component/common/Footer';
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
-  const [fontsLoaded, setFontLoaded]= useState(false);
+  const [fontsLoaded, setFontLoaded]= useState(true);
 
   useEffect(() => {
     // 폰트를 비동기로 로드
@@ -32,13 +35,18 @@ export default function App() {
       };
       setCustomText(customTextProps);
       setFontLoaded(false);
+      await SplashScreen.hideAsync();
     };
 
     loadFonts();
   }, []);
 
   if(fontsLoaded) {
-    return null;
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#CA7FFE" />
+      </View>
+    );
   }
 
   return (
