@@ -160,6 +160,7 @@ const PasswordFindScreen = ({ route, navigation }) => {
 										placeholderTextColor={"#5F5F5F"}
 										onChangeText={(text) => setUserEmail(text)}
 										value={userEmail}
+										style={{fontFamily: 'Regular'}}
 									/>
 									{emailIsValid !== undefined && emailIsValid !== null ? (
 										emailIsValid ? (
@@ -185,6 +186,7 @@ const PasswordFindScreen = ({ route, navigation }) => {
 										placeholderTextColor={"#5F5F5F"}
 										onChangeText={(text) => setEmailAuthNum(text)}
 										value={emailAuthNum}
+										style={{fontFamily: 'Regular'}}
 									/>
 									{emailAuthNumIsValid !== undefined && emailAuthNumIsValid !== null ? (
 										emailAuthNumIsValid ? (
@@ -216,6 +218,7 @@ const PasswordFindScreen = ({ route, navigation }) => {
 											onChangeText={(text) => setUserPassword(text)}
 											secureTextEntry={true}
 											value={userPassword}
+											style={{fontFamily: 'Regular'}}
 										/>
 										{passwordIsValid !== undefined && passwordIsValid !== null ? (
 											passwordIsValid ? (
@@ -240,6 +243,7 @@ const PasswordFindScreen = ({ route, navigation }) => {
 											onChangeText={(text) => setCheckUserPassword(text)}
 											secureTextEntry={true}
 											value={checkUserPassword}
+											style={{fontFamily: 'Regular'}}
 										/>
 										{checkPasswordIsValid !== undefined && checkPasswordIsValid !== null ? (
 											checkPasswordIsValid ? (
@@ -306,15 +310,15 @@ const LoadingContainer = styled.View`
 `
 
 const PasswordFindHeaderText = styled.Text`
-  font-size: 24px;
+  font-size: 25px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Medium;
 `
 
 const EmailAuthHeaderText = styled.Text`
-  font-size: 15px;
+  font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   margin-top: 20px;
   margin-bottom: 20px;
 	color: #5F5F5F;
@@ -324,7 +328,7 @@ const InputLabelText = styled.Text`
 	margin-bottom: 4px;
 	font-size: 18px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #5F5F5F;
 `
 
@@ -407,9 +411,9 @@ const EmailButton = styled.TouchableOpacity`
 `
 
 const EmailButtonText = styled.Text`
-	font-size: 14px;
+	font-size: 14.5px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #999999;
 	line-height: 40px;
 `
@@ -417,7 +421,7 @@ const EmailButtonText = styled.Text`
 const EmailNotValidText = styled.Text`
 	font-size: 12px;
 	font-style: normal;
-	font-weight: 400;
+	font-family: Regular;
 	color: #CB1400;
 	margin-top: 4px;
 `
@@ -435,7 +439,7 @@ const SignUpButton = styled.TouchableOpacity`
 const SignUpButtonText = styled.Text`
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 600;
+	font-family: Semibold;
 	color: #FFFFFF;
 	line-height: 40px;
 `

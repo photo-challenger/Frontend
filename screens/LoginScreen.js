@@ -168,7 +168,7 @@ const LoginLogoImage = styled.Image`
 const EmailText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   color: #5f5f5f;
 `;
 const SearchContent = styled.View`
@@ -186,7 +186,7 @@ const SearchInput = styled.TextInput`
   padding-bottom: 9px;
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
 `;
 
 const AutoLoginCheckBoxContainer = styled.View`
@@ -214,8 +214,9 @@ const AutoLoginText = styled.Text`
   color: #b5b5b5;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   margin-left: 6px;
+  line-height: 21px;
 `;
 
 const LoginButton = styled.TouchableOpacity`
@@ -230,7 +231,7 @@ const LoginButton = styled.TouchableOpacity`
 const LoginButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   color: #ffffff;
 `;
 
@@ -248,8 +249,9 @@ const SubButton = styled.TouchableOpacity`
 const SubButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #4f4f4f;
+  line-height: 23px;
 `;
 
 const KakaoButton = styled.TouchableOpacity`
@@ -264,7 +266,7 @@ const KakaoButton = styled.TouchableOpacity`
 const KakaoButtonText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const SignUpButton = styled.TouchableOpacity`
