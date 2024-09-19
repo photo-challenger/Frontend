@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import {
   fetchMyBookmarkSightList,
   fetchMyBookmarkPostList,
+  fetchDetailCommon,
 } from '../../service/api';
 import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
@@ -25,11 +26,21 @@ const ScrapComponent = ({ route, navigation }) => {
     });
     console.log('fetchMyBookmarkSightList pageNum  >> ', pageNum);
 
+    const detailResultData = await Promise.all(
+      resultData.myContentResponseList.map(async (result) => {
+        const response = await fetchDetailCommon(result.contentId);
+        return {"addr1": response.addr1 || "",
+          "contentid": response.contentid,
+          "firstimage": response.firstimage,
+          "title": response.title};
+      })
+    );
+
     if (pageNum === 0) {
-      setContentList(resultData.myContentResponseList);
+      setContentList(detailResultData);
       setMyContentTotPageCnt(resultData.totalPages);
     } else {
-      setContentList(resultData.myContentResponseList.concat(contentList));
+      setContentList(detailResultData.concat(contentList));
     }
 
     console.log('contentList   : ', contentList);
@@ -55,6 +66,10 @@ const ScrapComponent = ({ route, navigation }) => {
 
   const moveToHome = () => {
     // navigation.navigate('home');
+  };
+
+  const moveContentDetail = (id) => {
+    navigation.navigate('MainDetailScreen', { contentId: id });
   };
 
   const movePostDetail = (id) => {
@@ -93,25 +108,26 @@ const ScrapComponent = ({ route, navigation }) => {
                     contentList.map((content, index) => (
                       <ScrapContentSubContainer
                         key={content.contentId}
-                        activeOpacity={0.7}
+                        activeOpacity={0.8}
+                        onPress={() => moveContentDetail(content.contentid)}
                       >
                         <ScrapContentImageUpCircle />
                         <ScrapContentImageDownCircle />
                         <ScrapContentImage
-                          source={{ uri: content.contentImage }}
+                          source={{ uri: content.firstimage !== '' ? content.firstimage : "https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/be_background.png" }}
                         />
                         <ScrapContentDetailContainer>
                           <ScrapContentTitle
                             numberOfLines={1}
                             ellipsizeMode="tail"
                           >
-                            {content.contentTitle}
+                            {content.title}
                           </ScrapContentTitle>
                           <ScrapContentAddress
                             numberOfLines={1}
                             ellipsizeMode="tail"
                           >
-                            {content.contentAddress}
+                            {content.addr1}
                           </ScrapContentAddress>
                         </ScrapContentDetailContainer>
                         <ScrapContentDash />
@@ -312,7 +328,7 @@ const ScrapContentDetailContainer = styled.View`
 const ScrapContentTitle = styled.Text`
   font-size: 22px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #ffffff;
   margin-bottom: 2px;
 `;
@@ -320,7 +336,7 @@ const ScrapContentTitle = styled.Text`
 const ScrapContentAddress = styled.Text`
   font-size: 12px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #ffffff;
 `;
 
