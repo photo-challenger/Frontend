@@ -50,50 +50,19 @@ const ProfileEditScreen = ({ route, navigation }) => {
     if (saveFlag) {
       saveData();
     }
-  }, [
-    profileInfo,
-    nickname,
-    passwordValid,
-    currentPassword,
-    checkPasswordIsValid,
-    saveFlag,
-  ]);
+  }, [saveFlag]);
 
   const saveData = async () => {
-    if (imageInfo != '' || nickname != '') {
-      //닉네임 or 이미지 변경만 원할 경우
-      const rtn = {
-        profileNickname: nickname,
-        loginPw: null,
-        file: imageInfo,
-      };
-      const result = await fetchProfileEdit(rtn);
-      // console.log('🚀 ~ saveData ~ result:', result);
-      ToastAndroid.showWithGravity(
-        '저장했습니다.',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-      dispatch(
-        updateUserProfile({
-          profileImgName: result.profileImgName,
-          nickname: result.profileNickname,
-        }),
-      );
-      navigation.push('mypage');
-    } else if (
-      nickname != '' &&
-      currentPassword != '' &&
-      !passwordValid != ''
-    ) {
-      //비밀번호 정규식 틀렸을 경우
+    if (passwordValid === false) {
+      //비밀번호 정규식이 틀렸을 경우
       setSaveFlag(false);
       ToastAndroid.showWithGravity(
         '비밀번호는 특수문자, 숫자 포함 8자 이상 입력해주세요.',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
-    } else if (!checkPasswordIsValid) {
+      return;
+    } else if (checkPasswordIsValid === false) {
       //비밀번호 검사 틀렸을 경우
       setSaveFlag(false);
       ToastAndroid.showWithGravity(
@@ -101,36 +70,45 @@ const ProfileEditScreen = ({ route, navigation }) => {
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
-    } else if (!passwordValid && password != '') {
-      //비밀번호 정규식 및 검사 모두 맞을 경우
-      const rtn = {
-        profileNickname: nickname,
-        loginPw: password,
-        file: imageInfo,
-      };
-      const result = await fetchProfileEdit(rtn);
-      ToastAndroid.showWithGravity(
-        '저장했습니다.',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-      dispatch(
-        updateUserProfile({
-          profileImgName: result.profileImgName,
-          nickname: result.profileNickname,
-        }),
-      );
-      navigation.push('mypage');
-      // console.log('🚀 ~ saveData ~ result:', result);
-    } else {
-      //나머지 처리(저장에 실패했습니다. 다시 한 번 확인해주세요.)
-      ToastAndroid.showWithGravity(
-        '저장에 실패했습니다. 다시 한 번 확인해주세요.',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-      setSaveFlag(false);
+      return;
     }
+
+    const rtn = {
+      profileNickname:
+        nickname == '' || nickname == null
+          ? profileInfo.profileNickname
+          : nickname,
+      loginPw:
+        password == '' || password == null ? profileInfo.loginPw : password,
+      file: imageInfo ?? '',
+    };
+    // console.log('🚀 ~ saveData ~ rtn:', rtn);
+
+    fetchProfileEdit(rtn)
+      .then((result) => {
+        ToastAndroid.showWithGravity(
+          '저장했습니다.',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+        dispatch(
+          updateUserProfile({
+            profileImgName: result.profileImgName,
+            profileNickname: result.profileNickname,
+          }),
+        );
+      })
+      .catch(() => {
+        ToastAndroid.showWithGravity(
+          '저장에 실패했습니다. 다시 한 번 확인해주세요.',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+        setSaveFlag(false);
+      })
+      .finally(() => {
+        navigation.push('mypage');
+      });
   };
 
   useEffect(() => {

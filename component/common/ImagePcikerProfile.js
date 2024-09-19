@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import styled from 'styled-components/native';
@@ -8,8 +8,11 @@ export default function ImagePickerProfile({
   callbackResult,
   borderType,
 }) {
-  const [image, setImage] = useState(profileImage);
+  const [image, setImage] = useState(null);
 
+  useEffect(() => {
+    setImage(profileImage);
+  }, [profileImage]);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
