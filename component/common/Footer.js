@@ -6,31 +6,43 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
 const Footer = () => {
   const navigation = useNavigation();
+  const routeName = useNavigationState((state) => state?.routes[state.index]?.name);
   const [selectedItem, setSelectedItem] = useState('home');
+
+  useEffect(() => {
+    console.log(routeName);
+    if (routeName === 'main' ||
+      routeName === 'photoChallenge' ||
+      routeName === 'community' ||
+      routeName === 'pointStore' ||
+      routeName === 'mypage') {
+      setSelectedItem(routeName);
+    }
+  }, [routeName]);
 
   const handlePress = (item) => {
     setSelectedItem(item);
 
     switch (item) {
-      case 'home':
+      case 'main':
         navigation.navigate('main');
         break;
-      case 'challenge':
+      case 'photoChallenge':
         navigation.navigate('photoChallenge');
         break;
       case 'community':
         navigation.navigate('community');
         break;
-      case 'store':
+      case 'pointStore':
         navigation.navigate('pointStore');
         break;
-      case 'myPage':
+      case 'mypage':
         navigation.navigate('mypage');
         break;
     }
@@ -38,27 +50,27 @@ const Footer = () => {
 
   return (
     <FooterContainer>
-      <FooterItem activeOpacity={0.7} onPress={() => handlePress('home')}>
+      <FooterItem activeOpacity={0.7} onPress={() => handlePress('main')}>
         <FooterImg
           source={
-            selectedItem === 'home'
+            selectedItem === 'main'
               ? require('../../assets/icon-home-selected.png') // 선택된 경우
               : require('../../assets/home-01.png')
           }
-          selected={selectedItem === 'home'}
+          selected={selectedItem === 'main'}
         />
-        <FooterItemText isSelected={selectedItem === 'home'}>홈</FooterItemText>
+        <FooterItemText isSelected={selectedItem === 'main'}>홈</FooterItemText>
       </FooterItem>
-      <FooterItem activeOpacity={0.7} onPress={() => handlePress('challenge')}>
+      <FooterItem activeOpacity={0.7} onPress={() => handlePress('photoChallenge')}>
         <FooterImg
           source={
-            selectedItem === 'challenge'
+            selectedItem === 'photoChallenge'
               ? require('../../assets/icon-challenge-selected.png') // 선택된 경우
               : require('../../assets/image-02.png')
           }
-          selected={selectedItem === 'challenge'}
+          selected={selectedItem === 'photoChallenge'}
         />
-        <FooterItemText isSelected={selectedItem === 'challenge'}>
+        <FooterItemText isSelected={selectedItem === 'photoChallenge'}>
           포토챌린지
         </FooterItemText>
       </FooterItem>
@@ -75,29 +87,29 @@ const Footer = () => {
           커뮤니티
         </FooterItemText>
       </FooterItem>
-      <FooterItem activeOpacity={0.7} onPress={() => handlePress('store')}>
+      <FooterItem activeOpacity={0.7} onPress={() => handlePress('pointStore')}>
         <FooterImg
           source={
-            selectedItem === 'store'
+            selectedItem === 'pointStore'
               ? require('../../assets/icon-gift-selected.png') // 선택된 경우
               : require('../../assets/gift-01.png')
           }
-          selected={selectedItem === 'store'}
+          selected={selectedItem === 'pointStore'}
         />
-        <FooterItemText isSelected={selectedItem === 'store'}>
+        <FooterItemText isSelected={selectedItem === 'pointStore'}>
           포인트상점
         </FooterItemText>
       </FooterItem>
-      <FooterItem activeOpacity={0.7} onPress={() => handlePress('myPage')}>
+      <FooterItem activeOpacity={0.7} onPress={() => handlePress('mypage')}>
         <FooterImg
           source={
-            selectedItem === 'myPage'
+            selectedItem === 'mypage'
               ? require('../../assets/icon-my-selected.png') // 선택된 경우
               : require('../../assets/user-02.png')
           }
-          selected={selectedItem === 'myPage'}
+          selected={selectedItem === 'mypage'}
         />
-        <FooterItemText isSelected={selectedItem === 'myPage'}>
+        <FooterItemText isSelected={selectedItem === 'mypage'}>
           마이페이지
         </FooterItemText>
       </FooterItem>
