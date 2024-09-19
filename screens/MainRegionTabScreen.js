@@ -4,17 +4,13 @@ import styled from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native';
 import Animated from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { fetchAreaBasedList } from '../service/api';
+import {
+  fetchAreaBasedList,
+} from '../service/api';
 
 const Tab = createMaterialTopTabNavigator();
 
 const RegionItemComopnent = React.memo(({ navigation, item }) => {
-  const [clickBookmark, setClickBookmark] = useState(false);
-
-  const handleBookmarkClick = () => {
-    setClickBookmark(!clickBookmark);
-  };
-
   const moveDetail = (id) => {
     navigation.navigate('MainDetailScreen', { contentId: id });
   };
@@ -28,9 +24,6 @@ const RegionItemComopnent = React.memo(({ navigation, item }) => {
           <RegionName numberOfLines={1} ellipsizeMode="tail">{item.title}</RegionName>
           <RegionAddress numberOfLines={1} ellipsizeMode="tail">{item.addr1}</RegionAddress>
         </View>
-        <TouchableOpacity onPress={handleBookmarkClick}>
-          {clickBookmark ? (<BookmarkImage source={require('../assets/select-content-bookmark.png')} />) : (<BookmarkImage source={require('../assets/content-bookmark.png')} />)}
-        </TouchableOpacity>
       </RegionTextContainer>
     </RegionItemContainer>
   )
@@ -149,6 +142,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 };
 
 const MainRegionTabScreen = ({ route, navigation }) => {
+  const [bookmarkList, setBookmarkList] = useState();
   const RegionList = ['전체', '인천', '경기', '서울', '강원', '대전', '세종', '충청남도', '충청북도',
     '광주', '전라남도', '전북', '부산', '울산', '경상남도', '대구', '경상북도', '제주'];
 
@@ -202,7 +196,7 @@ const MainRegionTabScreen = ({ route, navigation }) => {
             },
           }}>
           {RegionList.map((region) => (
-            <Tab.Screen key={region} name={region} component={RegionComponent} initialParams={{ region }} />
+            <Tab.Screen key={region} name={region} component={RegionComponent} initialParams={{ region, bookmarkList }} />
           ))}
         </Tab.Navigator>
 

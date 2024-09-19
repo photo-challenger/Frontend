@@ -15,14 +15,14 @@ import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
 import {
   fetchDetailCommon,
-  fetchIsPhotoChallenge,
-  fetchLogin,
+  fetchContentBookmark,
+  fetchCheckContentBookmark,
 } from '../service/api';
 
 const MainDetailScreen = ({ route, navigation }) => {
   const { contentId } = route.params;
   const [regionDetailContent, setRegionDetailContent] = useState();
-  const [isPhotoChallenge, setIsPhotoChallenge] = useState();
+  const [clickBookmark, setClickBookmark] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,9 +30,9 @@ const MainDetailScreen = ({ route, navigation }) => {
       try {
         setLoading(true);
         const apiResponseData = await fetchDetailCommon(contentId);
-        const isPhotoChallenge = await fetchIsPhotoChallenge(contentId);
+        const checkResponse = await fetchCheckContentBookmark(contentId);
         setRegionDetailContent(apiResponseData);
-        setIsPhotoChallenge(isPhotoChallenge);
+        setClickBookmark(checkResponse);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch region detail content:', error);
@@ -42,8 +42,14 @@ const MainDetailScreen = ({ route, navigation }) => {
     getRegionDetailContent();
   }, [contentId]);
 
-  const moveDetail = () => {
-    navigation.navigate('MainRegionTabScreen');
+  const handleBookmarkClick = async () => {
+    const response = await fetchContentBookmark(contentId);
+
+    if (response === 'Bookmark Save Successful') {
+      setClickBookmark(true);
+    } else {
+      setClickBookmark(false);
+    }
   };
 
   const moveToMap = () => {
@@ -78,6 +84,11 @@ const MainDetailScreen = ({ route, navigation }) => {
               <RegionDetailContainer>
                 <RegionDetailImage source={regionDetailContent.firstimage === '' ? (require('../assets/tripture-main-no-content.png'))
                   : ({ uri: regionDetailContent.firstimage })} />
+
+                <BookmarkWrapper onPress={handleBookmarkClick}>
+                  {clickBookmark ? (<BookmarkImage source={require('../assets/select-content-bookmark.png')} />)
+                    : (<BookmarkImage source={require('../assets/content-bookmark.png')} />)}
+                </BookmarkWrapper>
 
                 <RegionNameContainer>
                   {regionDetailContent.addr1 === '' ? null : (
@@ -125,6 +136,7 @@ const styles = StyleSheet.create({
   },
   animatedSheet: {
     maxHeight: '100%',
+    flex: 1,
   },
   scrollView: {
     flexGrow: 1, // Changed from flex: 1
@@ -145,6 +157,17 @@ const RegionDetailImage = styled.Image`
   height: 452px;
   border-radius: 12px;
 `;
+
+const BookmarkWrapper = styled.TouchableOpacity`
+  position: absolute;
+  top: 14px;
+  right: 16px;
+`
+
+const BookmarkImage = styled.Image`
+  width: 35px;
+  height: 35px;
+`
 
 const RegionDetailContainer = styled.View`
   position: relative;
@@ -199,6 +222,8 @@ const RegionDetailHeaderText = styled.Text`
 const ButtonContainer = styled.View`
   display: flex;
   flex-direction: row;
+  position: absolute;
+  bottom: 0;
 `;
 
 const ChallengeButton = styled.TouchableOpacity`

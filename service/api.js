@@ -419,6 +419,28 @@ async function fetchIsPhotoChallenge(contentId) {
   }
 }
 
+async function fetchCheckContentBookmark(contentId) {
+  try {
+    const apiResponseData = await axios.get(
+      `${config.apiUrl}bookmark/check/content/${contentId}`,
+    );
+    return apiResponseData.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchContentBookmark(contentId) {
+  try {
+    const apiResponseData = await axios.post(
+      `${config.apiUrl}bookmark/save/content/${contentId}`,
+    );
+    return apiResponseData.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchPointStoreList(params) {
   try {
     let sendObj = params || {};
@@ -778,6 +800,8 @@ export {
   fetchDetailCommon,
   fetchSearchKeyword,
   fetchIsPhotoChallenge,
+  fetchCheckContentBookmark,
+  fetchContentBookmark,
   fetchUserTotalPoint,
   fetchMyPostList,
   fetchMyCommentList,
