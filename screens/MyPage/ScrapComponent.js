@@ -65,7 +65,7 @@ const ScrapComponent = ({ route, navigation }) => {
   };
 
   const moveToHome = () => {
-    // navigation.navigate('home');
+    navigation.navigate('main');
   };
 
   const moveContentDetail = (id) => {
@@ -107,7 +107,7 @@ const ScrapComponent = ({ route, navigation }) => {
                   {contentList &&
                     contentList.map((content, index) => (
                       <ScrapContentSubContainer
-                        key={content.contentId}
+                        key={content.contentid}
                         activeOpacity={0.8}
                         onPress={() => moveContentDetail(content.contentid)}
                       >
@@ -147,8 +147,8 @@ const ScrapComponent = ({ route, navigation }) => {
                   마음에 드는 관광지를{'\n'}
                   저장해보세요.
                 </NoChallengeListText>
-                <NoChallengeButton>
-                  <NoChallengeButtonText onPress={moveToHome}>
+                <NoChallengeButton onPress={moveToHome}>
+                  <NoChallengeButtonText>
                     관광지 둘러보기
                   </NoChallengeButtonText>
                 </NoChallengeButton>

@@ -234,7 +234,7 @@ const ChallengeLevelContainer = styled.View`
 const ChallengeLevelText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-family: Semibold;
+  font-family: Medium;
   color: #ffffff;
 `;
 
