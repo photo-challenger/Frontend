@@ -12,6 +12,7 @@ import {
   fetchDeletePost,
   fetchSaveBookmark,
   fetchAddPostLike,
+  fetchDetailCommon,
 } from '../service/api';
 import useConfirm from '../hooks/useConfirm';
 import CommunityCommentModal from './CommunityCommentModal';
@@ -20,10 +21,22 @@ const CommunityDetail = ({ route, navigation }) => {
   const { postId } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [postInfo, setPostInfo] = useState(null);
+  const [contentDetail, setContentDetail] = useState();
   const [loading, setLoading] = useState(true);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [showConfirm, ConfirmComponent] = useConfirm();
+
+  const tourType = {
+    12: '관광지',
+    14: '문화시설',
+    15: '축제공연행사',
+    25: '여행코스',
+    28: '레포츠',
+    32: '숙박',
+    38: '쇼핑',
+    39: '음식점',
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -81,14 +94,24 @@ const CommunityDetail = ({ route, navigation }) => {
     try {
       const apiResponseData = await fetchCommunityDetail(postId);
       console.log(' apiResponseData   :', apiResponseData);
+      const contentDetailResponse = await fetchDetailCommon(apiResponseData.contentId);
       setPostInfo(apiResponseData);
       setIsBookmark(apiResponseData.isSaveBookmark == 'true');
       setIsLike(apiResponseData.isLike === 'true');
+      setContentDetail({
+        "contentId": contentDetailResponse.contentid,
+        "title": contentDetailResponse.title,
+        "type": tourType[contentDetailResponse.contenttypeid],
+        "image": contentDetailResponse.firstimage || ''});
     } catch (error) {
       console.error('Failed to fetch community detail:', error);
     } finally {
       setLoading(false);
     }
+  }
+
+  const moveToDetail = (id) => {
+    navigation.navigate('MainDetailScreen', { contentId: id });
   }
 
   async function addPostLike() {
@@ -130,12 +153,12 @@ const CommunityDetail = ({ route, navigation }) => {
       <ContentBox>
         <ContentText>{postInfo.postContent}</ContentText>
       </ContentBox>
-      {/* 
-      <LocationBox>
-        <LocationImage source={require('../assets/img-beach.png')} />
+      <LocationBox activeOpacity={0.5} onPress={() => moveToDetail(contentDetail.contentId)}>
+        <LocationImage source={contentDetail.image !== '' ? { uri: contentDetail.image }
+        : require('../assets/profile-default-image.png')} />
         <LocationDetails>
-          <LocationName>우도</LocationName>
-          <LocationType>섬</LocationType>
+          <LocationName>{contentDetail.title}</LocationName>
+          <LocationType>{contentDetail.type}</LocationType>
         </LocationDetails>
         <MoreButton>
           <Image
@@ -143,7 +166,7 @@ const CommunityDetail = ({ route, navigation }) => {
             style={{ width: 24, height: 24 }}
           />
         </MoreButton>
-      </LocationBox> */}
+      </LocationBox>
 
       <ScoreBox>
         <LikeBox onPress={addPostLike}>
@@ -275,7 +298,7 @@ const ContentText = styled.Text`
   line-height: 16.8px;
 `;
 
-const LocationBox = styled.View`
+const LocationBox = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   padding: 10px;
@@ -285,8 +308,8 @@ const LocationBox = styled.View`
 `;
 
 const LocationImage = styled.Image`
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 8px;
 `;
 
@@ -297,13 +320,14 @@ const LocationDetails = styled.View`
 
 const LocationName = styled.Text`
   color: #000;
-  font-weight: bold;
+  font-family: Bold;
   font-size: 14px;
 `;
 
 const LocationType = styled.Text`
   color: #666;
   font-size: 12px;
+  font-family: Regular;
 `;
 
 const MoreButton = styled.TouchableOpacity``;

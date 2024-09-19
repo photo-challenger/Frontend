@@ -16,7 +16,6 @@ const Footer = () => {
   const [selectedItem, setSelectedItem] = useState('home');
 
   useEffect(() => {
-    console.log(routeName);
     if (routeName === 'main' ||
       routeName === 'photoChallenge' ||
       routeName === 'community' ||
