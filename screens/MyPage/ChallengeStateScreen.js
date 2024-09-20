@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styled, { StyleSheetManager } from 'styled-components';
-import { fetchMyChallengeState } from '../../service/api';
+import { fetchMyChallengeState, fetchProfileLevel } from '../../service/api';
 import { useSelector } from 'react-redux';
 
 const ChallengeStateScreen = ({ route, navigation }) => {
   const [profileInfo, setProfileInfo] = useState({});
   const userInfo = useSelector((state) => state.user.userInfo);
   const [profileLevel, setProfileLevel] = useState('레벨1 찰칵 루키');
+  const [profileTotalChallenge, setProfileTotalChallenge] = useState();
+  const [levelNeedCount, setLevelNeedCount] = useState(0);
   const challengeEngList = ['inc', 'seo', 'gang', 'chung', 'jeon', 'gyeong'];
   const challengeList = ['인천 경기', '서울', '강원', '충청', '호남', '영남'];
   const challengeCoords = {
@@ -29,10 +31,25 @@ const ChallengeStateScreen = ({ route, navigation }) => {
     je: [0, 0],
   });
 
+  const checkLevel = () => {
+    if(profileLevel === '레벨1 찰칵 루키') {
+      setLevelNeedCount(20 - profileTotalChallenge);
+    } else if(profileLevel === '레벨2 챌린지 스타') {
+      setLevelNeedCount(30 - profileTotalChallenge);
+    }
+  }
+
   const getMyChallengeState = async () => {
     const resultData = await fetchMyChallengeState();
     setChallengeStateList(resultData);
+    setProfileTotalChallenge(resultData.inc[0] + resultData.seo[0] + resultData.jeon[0] + resultData.gang[0]
+      + resultData.chung[0] + resultData.gyeong[0] + resultData.je[0]);
   };
+
+  const getProfileLevel = async () => {
+    const resultData = await fetchProfileLevel();
+    setProfileLevel(resultData);
+  }
 
   const moveToMap = (loc) => {
     navigation.navigate('map', {
@@ -43,7 +60,18 @@ const ChallengeStateScreen = ({ route, navigation }) => {
   useEffect(() => {
     setProfileInfo(userInfo);
     getMyChallengeState();
+    getProfileLevel();
+    checkLevel();
   }, []);
+
+  const images = {
+    '인천 경기': require('../../assets/inc.png'),
+    '서울': require('../../assets/seo.png'),
+    '강원': require('../../assets/gang.png'),
+    '충청': require('../../assets/chung.png'),
+    '호남': require('../../assets/jeon.png'),
+    '영남': require('../../assets/gyeong.png'),
+  };
 
   return (
     <ListContainer>
@@ -52,32 +80,29 @@ const ChallengeStateScreen = ({ route, navigation }) => {
         {profileLevel.replace('레벨', 'Lv.')}
       </ChallengeStateHeaderText>
       <ChallengeStateSubHeaderText>
-        총 2개 완료! 다음레벨까지 3개의 챌린지가 남았아요
+        총 {profileTotalChallenge}개 완료! {profileLevel === '레벨3 스냅 마스터' ? (<Text>Tripture 레벨 모두 달성!</Text>)
+        : (<Text>다음 레벨까지 {levelNeedCount}개의 챌린지가 남았아요.</Text>)}
       </ChallengeStateSubHeaderText>
 
       <ChallengeContainer>
         {challengeEngList.map((challenge, index) => (
           <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
             <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
+            <ChallengeIcon source={images[challengeList[index]]} />
             <ChallengeStateNum>
-              <Text style={{ color: '#CA7FFE' }}>
-                {challengeStateList[challenge][0]}
-              </Text>{' '}
-              / {challengeStateList[challenge][1]}
+              {challengeStateList[challenge][0]}
             </ChallengeStateNum>
           </ChallengeSubContainer>
         ))}
         <JeJuContainer onPress={() => moveToMap('je')}>
           <ChallengeNameText>제주</ChallengeNameText>
-          <ChallengeStateNum>
-            <Text style={{ color: '#CA7FFE' }}>
-              {challengeStateList['je'][0]}
-            </Text>{' '}
-            / {challengeStateList['je'][1]}
+          <JeJuChallengeIcon source={require('../../assets/je.png')} />
+          <ChallengeStateNum count={challengeStateList['je'][0]}>
+            {challengeStateList['je'][0]}
           </ChallengeStateNum>
         </JeJuContainer>
       </ChallengeContainer>
-      <InfoText>전체 챌린지를 완료하시면 5만 포인트를 드려요!</InfoText>
+      <InfoText>히든 챌린지를 모두 완료하시면 1만 포인트를 드려요!</InfoText>
     </ListContainer>
   );
 };
@@ -124,30 +149,29 @@ const ChallengeSubContainer = styled.TouchableOpacity`
 `;
 
 const ChallengeNameText = styled.Text`
-  font-size: 14px;
-  font-style: normal;
+  font-size: 15px;
   font-family: Bold;
   margin-bottom: 10px;
 `;
 
 const ChallengeIcon = styled.Image`
-  width: 48px;
-  height: 48px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
-
-const JeJuChallengeIcon = styled.Image`
   width: 35px;
   height: 35px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+`;
+
+const JeJuChallengeIcon = styled.Image`
+  width: 28px;
+  height: 28px;
+  margin-bottom: 5px;
 `;
 
 const ChallengeStateNum = styled.Text`
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-family: Bold;
+  color: ${(props) => (props.count > 0 ? '#CA7FFE' : '#B5B5B5')};
 `;
 
 const JeJuContainer = styled.TouchableOpacity`

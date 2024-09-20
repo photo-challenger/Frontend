@@ -586,6 +586,16 @@ async function fetchComment(groupId, postId, commentContent) {
   }
 }
 
+async function fetchProfileLevel() {
+  try {
+    const response = await axiosInstance.get(`${config.apiUrl}profile/checkLevel`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+  
+}
+
 // 포토챌린지 > 포토챌린지 상세 정보 조회
 async function fetchChallengeDetail(contentId) {
   console.log(`${config.apiUrl}challenge/challengeId/${contentId}`);
@@ -785,6 +795,7 @@ export {
   fetchCommentList,
   fetchCommentReplyList,
   fetchComment,
+  fetchProfileLevel,
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
   fetchCommunityDetail,
