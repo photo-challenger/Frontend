@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   View,
@@ -16,6 +16,7 @@ import {
 } from '../service/api';
 import useConfirm from '../hooks/useConfirm';
 import CommunityCommentModal from './CommunityCommentModal';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CommunityDetail = ({ route, navigation }) => {
   const { postId } = route.params;
@@ -48,6 +49,13 @@ const CommunityDetail = ({ route, navigation }) => {
   // 수정하기
   const editPost = () => {
     // 수정하기 화면으로 이동
+    navigation.navigate('photoChallengeEdit', {
+      postInfo: {
+        postId: postId,
+        imgUrl: postInfo.imgUrl,
+        postContent: postInfo.postContent,
+      },
+    });
     setModalVisible(false);
   };
 
@@ -94,15 +102,18 @@ const CommunityDetail = ({ route, navigation }) => {
     try {
       const apiResponseData = await fetchCommunityDetail(postId);
       console.log(' apiResponseData   :', apiResponseData);
-      const contentDetailResponse = await fetchDetailCommon(apiResponseData.contentId);
+      const contentDetailResponse = await fetchDetailCommon(
+        apiResponseData.contentId,
+      );
       setPostInfo(apiResponseData);
       setIsBookmark(apiResponseData.isSaveBookmark == 'true');
       setIsLike(apiResponseData.isLike === 'true');
       setContentDetail({
-        "contentId": contentDetailResponse.contentid,
-        "title": contentDetailResponse.title,
-        "type": tourType[contentDetailResponse.contenttypeid],
-        "image": contentDetailResponse.firstimage || ''});
+        contentId: contentDetailResponse.contentid,
+        title: contentDetailResponse.title,
+        type: tourType[contentDetailResponse.contenttypeid],
+        image: contentDetailResponse.firstimage || '',
+      });
     } catch (error) {
       console.error('Failed to fetch community detail:', error);
     } finally {
@@ -112,16 +123,18 @@ const CommunityDetail = ({ route, navigation }) => {
 
   const moveToDetail = (id) => {
     navigation.navigate('MainDetailScreen', { contentId: id });
-  }
+  };
 
   async function addPostLike() {
     const apiResponseData = await fetchAddPostLike(postId);
     setIsLike(apiResponseData.checkDeleteOrSave == 'Save');
   }
 
-  useEffect(() => {
-    getCommunityDetail();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCommunityDetail();
+    }, []),
+  );
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -131,8 +144,13 @@ const CommunityDetail = ({ route, navigation }) => {
     <CommunityDetailContainer>
       <TopBox>
         <UserProfile>
-          {postInfo.profileImgUrl.split('/').pop() !== 'default' ? (<UserImage source={{ uri: postInfo.profileImgUrl }} />)
-            : (<UserImage source={require('../assets/profile-default-image.png')} />)}
+          {postInfo.profileImgUrl.split('/').pop() !== 'default' ? (
+            <UserImage source={{ uri: postInfo.profileImgUrl }} />
+          ) : (
+            <UserImage
+              source={require('../assets/profile-default-image.png')}
+            />
+          )}
           <UserInfo>
             <UserName>{postInfo.nickname}</UserName>
             <UserLevel>{postInfo.level}</UserLevel>
@@ -153,9 +171,17 @@ const CommunityDetail = ({ route, navigation }) => {
       <ContentBox>
         <ContentText>{postInfo.postContent}</ContentText>
       </ContentBox>
-      <LocationBox activeOpacity={0.5} onPress={() => moveToDetail(contentDetail.contentId)}>
-        <LocationImage source={contentDetail.image !== '' ? { uri: contentDetail.image }
-        : require('../assets/profile-default-image.png')} />
+      <LocationBox
+        activeOpacity={0.5}
+        onPress={() => moveToDetail(contentDetail.contentId)}
+      >
+        <LocationImage
+          source={
+            contentDetail.image !== ''
+              ? { uri: contentDetail.image }
+              : require('../assets/profile-default-image.png')
+          }
+        />
         <LocationDetails>
           <LocationName>{contentDetail.title}</LocationName>
           <LocationType>{contentDetail.type}</LocationType>
@@ -185,24 +211,30 @@ const CommunityDetail = ({ route, navigation }) => {
             source={
               postInfo.postCommentCount == 0
                 ? require('../assets/icon-annotation.png')
-                : require('../assets/icon-annotation-on.png')}
+                : require('../assets/icon-annotation-on.png')
+            }
             style={{ width: 24, height: 24 }}
           />
           <ScoreText>{postInfo.postCommentCount}</ScoreText>
         </CommentBox>
-        <CommunityCommentModal commentModalVisible={commentModalVisible} setCommentModalVisible={setCommentModalVisible} postId={postId} navigation={navigation} />
+        <CommunityCommentModal
+          commentModalVisible={commentModalVisible}
+          setCommentModalVisible={setCommentModalVisible}
+          postId={postId}
+          navigation={navigation}
+        />
       </ScoreBox>
 
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <ModalContainer>
             <ModalContent>
-              {/* {postInfo.isMyPost == 'true' && (
+              {postInfo.isMyPost == 'true' && (
                 <ModalOption onPress={editPost}>
                   <ModalIcon source={require('../assets/icon-edit.png')} />
                   <ModalText>수정하기</ModalText>
                 </ModalOption>
-              )} */}
+              )}
               {postInfo.isMyPost != 'true' && (
                 <ModalOption onPress={reportPost}>
                   <ModalIcon source={require('../assets/icon-report.png')} />
@@ -385,7 +417,7 @@ const ModalIcon = styled.Image`
 
 const ModalText = styled.Text`
   font-size: 16px;
-  color: #4F4F4F;
+  color: #4f4f4f;
   line-height: 22px;
   font-family: Bold;
 `;

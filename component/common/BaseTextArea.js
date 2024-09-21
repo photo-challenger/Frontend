@@ -1,9 +1,9 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 
 const BaseTextarea = forwardRef(
-  ({ title, placeholder, readOnly, inputType }, ref) => {
+  ({ title, placeholder, readOnly, inputType, value, onChangeText }, ref) => {
     return (
       <Container>
         {title && <Title>{title}</Title>}
@@ -13,8 +13,10 @@ const BaseTextarea = forwardRef(
           keyboardType={inputType}
           placeholderTextColor="#C0C0C0"
           multiline={true}
+          value={value}
           ref={ref}
           numberOfLines={4} // 기본 줄 수 설정 (필요에 따라 조정 가능)
+          onChangeText={onChangeText} // 입력 값이 변경될 때마다 state 업데이트
         />
         <Underline />
       </Container>
