@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   TouchableOpacity,
   Modal,
@@ -16,9 +16,12 @@ import {
 import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
 import { useSelector } from 'react-redux';
+import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 
 const ChallengeComponent = ({ route, navigation }) => {
-  const [loading, setLoading] = useState(route.params?.loading);
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  const navigationState = useNavigationState(state => state);
+
   const [challengeLevel, setChallengeLevel] = useState('Lv.1 찰칵 루키');
   const [myPostImageList, setMyPostImageList] = useState([]);
   const [commentList, setCommentList] = useState([]);
@@ -86,11 +89,17 @@ const ChallengeComponent = ({ route, navigation }) => {
     navigation.navigate('community');
   };
 
-  useEffect(() => {
-    getMyPostList(0);
-    getMyCommentList(0);
-  }, [route.params]);
-
+  useFocusEffect(
+    useCallback(() => {
+      if (navigationState.index === 0) {
+        setShouldRefresh(true);
+        getMyPostList(0);
+        getMyCommentList(0);
+      }
+      return () => setShouldRefresh(false); // cleanup
+    }, [navigationState])
+  );
+  
   return (
     <ChallengeTabContainer>
       <Animated.View style={[styles.animatedSheet]}>

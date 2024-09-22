@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
+import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {
   fetchMyBookmarkSightList,
@@ -10,6 +11,9 @@ import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
 
 const ScrapComponent = ({ route, navigation }) => {
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  const navigationState = useNavigationState(state => state);
+
   const [contentList, setContentList] = useState([]);
   const [scrapChallengeList, setScrapChallengeList] = useState([]);
 
@@ -82,10 +86,21 @@ const ScrapComponent = ({ route, navigation }) => {
     navigation.navigate('community');
   };
 
-  useEffect(() => {
-    getBookmarkContentList(0);
-    getBookmarkChallengeList(0);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (navigationState.index === 2) {
+        setShouldRefresh(true);
+        getBookmarkContentList(0);
+        getBookmarkChallengeList(0);
+      }
+      return () => setShouldRefresh(false); // cleanup
+    }, [navigationState])
+  );
+
+  // useEffect(() => {
+  //   getBookmarkContentList(0);
+  //   getBookmarkChallengeList(0);
+  // }, [isFocused]);
 
   return (
     <ChallengeTabContainer>
