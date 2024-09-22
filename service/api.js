@@ -776,6 +776,19 @@ async function fetchProfileDelete() {
   }
 }
 
+async function fetchEditPost(params) {
+  try {
+    const response = await axios.put(`${config.apiUrl}post/edit`, {
+      postId: params.postId,
+      postContent: params.postContent,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   fetchLogin_before,
   fetchBuyByPoint,
@@ -827,4 +840,5 @@ export {
   fetchLogout,
   fetchProfileDelete,
   fetchLocationBasedChallengeList,
+  fetchEditPost,
 };

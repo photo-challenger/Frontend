@@ -33,6 +33,7 @@ import SettingScreen from '../screens/MyPage/SettingScreen';
 import ProfileEditScreen from '../screens/MyPage/ProfileEditScreen';
 import ChallengeStateScreen from '../screens/MyPage/ChallengeStateScreen';
 import ProfileDeleteScreen from '../screens/MyPage/ProfileDeleteScreen';
+import PhotoChallengeEdit from '../screens/PhotoChallengeEdit';
 
 const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -211,7 +212,7 @@ const StackNavigation = () => {
             headerTitle: '홈',
             headerLeftVisible: true,
             headerRightVisible: false,
-            headerBackgroundColor: '#F7F7F8'
+            headerBackgroundColor: '#F7F7F8',
           }),
         })}
       />
@@ -403,7 +404,17 @@ const StackNavigation = () => {
           }),
         })}
       />
-
+      <Stack.Screen
+        name="photoChallengeEdit"
+        component={PhotoChallengeEdit}
+        options={() => ({
+          ...naviOption({
+            headerTitle: '게시글 수정',
+            headerLeftVisible: false,
+            headerRightVisible: true,
+          }),
+        })}
+      />
       <Stack.Screen
         name="report"
         component={ReportScreen}

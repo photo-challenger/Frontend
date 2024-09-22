@@ -29,18 +29,20 @@ const ScrapComponent = ({ route, navigation }) => {
     const detailResultData = await Promise.all(
       resultData.myContentResponseList.map(async (result) => {
         const response = await fetchDetailCommon(result.contentId);
-        return {"addr1": response.addr1 || "",
-          "contentid": response.contentid,
-          "firstimage": response.firstimage,
-          "title": response.title};
-      })
+        return {
+          addr1: response.addr1 || '',
+          contentid: response.contentid,
+          firstimage: response.firstimage,
+          title: response.title,
+        };
+      }),
     );
 
     if (pageNum === 0) {
       setContentList(detailResultData);
       setMyContentTotPageCnt(resultData.totalPages);
     } else {
-      setContentList(detailResultData.concat(contentList));
+      setContentList(contentList.concat(detailResultData));
     }
 
     console.log('contentList   : ', contentList);
@@ -114,7 +116,12 @@ const ScrapComponent = ({ route, navigation }) => {
                         <ScrapContentImageUpCircle />
                         <ScrapContentImageDownCircle />
                         <ScrapContentImage
-                          source={{ uri: content.firstimage !== '' ? content.firstimage : "https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/be_background.png" }}
+                          source={{
+                            uri:
+                              content.firstimage !== ''
+                                ? content.firstimage
+                                : 'https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/be_background.png',
+                          }}
                         />
                         <ScrapContentDetailContainer>
                           <ScrapContentTitle
@@ -148,9 +155,7 @@ const ScrapComponent = ({ route, navigation }) => {
                   저장해보세요.
                 </NoChallengeListText>
                 <NoChallengeButton onPress={moveToHome}>
-                  <NoChallengeButtonText>
-                    관광지 둘러보기
-                  </NoChallengeButtonText>
+                  <NoChallengeButtonText>관광지 둘러보기</NoChallengeButtonText>
                 </NoChallengeButton>
               </NoChallengeListContainer>
             )}
@@ -280,7 +285,7 @@ const ScrapContentHeaderText = styled.Text`
 
 const ScrapContentListContainer = styled.View``;
 const ScrapContentContainer = styled.View`
-  max-height: 400;
+  max-height: 280;
 `;
 
 const ScrapContentSubContainer = styled.TouchableOpacity`
