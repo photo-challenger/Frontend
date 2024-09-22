@@ -61,6 +61,17 @@ const MainDetailScreen = ({ route, navigation }) => {
     });
   };
 
+  const moveToChallengeWrite = (obj) => {
+    navigation.navigate('photoChallengeWrite', {
+      challengeInfo: {
+        challengeName: obj.title,
+        contentId: obj.contentid,
+        areaCode: obj.areacode,
+        addr: obj.addr1 || ""
+      },
+    });
+  }
+
   if (loading) {
     return (
       <MainDetailContainer style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -116,7 +127,7 @@ const MainDetailScreen = ({ route, navigation }) => {
           )}
         </Animated.ScrollView>
         <ButtonContainer>
-          <ChallengeButton>
+          <ChallengeButton onPress={() => moveToChallengeWrite(regionDetailContent)}>
             <ChallengeText>챌린지 참여</ChallengeText>
           </ChallengeButton>
           <MapButton onPress={moveToMap}>
