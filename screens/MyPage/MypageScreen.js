@@ -68,12 +68,12 @@ const MypageScreen = ({ route, navigation }) => {
       </SettingImageContainer>
       <MyPageHeaderContainer>
         <MyPageHeaderText>
-          {profileInfo?.profileNickname}님, 트립처와 함께{'\n'}
+          {profileInfo?.profileNickname}님, {profileInfo?.profileNickname?.length > 5 && '\n'}트립처와 함께{'\n'}
           추억가득한 여행되세요!
         </MyPageHeaderText>
         <MyPageHeaderProfileImage
           source={
-            profileInfo?.profileImgName
+            profileInfo?.profileImgName !== 'https://tripture.s3.ap-northeast-2.amazonaws.com/default'
               ? { uri: profileInfo.profileImgName }
               : require('../../assets/profile-default-image.png')
           }
