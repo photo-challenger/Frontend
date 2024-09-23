@@ -39,7 +39,7 @@ const KakaoMap = (props) => {
           var mapContainer = document.getElementById('map'), // Div to display the map
           mapOption = {
             center: new kakao.maps.LatLng(${latitude}, ${longitude}), // Map center coordinates
-            level: 8 // Map zoom level
+            level: 5 // Map zoom level
           };
 
           var map = new kakao.maps.Map(mapContainer, mapOption); // Create the map

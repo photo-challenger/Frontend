@@ -6,8 +6,11 @@ import * as Location from 'expo-location';
 import {
   fetchlocationBasedList,
   fetchLocationBasedChallengeList,
+  fetchCheckChallenge,
 } from '../service/api';
 import styled from 'styled-components/native';
+import useAlert from '../hooks/useAlert';
+import { getDistance } from '../component/common/GetDistance';
 
 const MapScreen = ({ route, navigation }) => {
   const [coords, setCoords] = useState(null);
@@ -16,6 +19,7 @@ const MapScreen = ({ route, navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [layerPopFlag, setLayerPopFlag] = useState(false);
   const [tourInfo, setTourInfo] = useState({});
+  const [showAlert, AlertComponent] = useAlert();
 
   const tourType = {
     12: '관광지',
@@ -119,15 +123,51 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   // ‘포토챌린지 참여하기' 클릭 시 해당 포토챌린지 작성화면으로 이동
-  function writeChallenge(obj) {
-    navigation.navigate('photoChallengeWrite', {
-      challengeInfo: {
-        challengeName: obj.title,
-        contentId: obj.contentid,
-        areaCode: obj.areacode,
-        addr: obj.addr1 || ""
-      },
-    });
+  async function writeChallenge(obj) {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      showAlert({
+        title: '포토챌린지 오류!',
+        msg: '위치 권한이 허용되지 않았습니다.',
+      });
+      return;
+    }
+
+    // let _location = await Location.getCurrentPositionAsync();
+    // if(getDistance(_location.coords.latitude, _location.coords.longitude, obj.mapy, obj.mapx) > 1000) {
+    //   showAlert({
+    //     title: '포토챌린지 작성 불가',
+    //     msg: '관광지로 조금 더 가까이 이동해 주세요!',
+    //   });
+    //   return;
+    // }
+
+    const response = await fetchCheckChallenge(obj.contentid);
+    if(response) {
+      showAlert({
+        title: '히든 포토챌린지 발견 ✌️',
+        msg: '히든 포토챌린지에 참여하면\n더 많은 포인트를 얻을 수 있어요!',
+        onOk: async function () {
+          navigation.navigate('photoChallengeDetail', {
+            challengeInfo: {
+              challengeName: obj.title,
+              contentId: obj.contentid,
+              areaCode: obj.areacode,
+              addr: obj.addr1 || ""
+            },
+          });
+        },
+      });
+    } else {
+      navigation.navigate('photoChallengeWrite', {
+        challengeInfo: {
+          challengeName: obj.title,
+          contentId: obj.contentid,
+          areaCode: obj.areacode,
+          addr: obj.addr1 || ""
+        },
+      });
+    }
   }
 
   // 마커 클릭 시
@@ -195,6 +235,8 @@ const MapScreen = ({ route, navigation }) => {
               <BttmShtChllngBtnText>포토챌린지 참여하기</BttmShtChllngBtnText>
             </BttmShtChllngBtn>
           </DetailBtnView>
+
+          <AlertComponent />
         </DetailBottomSheet>
       ) : (
         ''
