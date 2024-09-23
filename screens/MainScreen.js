@@ -20,8 +20,8 @@ import { setUserProfile } from '../redux/user';
 const MainScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
-  const [userInfo, setUserInfo] = useState({});
   const RegionList = ['인천 경기', '서울', '강원', '충청', '호남', '영남'];
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   const images = {
     '인천 경기': require('../assets/inc.png'),
@@ -36,7 +36,6 @@ const MainScreen = ({ route, navigation }) => {
     const result = await fetchDefaultProfile();
 
     dispatch(setUserProfile(result));
-    setUserInfo(result);
   };
 
   const moveDetail = (region) => {
@@ -48,7 +47,6 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    // fetchLogin('user2@example.com', 'password2', false);
     getDefaultProfile();
   }, []);
 
