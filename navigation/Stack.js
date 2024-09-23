@@ -368,6 +368,7 @@ const StackNavigation = () => {
             headerTitle: '포토챌린지',
             headerLeftVisible: true,
             headerRightVisible: false,
+            headerBackgroundColor: '#f7f7f8',
           }),
         })}
       />

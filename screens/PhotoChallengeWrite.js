@@ -33,7 +33,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
     //일 : 19
     const _date = String(new Date().getDate());
     setVisitDate(
-      `${_year}-${_month.padStart(2, '0')}-${_date.padStart(2, '0')}`,
+      `${_year}.${_month.padStart(2, '0')}.${_date.padStart(2, '0')}`,
     );
 
     console.log('visitDate : ', visitDate);
@@ -192,9 +192,9 @@ const NameTextBox = styled.View`
   background: #b5b5b5;
   display: inline-flex;
   padding: 6px 14px;
-  justify-content: center;
-  align-items: center;
-  margin: 4px;
+  flex-direction: row;
+  align-self: flex-start;
+  margin-bottom: 4px;
 `;
 
 const NameText = styled.Text`

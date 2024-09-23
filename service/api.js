@@ -598,10 +598,10 @@ async function fetchProfileLevel() {
 
 // 포토챌린지 > 포토챌린지 상세 정보 조회
 async function fetchChallengeDetail(contentId) {
-  console.log(`${config.apiUrl}challenge/challengeId/${contentId}`);
+  console.log(`${config.apiUrl}challenge/contentId/${contentId}`);
   try {
     const response = await axios.get(
-      `${config.apiUrl}challenge/challengeId/${contentId}`,
+      `${config.apiUrl}challenge/contentId/${contentId}`,
     );
     return response.data;
   } catch (error) {
@@ -789,6 +789,15 @@ async function fetchEditPost(params) {
   }
 }
 
+async function fetchCheckChallenge(contentId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}challenge/check/${contentId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   fetchLogin_before,
   fetchBuyByPoint,
@@ -841,4 +850,5 @@ export {
   fetchProfileDelete,
   fetchLocationBasedChallengeList,
   fetchEditPost,
+  fetchCheckChallenge,
 };

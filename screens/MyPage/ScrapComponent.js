@@ -93,7 +93,7 @@ const ScrapComponent = ({ route, navigation }) => {
         getBookmarkContentList(0);
         getBookmarkChallengeList(0);
       }
-      return () => setShouldRefresh(false); // cleanup
+      return () => setShouldRefresh(false);
     }, [navigationState])
   );
 
