@@ -284,7 +284,7 @@ const StackNavigation = () => {
       />
 
       <Stack.Screen
-        name="프로필 수정"
+        name="ProfileEditScreen"
         component={ProfileEditScreen}
         options={() => ({
           ...naviOption({

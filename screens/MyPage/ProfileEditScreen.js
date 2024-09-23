@@ -365,8 +365,6 @@ const SaveText = styled.Text`
   color: #373737;
 `;
 const SaveButton = styled.TouchableOpacity`
-  width: 32px;
-  height: 32px;
   align-items: center;
   justify-content: center;
 `;
