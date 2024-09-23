@@ -79,9 +79,9 @@ const ImageListContainer = styled.View`
   justify-content: space-between;
 `;
 const ImageItem = styled.Image`
-  width: ${width * 0.28}px;
-  height: ${width * 0.28}px;
-  margin: 3px 1.5px;
+  width: ${width * 0.279}px;
+  height: ${width * 0.279}px;
+  margin: 3px;
   border-radius: 8px;
   aspect-ratio: 1;
   background-color: #f0f0f0;
