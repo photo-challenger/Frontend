@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Image, TouchableOpacity, StatusBar, Dimensions } from 'react-native';
 import styled from 'styled-components';
 import {
   fetchPopularCommunityList,
   fetchSearchCommnunityRegion,
 } from '../service/api';
+
+const { width } = Dimensions.get('window');
 
 const CommunityScreen = ({ route, navigation }) => {
   const [text, onChangeText] = useState('');
@@ -77,8 +79,8 @@ const ImageListContainer = styled.View`
   justify-content: space-between;
 `;
 const ImageItem = styled.Image`
-  width: 30%;
-  height: 102px;
+  width: ${width * 0.28}px;
+  height: ${width * 0.28}px;
   margin: 3px 1.5px;
   border-radius: 8px;
   aspect-ratio: 1;
