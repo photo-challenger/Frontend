@@ -13,17 +13,21 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
+import * as Location from 'expo-location';
 import {
   fetchDetailCommon,
   fetchContentBookmark,
   fetchCheckContentBookmark,
 } from '../service/api';
+import useAlert from '../hooks/useAlert';
+import { getDistance } from '../component/common/GetDistance';
 
 const MainDetailScreen = ({ route, navigation }) => {
   const { contentId } = route.params;
   const [regionDetailContent, setRegionDetailContent] = useState();
   const [clickBookmark, setClickBookmark] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showAlert, AlertComponent] = useAlert();
 
   useEffect(() => {
     const getRegionDetailContent = async () => {
@@ -61,7 +65,25 @@ const MainDetailScreen = ({ route, navigation }) => {
     });
   };
 
-  const moveToChallengeWrite = (obj) => {
+  const moveToChallengeWrite = async (obj) => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      showAlert({
+        title: '포토챌린지 오류!',
+        msg: '위치 권한이 허용되지 않았습니다.',
+      });
+      return;
+    }
+
+    let _location = await Location.getCurrentPositionAsync();
+    if(getDistance(_location.coords.latitude, _location.coords.longitude, obj.mapy, obj.mapx) > 1000) {
+      showAlert({
+        title: '포토챌린지 작성 불가',
+        msg: '관광지로 조금 더 가까이 이동해 주세요!',
+      });
+      return;
+    }
+
     navigation.navigate('photoChallengeWrite', {
       challengeInfo: {
         challengeName: obj.title,
@@ -135,6 +157,8 @@ const MainDetailScreen = ({ route, navigation }) => {
           </MapButton>
         </ButtonContainer>
       </Animated.View>
+
+      <AlertComponent />
     </MainDetailContainer>
   );
 };
@@ -155,6 +179,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
     padding: 24,
+    paddingBottom: 76,
   },
 });
 
