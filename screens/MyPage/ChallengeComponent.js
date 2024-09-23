@@ -25,7 +25,6 @@ const ChallengeComponent = ({ route, navigation }) => {
   const [challengeLevel, setChallengeLevel] = useState('Lv.1 찰칵 루키');
   const [myPostImageList, setMyPostImageList] = useState([]);
   const [commentList, setCommentList] = useState([]);
-  const [challengeImageList, setChallengeImageList] = useState([]);
 
   const [myPostPageNo, setMyPostPageNo] = useState(0);
   const [myPostTotPageCnt, setmyPostTotPageCnt] = useState(null);

@@ -23,7 +23,7 @@ const SettingScreen = ({ route, navigation }) => {
   const [showAlert, AlertComponent] = useAlert();
 
   const moveProfileEdit = () => {
-    navigation.navigate('프로필 수정');
+    navigation.navigate('ProfileEditScreen');
   };
 
   const moveProfileDelete = () => {
