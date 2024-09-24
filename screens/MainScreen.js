@@ -109,7 +109,10 @@ const MainScreen = ({ route, navigation }) => {
                     )}
                   </RegionSubContainer>
                 ))}
-                <JejuContainer activeOpacity={0.5} onPress={() => moveDetail('제주')}>
+                <JejuContainer
+                  activeOpacity={0.5}
+                  onPress={() => moveDetail('제주')}
+                >
                   <RegionNameText>제주</RegionNameText>
                   <JejuImage source={require('../assets/je.png')} />
                 </JejuContainer>

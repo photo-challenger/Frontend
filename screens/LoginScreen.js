@@ -71,11 +71,11 @@ const LoginScreen = ({ route, navigation }) => {
 
   const moveFindPassword = () => {
     navigation.navigate('passwordFind');
-  }
+  };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, backgroundColor: '#FFFFFF' }}
     >
       <Animated.View style={{ flex: 1 }}>
@@ -84,7 +84,6 @@ const LoginScreen = ({ route, navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <LoginContainer>
-
             <LogoImageContainer>
               <LoginLogoImage source={require('../assets/tripture.png')} />
             </LogoImageContainer>
@@ -93,7 +92,7 @@ const LoginScreen = ({ route, navigation }) => {
               <SearchInput
                 placeholder="이메일을 입력해주세요."
                 onChangeText={(text) => setUserEmail(text)}
-                placeholderTextColor={"#B5B5B5"}
+                placeholderTextColor={'#B5B5B5'}
               />
             </SearchContent>
 
@@ -139,7 +138,6 @@ const LoginScreen = ({ route, navigation }) => {
           <AlertComponent />
         </Animated.ScrollView>
       </Animated.View>
-
     </KeyboardAvoidingView>
   );
 };
@@ -236,15 +234,15 @@ const LoginButtonText = styled.Text`
 `;
 
 const SubButtonContainer = styled.View`
-	display: flex;
-	flex-direction: row;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
-`
+`;
 
 const SubButton = styled.TouchableOpacity`
-	margin-right: 5px;
+  margin-right: 5px;
   display: flex;
-`
+`;
 
 const SubButtonText = styled.Text`
   font-size: 14px;
