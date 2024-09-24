@@ -529,6 +529,15 @@ async function fetchSurroundingChallenge(params) {
   }
 }
 
+async function fetchCheckWrittenPost(contentId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}post/check/${contentId}`);
+    console.log(`${config.apiUrl}post/check/${contentId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 // 포토챌린지 > 인기 포토챌린지 상위 10개
 async function fetchPopularChallenge() {
   try {
@@ -854,4 +863,5 @@ export {
   fetchLocationBasedChallengeList,
   fetchEditPost,
   fetchCheckChallenge,
+  fetchCheckWrittenPost,
 };

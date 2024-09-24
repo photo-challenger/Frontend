@@ -1,14 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, Image, Dimensions, Animated, View, ScrollView } from 'react-native';
+import {
+  Text,
+  Image,
+  Dimensions,
+  Animated,
+  View,
+  ScrollView,
+} from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
-import { fetchChallengeDetail } from '../service/api';
+import { fetchChallengeDetail, fetchCheckWrittenPost } from '../service/api';
+import useAlert from '../hooks/useAlert';
 
 const { width } = Dimensions.get('window');
 
 const PhotoChallengeDetail = ({ route, navigation }) => {
   const { challengeInfo } = route.params;
   const [challengeDetail, setChallengeDetail] = useState({});
+  const [showAlert, AlertComponent] = useAlert();
 
   useEffect(() => {
     console.log(challengeInfo);
@@ -28,6 +37,19 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
     });
   }
 
+  async function checkWrited() {
+    const apiResponseData = await fetchCheckWrittenPost(
+      challengeInfo.contentId,
+    );
+    if (apiResponseData) {
+      showAlert({
+        title: '포토챌린지 오류!',
+        msg: '이미 참여한 포토챌린지입니다.',
+      });
+    } else {
+      moveWrite();
+    }
+  }
   return (
     <Container>
       <TopText>
@@ -44,14 +66,17 @@ const PhotoChallengeDetail = ({ route, navigation }) => {
         </DescriptionContainer>
       </ScrollView>
 
-      <View style={{ elevation: 10, height: 1, backgroundColor: '#fff'}}></View>
+      <View
+        style={{ elevation: 10, height: 1, backgroundColor: '#fff' }}
+      ></View>
       <GuideContainer>
         <GuideTop>지금 히든 챌린지에 참여하면,</GuideTop>
         <GuideBottom>{challengeDetail?.challengePoint} 포인트</GuideBottom>
       </GuideContainer>
-      <ActionButton onPress={() => moveWrite()}>
+      <ActionButton onPress={() => checkWrited()}>
         <ButtonText>포토챌린지 참여하기</ButtonText>
       </ActionButton>
+      <AlertComponent />
     </Container>
   );
 };

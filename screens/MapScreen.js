@@ -143,17 +143,17 @@ const MapScreen = ({ route, navigation }) => {
     // }
 
     const response = await fetchCheckChallenge(obj.contentid);
-    if(response) {
+    if (response) {
       showAlert({
         title: '히든 포토챌린지 발견 ✌️',
         msg: '히든 포토챌린지에 참여하면\n더 많은 포인트를 얻을 수 있어요!',
-        onOk: async function () {
+        onOk: () => {
           navigation.navigate('photoChallengeDetail', {
             challengeInfo: {
               challengeName: obj.title,
               contentId: obj.contentid,
               areaCode: obj.areacode,
-              addr: obj.addr1 || ""
+              addr: obj.addr1 || '',
             },
           });
         },
@@ -164,7 +164,7 @@ const MapScreen = ({ route, navigation }) => {
           challengeName: obj.title,
           contentId: obj.contentid,
           areaCode: obj.areacode,
-          addr: obj.addr1 || ""
+          addr: obj.addr1 || '',
         },
       });
     }
@@ -206,24 +206,37 @@ const MapScreen = ({ route, navigation }) => {
         <DetailBottomSheet>
           <DetailInfoView>
             <DetailInfoImage
-              source={tourInfo.firstimage ? { uri: tourInfo.firstimage } 
-              : require('../assets/tripture-main-no-content.png')}
+              source={
+                tourInfo.firstimage
+                  ? { uri: tourInfo.firstimage }
+                  : require('../assets/tripture-main-no-content.png')
+              }
             />
             <DetailInfoContView>
               <DetailInfoTitle>
-                <Text 
-                  style={{fontSize: 16, fontFamily: 'Bold', marginRight: 4}}
+                <Text
+                  style={{ fontSize: 16, fontFamily: 'Bold', marginRight: 4 }}
                   numberOfLines={1}
-                  ellipsizeMode="tail">{tourInfo.title}</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Semibold', color: '#878787'}}>
+                  ellipsizeMode="tail"
+                >
+                  {tourInfo.title}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: 'Semibold',
+                    color: '#878787',
+                  }}
+                >
                   {tourType[tourInfo.contenttypeid]}
                 </Text>
               </DetailInfoTitle>
-              <Text 
-                style={{fontFamily: 'Medium', color: '#9C9C9C', width: '90%'}} 
-                numberOfLines={1} 
-                ellipsizeMode="tail">
-                  {tourInfo.addr1}
+              <Text
+                style={{ fontFamily: 'Medium', color: '#9C9C9C', width: '90%' }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {tourInfo.addr1}
               </Text>
             </DetailInfoContView>
           </DetailInfoView>
@@ -273,7 +286,7 @@ const RefreshBtn = styled.TouchableOpacity`
 
 const RefreshBtnText = styled.Text`
   font-family: Regular;
-  color: #4C53F5;
+  color: #4c53f5;
   font-size: 16px;
   line-height: 18px;
 `;
@@ -370,7 +383,7 @@ const DetailInfoTitle = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-`
+`;
 
 const DetailInfoImage = styled.Image`
   width: 100px;
