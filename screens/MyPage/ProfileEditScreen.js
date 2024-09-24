@@ -144,14 +144,14 @@ const ProfileEditScreen = ({ route, navigation }) => {
   return (
     <ProfileEditComponent>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
         style={styles.keyboardAvoidingView}
       >
         <Animated.View style={[styles.animatedSheet]}>
           <Animated.ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollViewContent}
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
           >
             <ProfileHeaderText>프로필</ProfileHeaderText>
             <ProfileDetailContainer>
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 24, // 스크롤 여유 공간을 위한 추가 패딩
+    paddingBottom: 30, // 스크롤 여유 공간을 위한 추가 패딩
   },
 });
 

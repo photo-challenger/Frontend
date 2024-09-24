@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -23,6 +23,7 @@ const itemWidth = width / 3 - 22;
 
 const MainScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
 
   const RegionList = ['인천 경기', '서울', '강원', '충청', '호남', '영남'];
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -47,6 +48,7 @@ const MainScreen = ({ route, navigation }) => {
   };
 
   const onSearchSubmit = (searchText) => {
+    inputRef.current.clear();
     navigation.navigate('MainSearchScreen', { query: searchText });
   };
 
@@ -64,6 +66,7 @@ const MainScreen = ({ route, navigation }) => {
         <SearchContainer>
           <SearchContent>
             <SearchInput
+              ref={inputRef}
               placeholder="어떤 여행지를 찾으세요?"
               onSubmitEditing={(e) => onSearchSubmit(e.nativeEvent.text)}
               placeholderTextColor={'#C4C7CE'}
@@ -78,7 +81,7 @@ const MainScreen = ({ route, navigation }) => {
           <Animated.ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollViewContent}
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
           >
             <HomeHeaderContainer>
               <HomeHeaderText>
