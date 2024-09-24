@@ -7,6 +7,7 @@ import {
 } from '../service/api';
 
 const { width } = Dimensions.get('window');
+const itemWidth = width / 3 - 22.5;
 
 const CommunityScreen = ({ route, navigation }) => {
   const [text, onChangeText] = useState('');
@@ -79,8 +80,7 @@ const ImageListContainer = styled.View`
   justify-content: space-between;
 `;
 const ImageItem = styled.Image`
-  width: ${width * 0.279}px;
-  height: ${width * 0.279}px;
+  width: ${itemWidth}px;
   margin: 3px;
   border-radius: 8px;
   aspect-ratio: 1;

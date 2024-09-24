@@ -10,12 +10,16 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
 import { fetchDefaultProfile } from '../service/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile } from '../redux/user';
+
+const { width } = Dimensions.get('window');
+const itemWidth = width / 3 - 22;
 
 const MainScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -122,13 +126,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animatedSheet: {
-    maxHeight: '100%',
+    flex: 1,
   },
   scrollView: {
-    flexGrow: 1, // Changed from flex: 1
+    flex: 1, // Changed from flex: 1
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingBottom: 20,
   },
 });
 
@@ -207,7 +212,7 @@ const RegionContainer = styled.View`
 
 const RegionSubContainer = styled.TouchableOpacity`
   background-color: #ffffff;
-  width: 31.5%;
+  width: ${itemWidth}px;
   height: 151px;
   border-radius: 10px;
   margin-right: 6px;
@@ -240,7 +245,7 @@ const SeoImage = styled.Image`
 const JejuContainer = styled.TouchableOpacity`
   background-color: #ffffff;
   width: 98.5%;
-  height: 100px;
+  height: 102px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
