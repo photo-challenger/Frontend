@@ -267,7 +267,7 @@ const ReportTypeText = styled.Text`
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 50px;
+  line-height: 45px;
   color: ${(props) => (props.isSelected ? '#000000' : '#B5B5B5')};
 `;
 
