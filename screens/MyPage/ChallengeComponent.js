@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import {
-  fetchLogin,
   fetchMyPostList,
   fetchMyCommentList,
+  fetchProfileLevel,
 } from '../../service/api';
 import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
@@ -34,7 +34,7 @@ const ChallengeComponent = ({ route, navigation }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
 
   const moveChallengeState = () => {
-    navigation.navigate('challengeState');
+    navigation.navigate('challengeState', { profileLevel : challengeLevel });
   };
 
   const getMyPostList = async (pageNum) => {
@@ -80,6 +80,11 @@ const ChallengeComponent = ({ route, navigation }) => {
     }
   };
 
+  const getProfileLevel = async () => {
+    const resultData = await fetchProfileLevel();
+    setChallengeLevel(resultData);
+  }
+
   const movePostDetail = (id) => {
     navigation.navigate('communityDetail', { postId: id });
   };
@@ -92,6 +97,7 @@ const ChallengeComponent = ({ route, navigation }) => {
     useCallback(() => {
       if (navigationState.index === 0) {
         setShouldRefresh(true);
+        getProfileLevel();
         getMyPostList(0);
         getMyCommentList(0);
       }
@@ -113,7 +119,7 @@ const ChallengeComponent = ({ route, navigation }) => {
               <ChallengeLevelText>
                 {userInfo.profileNickname}님은 지금,
               </ChallengeLevelText>
-              <ChallengeLevelSubText>{challengeLevel}</ChallengeLevelSubText>
+              <ChallengeLevelSubText>{challengeLevel.replace('레벨', 'Lv.')}</ChallengeLevelSubText>
             </View>
             <CurrentChallengeButton onPress={moveChallengeState}>
               <CurrentChallengeButtonText>

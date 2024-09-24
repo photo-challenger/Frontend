@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import styled, { StyleSheetManager } from 'styled-components';
-import { fetchMyChallengeState, fetchProfileLevel } from '../../service/api';
+import { fetchMyChallengeState } from '../../service/api';
 import { useSelector } from 'react-redux';
 import Animated from 'react-native-reanimated';
 
@@ -9,9 +9,9 @@ const { width } = Dimensions.get('window');
 const itemWidth = width / 3 - 17.5;
 
 const ChallengeStateScreen = ({ route, navigation }) => {
+  const { profileLevel } = route.params;
   const [profileInfo, setProfileInfo] = useState({});
   const userInfo = useSelector((state) => state.user.userInfo);
-  const [profileLevel, setProfileLevel] = useState('레벨1 찰칵 루키');
   const [profileTotalChallenge, setProfileTotalChallenge] = useState();
   const [levelNeedCount, setLevelNeedCount] = useState(0);
   const challengeEngList = ['inc', 'seo', 'gang', 'chung', 'jeon', 'gyeong'];
@@ -50,11 +50,6 @@ const ChallengeStateScreen = ({ route, navigation }) => {
       + resultData.chung[0] + resultData.gyeong[0] + resultData.je[0]);
   };
 
-  const getProfileLevel = async () => {
-    const resultData = await fetchProfileLevel();
-    setProfileLevel(resultData);
-  }
-
   const moveToMap = (loc) => {
     navigation.navigate('map', {
       coords: challengeCoords[loc],
@@ -64,11 +59,9 @@ const ChallengeStateScreen = ({ route, navigation }) => {
   useEffect(() => {
     setProfileInfo(userInfo);
     getMyChallengeState();
-    getProfileLevel();
   }, []);
 
   useEffect(() => {
-    console.log("checkLevel go >> ", profileTotalChallenge);
     checkLevel();
   }, [profileTotalChallenge])
 
@@ -91,7 +84,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
           >
       <ChallengeStateHeaderText>
         {profileInfo.profileNickname}님은 지금,{'\n'}
-        {profileLevel.replace('레벨', 'Lv.')}
+        {profileLevel?.replace('레벨', 'Lv.')}
       </ChallengeStateHeaderText>
       <ChallengeStateSubHeaderText>
         총 {profileTotalChallenge}개 완료! {profileLevel === '레벨3 스냅 마스터' ? (<Text>Tripture 레벨 모두 달성!</Text>)
