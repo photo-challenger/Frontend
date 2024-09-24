@@ -457,17 +457,6 @@ async function fetchPointStoreList(params) {
   }
 }
 
-async function fetchTotalPoint() {
-  try {
-    const apiResponseData = await axios.get(
-      `${config.apiUrl}bookmark/profile/point`,
-    );
-    return apiResponseData.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const fetchBuyItem = async (params) => {
   let sendObj = params || {};
   try {
@@ -558,7 +547,7 @@ async function fetchUserTotalPoint() {
     const response = await axios.get(`${config.apiUrl}profile/point`);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('fetchUserTotalPoint>>', error);
   }
 }
 
@@ -813,7 +802,7 @@ async function fetchCheckChallenge(contentId) {
 }
 
 export {
-  fetchTotalPoint,
+  fetchUserTotalPoint,
   fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,
@@ -850,7 +839,6 @@ export {
   fetchIsPhotoChallenge,
   fetchCheckContentBookmark,
   fetchContentBookmark,
-  fetchUserTotalPoint,
   fetchMyPostList,
   fetchMyCommentList,
   fetchMyChallengeState,
