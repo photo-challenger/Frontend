@@ -32,7 +32,9 @@ export default function ImagePickerProfile({
 
   return (
     <View style={{ position: 'relative' }}>
-      <ProfileImage source={{ uri: image }} />
+      <ProfileImage source={ profileImage !== "https://tripture.s3.ap-northeast-2.amazonaws.com/default" ? 
+            { uri: profileImage }
+            : require('../../assets/profile-default-image.png')} />
       <ProfileImageEditButton activeOpacity={0.8} onPress={pickImage}>
         <ProfileImageEditImage
           source={require('../../assets/profile-edit-icon.png')}
