@@ -457,6 +457,17 @@ async function fetchPointStoreList(params) {
   }
 }
 
+async function fetchTotalPoint() {
+  try {
+    const apiResponseData = await axios.get(
+      `${config.apiUrl}bookmark/profile/point`,
+    );
+    return apiResponseData.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const fetchBuyItem = async (params) => {
   let sendObj = params || {};
   try {
@@ -588,12 +599,13 @@ async function fetchComment(groupId, postId, commentContent) {
 
 async function fetchProfileLevel() {
   try {
-    const response = await axiosInstance.get(`${config.apiUrl}profile/checkLevel`);
+    const response = await axiosInstance.get(
+      `${config.apiUrl}profile/checkLevel`,
+    );
     return response.data;
   } catch (error) {
     console.log(error);
   }
-  
 }
 
 // 포토챌린지 > 포토챌린지 상세 정보 조회
@@ -791,7 +803,9 @@ async function fetchEditPost(params) {
 
 async function fetchCheckChallenge(contentId) {
   try {
-    const response = await axios.get(`${config.apiUrl}challenge/check/${contentId}`);
+    const response = await axios.get(
+      `${config.apiUrl}challenge/check/${contentId}`,
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -799,6 +813,7 @@ async function fetchCheckChallenge(contentId) {
 }
 
 export {
+  fetchTotalPoint,
   fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,

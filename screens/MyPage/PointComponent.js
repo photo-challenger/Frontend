@@ -8,12 +8,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { fetchMyDurationPointList } from '../../service/api';
+import { fetchMyDurationPointList, fetchTotalPoint } from '../../service/api';
 import Animated from 'react-native-reanimated';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DateRangePicker from './DateRangePicker';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
-import MyPageTicketScreen from './MyPageTicketScreen';
 
 const PointComponent = ({ route, navigation }) => {
   const [myPoint, setMyPoint] = useState(1000);
@@ -27,6 +25,11 @@ const PointComponent = ({ route, navigation }) => {
     navigation.navigate('MyPageTicketScreen');
   };
 
+  useEffect(async () => {
+    const totPoint = await fetchTotalPoint();
+    setMyPoint(totPoint);
+  });
+
   const getPointHistory = async (pageNum) => {
     setMyPointPageNo(pageNum);
 
@@ -39,11 +42,6 @@ const PointComponent = ({ route, navigation }) => {
     const resultData = await fetchMyDurationPointList(sendData);
 
     console.log('fetchMyDurationPointList pageNum  >> ', pageNum);
-
-    const totPoint = resultData.pointDtos.reduce((acc, cur) => {
-      return (acc += Number(cur.pointChange.replace(/[^-0-9]/g, '')));
-    }, 0);
-    setMyPoint(totPoint);
 
     if (pageNum === 0) {
       setPointHistory(resultData.pointDtos);
@@ -120,7 +118,7 @@ const PointComponent = ({ route, navigation }) => {
         >
           <PointHeaderText>나의 포인트 현황</PointHeaderText>
           <PointContainer>
-            <PointSubText>이번 달에 내가 모은 포인트</PointSubText>
+            <PointSubText>모은 총 포인트</PointSubText>
             <PointSubContainer>
               <PointNumText>
                 {new Intl.NumberFormat().format(myPoint)}
