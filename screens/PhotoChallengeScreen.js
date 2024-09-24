@@ -96,7 +96,7 @@ const PhotoChallengeScreen = ({ route, navigation }) => {
   }, []);
 
   return (
-    <Container>
+    <Container contentContainerStyle={{paddingBottom: 24}}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       {/* Points Section */}
       <PointsContainer>

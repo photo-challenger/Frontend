@@ -85,17 +85,16 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
   }
 
   useEffect(() => {
-    if(commentModalVisible) {
+    if (commentModalVisible) {
       resetModalState();
-      fetchAllCommentList();
     }
   }, [commentModalVisible]);
 
-  useEffect((index) => {
-    if (firstLoading) {
+  useEffect(() => {
+    if (firstLoading && commentModalVisible) {
       fetchAllCommentList();
     }
-  }, [firstLoading]);
+  }, [firstLoading, commentModalVisible]);
 
   const onEndReached = () => {
     if (!loading) {
@@ -133,6 +132,10 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
   );
 
   const handleLeaveComment = async (content) => {
+    if(content.trim() === "") {
+      return;
+    }
+    
     const apiResponseData = await fetchComment(replyCommentId, postId, content);
     console.log(apiResponseData);
 

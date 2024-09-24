@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import styled, { StyleSheetManager } from 'styled-components';
-import { fetchMyChallengeState, fetchProfileLevel } from '../../service/api';
+import { fetchMyChallengeState } from '../../service/api';
 import { useSelector } from 'react-redux';
+import Animated from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
+const itemWidth = width / 3 - 17.5;
 
 const ChallengeStateScreen = ({ route, navigation }) => {
+  const { profileLevel } = route.params;
   const [profileInfo, setProfileInfo] = useState({});
   const userInfo = useSelector((state) => state.user.userInfo);
-  const [profileLevel, setProfileLevel] = useState('레벨1 찰칵 루키');
   const [profileTotalChallenge, setProfileTotalChallenge] = useState();
   const [levelNeedCount, setLevelNeedCount] = useState(0);
   const challengeEngList = ['inc', 'seo', 'gang', 'chung', 'jeon', 'gyeong'];
@@ -41,15 +45,10 @@ const ChallengeStateScreen = ({ route, navigation }) => {
 
   const getMyChallengeState = async () => {
     const resultData = await fetchMyChallengeState();
-    setChallengeStateList(resultData);
+    console.log(resultData);
     setProfileTotalChallenge(resultData.inc[0] + resultData.seo[0] + resultData.jeon[0] + resultData.gang[0]
       + resultData.chung[0] + resultData.gyeong[0] + resultData.je[0]);
   };
-
-  const getProfileLevel = async () => {
-    const resultData = await fetchProfileLevel();
-    setProfileLevel(resultData);
-  }
 
   const moveToMap = (loc) => {
     navigation.navigate('map', {
@@ -60,9 +59,11 @@ const ChallengeStateScreen = ({ route, navigation }) => {
   useEffect(() => {
     setProfileInfo(userInfo);
     getMyChallengeState();
-    getProfileLevel();
-    checkLevel();
   }, []);
+
+  useEffect(() => {
+    checkLevel();
+  }, [profileTotalChallenge])
 
   const images = {
     '인천 경기': require('../../assets/inc.png'),
@@ -75,9 +76,15 @@ const ChallengeStateScreen = ({ route, navigation }) => {
 
   return (
     <ListContainer>
+      <Animated.View style={[styles.animatedSheet]}>
+          <Animated.ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="always"
+          >
       <ChallengeStateHeaderText>
         {profileInfo.profileNickname}님은 지금,{'\n'}
-        {profileLevel.replace('레벨', 'Lv.')}
+        {profileLevel?.replace('레벨', 'Lv.')}
       </ChallengeStateHeaderText>
       <ChallengeStateSubHeaderText>
         총 {profileTotalChallenge}개 완료! {profileLevel === '레벨3 스냅 마스터' ? (<Text>Tripture 레벨 모두 달성!</Text>)
@@ -103,11 +110,26 @@ const ChallengeStateScreen = ({ route, navigation }) => {
         </JeJuContainer>
       </ChallengeContainer>
       <InfoText>히든 챌린지를 모두 완료하시면 1만 포인트를 드려요!</InfoText>
+      </Animated.ScrollView>
+        </Animated.View>
     </ListContainer>
   );
 };
 
 export default ChallengeStateScreen;
+
+const styles = StyleSheet.create({
+  animatedSheet: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1, // Changed from flex: 1
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+});
 
 const ListContainer = styled.View`
   display: flex;
@@ -138,7 +160,7 @@ const ChallengeContainer = styled.View`
 const ChallengeSubContainer = styled.TouchableOpacity`
   background-color: #ffffff;
   height: 151px;
-  width: 31.6%;
+  width: ${itemWidth}px;
   border-radius: 10px;
   margin-right: 6px;
   margin-bottom: 6px;

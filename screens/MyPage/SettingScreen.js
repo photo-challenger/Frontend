@@ -81,7 +81,10 @@ const SettingScreen = ({ route, navigation }) => {
       <SettingProfileContainer>
         <SettingHeaderProfileText>프로필</SettingHeaderProfileText>
         <SettingProfileSubContainer>
-          <SettingProfileImage source={{ uri: profileInfo.profileImgName }} />
+          <SettingProfileImage 
+            source={ profileInfo.profileImgName !== "https://tripture.s3.ap-northeast-2.amazonaws.com/default" ? 
+            { uri: profileInfo.profileImgName }
+            : require('../../assets/profile-default-image.png')} />
           <ProfileDetailContainer>
             <SettingProfileNickname>
               {profileInfo.profileNickname}
