@@ -437,6 +437,20 @@ const StackNavigation = () => {
         })}
         initialParams={{ headerVisible: false }}
       />
+      {isLoggedIn && (
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={() => ({
+            ...naviOption({
+              headerLeftVisible: true,
+              headerRightVisible: false,
+              headerVisible: false,
+            }),
+          })}
+          setIsLoggedIn={setIsLoggedIn}
+        />
+      )}
     </Stack.Navigator>
   );
 };

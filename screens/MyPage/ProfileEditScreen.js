@@ -53,6 +53,15 @@ const ProfileEditScreen = ({ route, navigation }) => {
   }, [saveFlag]);
 
   const saveData = async () => {
+    if (currentPassword !== profileInfo.loginPw) {
+      setSaveFlag(false);
+      ToastAndroid.showWithGravity(
+        '비밀번호를 다시 확인해주세요.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      return;
+    }
     if (passwordValid === false) {
       //비밀번호 정규식이 틀렸을 경우
       setSaveFlag(false);

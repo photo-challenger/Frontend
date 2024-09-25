@@ -15,6 +15,8 @@ import { logout } from '../../redux/user';
 import useAlert from '../../hooks/useAlert';
 import useConfirm from '../../hooks/useConfirm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Animated from 'react-native-reanimated';
+import { CommonActions } from '@react-navigation/native';
 
 const SettingScreen = ({ route, navigation }) => {
   const profileInfo = route.params;
@@ -71,94 +73,118 @@ const SettingScreen = ({ route, navigation }) => {
         dispatch(logout());
         const response = await fetchLogout();
         console.log(response);
-        navigation.navigate('LoginScreen');
+
+        // 네비게이션 스택을 모두 초기화하고 LoginScreen으로 이동
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0, // 스택의 첫 번째 화면으로 설정
+            routes: [{ name: 'LoginScreen' }], // 이동할 화면
+          }),
+        );
       },
     });
   };
 
   return (
     <SettingScreenComponent>
-      <SettingProfileContainer>
-        <SettingHeaderProfileText>프로필</SettingHeaderProfileText>
-        <SettingProfileSubContainer>
-          <SettingProfileImage 
-            source={ profileInfo.profileImgName !== "https://tripture.s3.ap-northeast-2.amazonaws.com/default" ? 
-            { uri: profileInfo.profileImgName }
-            : require('../../assets/profile-default-image.png')} />
-          <ProfileDetailContainer>
-            <SettingProfileNickname>
-              {profileInfo.profileNickname}
-            </SettingProfileNickname>
-            <SettingProfileEmail>{profileInfo.loginEmail}</SettingProfileEmail>
-            <SettingProfileEditButton
-              activeOpacity={0.7}
-              onPress={moveProfileEdit}
-            >
-              <SettingProfileEditButtonText>
-                프로필 수정
-              </SettingProfileEditButtonText>
-              <SettingProfileEditButtonImage
-                source={require('../../assets/gray-chevron-right.png')}
+      <Animated.View style={[styles.animatedSheet]}>
+        <Animated.ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="always"
+          nestedScrollEnabled={true}
+        >
+          <SettingProfileContainer>
+            <SettingHeaderProfileText>프로필</SettingHeaderProfileText>
+            <SettingProfileSubContainer>
+              <SettingProfileImage
+                source={
+                  profileInfo.profileImgName !==
+                  'https://tripture.s3.ap-northeast-2.amazonaws.com/default'
+                    ? { uri: profileInfo.profileImgName }
+                    : require('../../assets/profile-default-image.png')
+                }
               />
-            </SettingProfileEditButton>
-          </ProfileDetailContainer>
-        </SettingProfileSubContainer>
-      </SettingProfileContainer>
+              <ProfileDetailContainer>
+                <SettingProfileNickname>
+                  {profileInfo.profileNickname}
+                </SettingProfileNickname>
+                <SettingProfileEmail>
+                  {profileInfo.loginEmail}
+                </SettingProfileEmail>
+                <SettingProfileEditButton
+                  activeOpacity={0.7}
+                  onPress={moveProfileEdit}
+                >
+                  <SettingProfileEditButtonText>
+                    프로필 수정
+                  </SettingProfileEditButtonText>
+                  <SettingProfileEditButtonImage
+                    source={require('../../assets/gray-chevron-right.png')}
+                  />
+                </SettingProfileEditButton>
+              </ProfileDetailContainer>
+            </SettingProfileSubContainer>
+          </SettingProfileContainer>
 
-      <SettingCategoryContainer>
-        <SettingHeaderText>문의</SettingHeaderText>
-        <SettingCategorySubContainer
-          activeOpacity={0.5}
-          onPress={handleSendMail}
-        >
-          <SettingCategoryText>문의하기</SettingCategoryText>
-        </SettingCategorySubContainer>
-      </SettingCategoryContainer>
+          <SettingCategoryContainer>
+            <SettingHeaderText>문의</SettingHeaderText>
+            <SettingCategorySubContainer
+              activeOpacity={0.5}
+              onPress={handleSendMail}
+            >
+              <SettingCategoryText>문의하기</SettingCategoryText>
+            </SettingCategorySubContainer>
+          </SettingCategoryContainer>
 
-      <SettingCategoryContainer>
-        <SettingHeaderText>앱 정보</SettingHeaderText>
-        <SettingCategorySubContainer
-          activeOpacity={1}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <SettingCategoryText>버전 정보</SettingCategoryText>
-          <SettingCategoryText>v1.0.0</SettingCategoryText>
-        </SettingCategorySubContainer>
-      </SettingCategoryContainer>
+          <SettingCategoryContainer>
+            <SettingHeaderText>앱 정보</SettingHeaderText>
+            <SettingCategorySubContainer
+              activeOpacity={1}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <SettingCategoryText>버전 정보</SettingCategoryText>
+              <SettingCategoryText>v1.0.0</SettingCategoryText>
+            </SettingCategorySubContainer>
+          </SettingCategoryContainer>
 
-      <SettingCategoryContainer>
-        <SettingHeaderText>약관 및 정책</SettingHeaderText>
-        <SettingCategorySubContainer
-          activeOpacity={0.5}
-          onPress={moveTermsOfService}
-        >
-          <SettingCategoryText>서비스 이용약관</SettingCategoryText>
-        </SettingCategorySubContainer>
-        <SettingCategorySubContainer
-          activeOpacity={0.5}
-          onPress={movePrivacyPolicy}
-        >
-          <SettingCategoryText>개인정보 처리방침</SettingCategoryText>
-        </SettingCategorySubContainer>
-      </SettingCategoryContainer>
+          <SettingCategoryContainer>
+            <SettingHeaderText>약관 및 정책</SettingHeaderText>
+            <SettingCategorySubContainer
+              activeOpacity={0.5}
+              onPress={moveTermsOfService}
+            >
+              <SettingCategoryText>서비스 이용약관</SettingCategoryText>
+            </SettingCategorySubContainer>
+            <SettingCategorySubContainer
+              activeOpacity={0.5}
+              onPress={movePrivacyPolicy}
+            >
+              <SettingCategoryText>개인정보 처리방침</SettingCategoryText>
+            </SettingCategorySubContainer>
+          </SettingCategoryContainer>
 
-      <SettingCategoryContainer>
-        <SettingHeaderText>계정 정보</SettingHeaderText>
-        <SettingCategorySubContainer activeOpacity={0.5} onPress={handleLogout}>
-          <SettingCategoryText>로그아웃</SettingCategoryText>
-        </SettingCategorySubContainer>
-        <SettingCategorySubContainer
-          activeOpacity={0.5}
-          onPress={moveProfileDelete}
-        >
-          <SettingCategoryText>탈퇴하기</SettingCategoryText>
-        </SettingCategorySubContainer>
-      </SettingCategoryContainer>
-
+          <SettingCategoryContainer>
+            <SettingHeaderText>계정 정보</SettingHeaderText>
+            <SettingCategorySubContainer
+              activeOpacity={0.5}
+              onPress={handleLogout}
+            >
+              <SettingCategoryText>로그아웃</SettingCategoryText>
+            </SettingCategorySubContainer>
+            <SettingCategorySubContainer
+              activeOpacity={0.5}
+              onPress={moveProfileDelete}
+            >
+              <SettingCategoryText>탈퇴하기</SettingCategoryText>
+            </SettingCategorySubContainer>
+          </SettingCategoryContainer>
+        </Animated.ScrollView>
+      </Animated.View>
       <ConfirmComponent />
       <AlertComponent />
     </SettingScreenComponent>
@@ -167,6 +193,17 @@ const SettingScreen = ({ route, navigation }) => {
 
 export default SettingScreen;
 
+const styles = StyleSheet.create({
+  animatedSheet: {
+    maxHeight: '100%',
+  },
+  scrollView: {
+    flexGrow: 1, // Changed from flex: 1
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+});
 const SettingScreenComponent = styled.View`
   background-color: #ffffff;
   height: 100%;

@@ -529,6 +529,15 @@ async function fetchSurroundingChallenge(params) {
   }
 }
 
+async function fetchCheckWrittenPost(contentId) {
+  try {
+    const response = await axios.get(`${config.apiUrl}post/check/${contentId}`);
+    console.log(`${config.apiUrl}post/check/${contentId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 // 포토챌린지 > 인기 포토챌린지 상위 10개
 async function fetchPopularChallenge() {
   try {
@@ -547,7 +556,7 @@ async function fetchUserTotalPoint() {
     const response = await axios.get(`${config.apiUrl}profile/point`);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('fetchUserTotalPoint>>', error);
   }
 }
 
@@ -588,12 +597,13 @@ async function fetchComment(groupId, postId, commentContent) {
 
 async function fetchProfileLevel() {
   try {
-    const response = await axiosInstance.get(`${config.apiUrl}profile/checkLevel`);
+    const response = await axiosInstance.get(
+      `${config.apiUrl}profile/checkLevel`,
+    );
     return response.data;
   } catch (error) {
     console.log(error);
   }
-  
 }
 
 // 포토챌린지 > 포토챌린지 상세 정보 조회
@@ -791,7 +801,9 @@ async function fetchEditPost(params) {
 
 async function fetchCheckChallenge(contentId) {
   try {
-    const response = await axios.get(`${config.apiUrl}challenge/check/${contentId}`);
+    const response = await axios.get(
+      `${config.apiUrl}challenge/check/${contentId}`,
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -799,6 +811,7 @@ async function fetchCheckChallenge(contentId) {
 }
 
 export {
+  fetchUserTotalPoint,
   fetchLogin_before,
   fetchBuyByPoint,
   fetchBuyItem,
@@ -835,7 +848,6 @@ export {
   fetchIsPhotoChallenge,
   fetchCheckContentBookmark,
   fetchContentBookmark,
-  fetchUserTotalPoint,
   fetchMyPostList,
   fetchMyCommentList,
   fetchMyChallengeState,
@@ -851,4 +863,5 @@ export {
   fetchLocationBasedChallengeList,
   fetchEditPost,
   fetchCheckChallenge,
+  fetchCheckWrittenPost,
 };
