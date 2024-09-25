@@ -67,7 +67,6 @@ const PhotoChallengeEdit = ({ route, navigation }) => {
           </InputContainer>
         </ScrollView>
 
-
         <ActionButton onPress={() => editPostData()}>
           <ButtonText>수정 완료</ButtonText>
         </ActionButton>

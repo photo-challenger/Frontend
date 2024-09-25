@@ -73,9 +73,9 @@ const MainScreen = ({ route, navigation }) => {
             />
             <SearchIconImg source={require('../assets/icon-search-home.png')} />
           </SearchContent>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('map')}>
+          <TouchableOpacity onPress={() => navigation.navigate('map')}>
             <MapIconImg source={require('../assets/map-01.png')} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </SearchContainer>
         <Animated.View style={[styles.animatedSheet]}>
           <Animated.ScrollView
