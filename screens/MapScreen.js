@@ -7,6 +7,7 @@ import {
   fetchlocationBasedList,
   fetchLocationBasedChallengeList,
   fetchCheckChallenge,
+  fetchCheckWrittenPost,
 } from '../service/api';
 import styled from 'styled-components/native';
 import useAlert from '../hooks/useAlert';
@@ -19,6 +20,7 @@ const MapScreen = ({ route, navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [layerPopFlag, setLayerPopFlag] = useState(false);
   const [tourInfo, setTourInfo] = useState({});
+  const [isWrittenPost, setIsWrittenPost] = useState();
   const [showAlert, AlertComponent] = useAlert();
 
   const tourType = {
@@ -171,10 +173,13 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   // 마커 클릭 시
-  function getMarkerInfo(obj) {
+  async function getMarkerInfo(obj) {
     console.log('getMarkerInfo', obj);
     setLayerPopFlag(obj != undefined);
     setTourInfo(obj || {});
+
+    const response = await fetchCheckWrittenPost(obj.contentid);
+    setIsWrittenPost(response);
   }
 
   return (
@@ -241,12 +246,14 @@ const MapScreen = ({ route, navigation }) => {
             </DetailInfoContView>
           </DetailInfoView>
           <DetailBtnView>
-            <BttmShtDetailBtn onPress={() => moveToDetail(tourInfo)}>
-              <BttmShtDetailBtnText>자세히 보기</BttmShtDetailBtnText>
-            </BttmShtDetailBtn>
+              <BttmShtDetailBtn onPress={() => moveToDetail(tourInfo)} isWrittenPost={isWrittenPost}>
+                <BttmShtDetailBtnText>자세히 보기</BttmShtDetailBtnText>
+              </BttmShtDetailBtn>
+            {isWrittenPost === false && (
             <BttmShtChllngBtn onPress={() => writeChallenge(tourInfo)}>
               <BttmShtChllngBtnText>포토챌린지 참여하기</BttmShtChllngBtnText>
             </BttmShtChllngBtn>
+            )}
           </DetailBtnView>
 
           <AlertComponent />
@@ -323,7 +330,7 @@ const DetailBottomSheet = styled.View`
 `;
 
 const BttmShtDetailBtn = styled.TouchableOpacity`
-  width: 48.5%;
+  width: ${(props) => props.isWrittenPost ? "100%" : "48.5%"};
   height: 50px;
   padding: 12px 9px;
   justify-content: center;

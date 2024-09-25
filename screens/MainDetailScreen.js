@@ -29,6 +29,7 @@ const MainDetailScreen = ({ route, navigation }) => {
   const [regionDetailContent, setRegionDetailContent] = useState();
   const [clickBookmark, setClickBookmark] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isWrittenPost, setIsWrittenPost] = useState();
   const [showAlert, AlertComponent] = useAlert();
 
   useEffect(() => {
@@ -37,8 +38,10 @@ const MainDetailScreen = ({ route, navigation }) => {
         setLoading(true);
         const apiResponseData = await fetchDetailCommon(contentId);
         const checkResponse = await fetchCheckContentBookmark(contentId);
+        const checkWrittenPost = await fetchCheckWrittenPost(contentId);
         setRegionDetailContent(apiResponseData);
         setClickBookmark(checkResponse);
+        setIsWrittenPost(checkWrittenPost);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch region detail content:', error);
@@ -68,14 +71,6 @@ const MainDetailScreen = ({ route, navigation }) => {
   };
 
   const moveToChallengeWrite = async (obj) => {
-    const apiResponseData = await fetchCheckWrittenPost(contentId);
-    if (apiResponseData) {
-      showAlert({
-        title: '포토챌린지 오류!',
-        msg: '이미 참여한 포토챌린지입니다.',
-      });
-      return;
-    }
     const response = await fetchCheckChallenge(contentId);
     if (response) {
       showAlert({
@@ -203,12 +198,14 @@ const MainDetailScreen = ({ route, navigation }) => {
           )}
         </Animated.ScrollView>
         <ButtonContainer>
-          <ChallengeButton
-            onPress={() => moveToChallengeWrite(regionDetailContent)}
-          >
-            <ChallengeText>챌린지 참여</ChallengeText>
-          </ChallengeButton>
-          <MapButton onPress={moveToMap}>
+          {!isWrittenPost && (
+            <ChallengeButton
+              onPress={() => moveToChallengeWrite(regionDetailContent)}
+            >
+              <ChallengeText>챌린지 참여</ChallengeText>
+            </ChallengeButton>
+          )}
+          <MapButton onPress={moveToMap} isWrittenPost={isWrittenPost}>
             <MapButtonText>지도보기</MapButtonText>
           </MapButton>
         </ButtonContainer>
@@ -313,6 +310,7 @@ const RegionDetailHeaderText = styled.Text`
 
 const ButtonContainer = styled.View`
   display: flex;
+  width: 100%;
   flex-direction: row;
   position: absolute;
   bottom: 0;
@@ -335,7 +333,7 @@ const ChallengeText = styled.Text`
 
 const MapButton = styled.TouchableOpacity`
   height: 76px;
-  width: 50%;
+  width: ${(props) => props.isWrittenPost ? "100%" : "50%"};
   background-color: #4f4f4f;
   justify-content: center;
   align-items: center;
