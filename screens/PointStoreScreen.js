@@ -51,7 +51,7 @@ const PointStoreScreen = ({ route, navigation }) => {
       setItemList(resultList);
       setTotPageCnt(resultData.totalPages);
     } else {
-      setItemList(resultList.concat(itemList));
+      setItemList(prevList => [...prevList, ...resultList]);
     }
   };
 
