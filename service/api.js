@@ -251,7 +251,9 @@ async function fetchSearchCommnunityRegion(params) {
 
     const queryStr = new URLSearchParams(sendObj).toString();
 
-    const response = await axios.get(`${config.apiUrl}post/search?searchOne=${queryStr}&page=${sendObj.page}`);
+    const response = await axios.get(
+      `${config.apiUrl}post/search?searchOne=${queryStr}&page=${sendObj.page}`,
+    );
     return response.data;
   } catch (error) {
     console.error(error);
