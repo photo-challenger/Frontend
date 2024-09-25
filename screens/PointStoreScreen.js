@@ -3,10 +3,7 @@ import { View, StatusBar, Image, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components';
 import ScrollWrapper from '../component/common/ScrollWrapper';
-import {
-  fetchPointStoreList,
-  fetchSearchPointStoreList,
-} from '../service/api';
+import { fetchPointStoreList, fetchSearchPointStoreList } from '../service/api';
 
 const PointStoreScreen = ({ route, navigation }) => {
   const [itemList, setItemList] = useState([]);
@@ -51,14 +48,14 @@ const PointStoreScreen = ({ route, navigation }) => {
       setItemList(resultList);
       setTotPageCnt(resultData.totalPages);
     } else {
-      setItemList(prevList => [...prevList, ...resultList]);
+      setItemList((prevList) => [...prevList, ...resultList]);
     }
   };
 
-  const changeSorting = (val) => {
-    setSortingItems(val);
+  useEffect(() => {
+    console.log(sortingValue, '여기');
     getPointStoreList(0);
-  };
+  }, [sortingValue]);
 
   // 입력시 즉시 조회
   const onInputSearchText = (str) => {
@@ -97,7 +94,6 @@ const PointStoreScreen = ({ route, navigation }) => {
             items={sortingItems}
             setOpen={setOpen}
             setValue={setSortingValue}
-            setItems={changeSorting}
             placeholder="Select an option"
             style={dropdownStyle}
             dropDownContainerStyle={dropdownContainerStyle}

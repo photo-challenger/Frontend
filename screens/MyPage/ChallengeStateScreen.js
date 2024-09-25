@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import styled, { StyleSheetManager } from 'styled-components';
 import { fetchMyChallengeState } from '../../service/api';
 import { useSelector } from 'react-redux';
@@ -36,18 +43,26 @@ const ChallengeStateScreen = ({ route, navigation }) => {
   });
 
   const checkLevel = () => {
-    if(profileLevel === '레벨1 찰칵 루키') {
+    if (profileLevel === '레벨1 찰칵 루키') {
       setLevelNeedCount(20 - profileTotalChallenge);
-    } else if(profileLevel === '레벨2 챌린지 스타') {
+    } else if (profileLevel === '레벨2 챌린지 스타') {
       setLevelNeedCount(30 - profileTotalChallenge);
     }
-  }
+  };
 
   const getMyChallengeState = async () => {
     const resultData = await fetchMyChallengeState();
     console.log(resultData);
-    setProfileTotalChallenge(resultData.inc[0] + resultData.seo[0] + resultData.jeon[0] + resultData.gang[0]
-      + resultData.chung[0] + resultData.gyeong[0] + resultData.je[0]);
+    setProfileTotalChallenge(
+      resultData.inc[0] +
+        resultData.seo[0] +
+        resultData.jeon[0] +
+        resultData.gang[0] +
+        resultData.chung[0] +
+        resultData.gyeong[0] +
+        resultData.je[0],
+    );
+    setChallengeStateList(resultData);
   };
 
   const moveToMap = (loc) => {
@@ -63,55 +78,61 @@ const ChallengeStateScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     checkLevel();
-  }, [profileTotalChallenge])
+  }, [profileTotalChallenge]);
 
   const images = {
     '인천 경기': require('../../assets/inc.png'),
-    '서울': require('../../assets/seo.png'),
-    '강원': require('../../assets/gang.png'),
-    '충청': require('../../assets/chung.png'),
-    '호남': require('../../assets/jeon.png'),
-    '영남': require('../../assets/gyeong.png'),
+    서울: require('../../assets/seo.png'),
+    강원: require('../../assets/gang.png'),
+    충청: require('../../assets/chung.png'),
+    호남: require('../../assets/jeon.png'),
+    영남: require('../../assets/gyeong.png'),
   };
 
   return (
     <ListContainer>
       <Animated.View style={[styles.animatedSheet]}>
-          <Animated.ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollViewContent}
-            keyboardShouldPersistTaps="always"
-          >
-      <ChallengeStateHeaderText>
-        {profileInfo.profileNickname}님은 지금,{'\n'}
-        {profileLevel?.replace('레벨', 'Lv.')}
-      </ChallengeStateHeaderText>
-      <ChallengeStateSubHeaderText>
-        총 {profileTotalChallenge}개 완료! {profileLevel === '레벨3 스냅 마스터' ? (<Text>Tripture 레벨 모두 달성!</Text>)
-        : (<Text>다음 레벨까지 {levelNeedCount}개의 챌린지가 남았아요.</Text>)}
-      </ChallengeStateSubHeaderText>
+        <Animated.ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="always"
+        >
+          <ChallengeStateHeaderText>
+            {profileInfo.profileNickname}님은 지금,{'\n'}
+            {profileLevel?.replace('레벨', 'Lv.')}
+          </ChallengeStateHeaderText>
+          <ChallengeStateSubHeaderText>
+            총 {profileTotalChallenge}개 완료!{' '}
+            {profileLevel === '레벨3 스냅 마스터' ? (
+              <Text>Tripture 레벨 모두 달성!</Text>
+            ) : (
+              <Text>다음 레벨까지 {levelNeedCount}개의 챌린지가 남았아요.</Text>
+            )}
+          </ChallengeStateSubHeaderText>
 
-      <ChallengeContainer>
-        {challengeEngList.map((challenge, index) => (
-          <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
-            <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
-            <ChallengeIcon source={images[challengeList[index]]} />
-            <ChallengeStateNum>
-              {challengeStateList[challenge][0]}
-            </ChallengeStateNum>
-          </ChallengeSubContainer>
-        ))}
-        <JeJuContainer onPress={() => moveToMap('je')}>
-          <ChallengeNameText>제주</ChallengeNameText>
-          <JeJuChallengeIcon source={require('../../assets/je.png')} />
-          <ChallengeStateNum count={challengeStateList['je'][0]}>
-            {challengeStateList['je'][0]}
-          </ChallengeStateNum>
-        </JeJuContainer>
-      </ChallengeContainer>
-      <InfoText>히든 챌린지를 모두 완료하시면 1만 포인트를 드려요!</InfoText>
-      </Animated.ScrollView>
-        </Animated.View>
+          <ChallengeContainer>
+            {challengeEngList.map((challenge, index) => (
+              <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
+                <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
+                <ChallengeIcon source={images[challengeList[index]]} />
+                <ChallengeStateNum>
+                  {challengeStateList[challenge][0]}
+                </ChallengeStateNum>
+              </ChallengeSubContainer>
+            ))}
+            <JeJuContainer onPress={() => moveToMap('je')}>
+              <ChallengeNameText>제주</ChallengeNameText>
+              <JeJuChallengeIcon source={require('../../assets/je.png')} />
+              <ChallengeStateNum count={challengeStateList['je'][0]}>
+                {challengeStateList['je'][0]}
+              </ChallengeStateNum>
+            </JeJuContainer>
+          </ChallengeContainer>
+          <InfoText>
+            히든 챌린지를 모두 완료하시면 1만 포인트를 드려요!
+          </InfoText>
+        </Animated.ScrollView>
+      </Animated.View>
     </ListContainer>
   );
 };
