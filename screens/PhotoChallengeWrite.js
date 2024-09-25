@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ImagePickerItem from '../component/common/ImagePickerItem';
@@ -24,6 +25,8 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
   const [visitDate, setVisitDate] = useState('');
   const [imageInfo, setImageInfo] = useState('');
   const [showAlert, AlertComponent] = useAlert();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     //연도 : 2022
@@ -63,6 +66,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
         msg: '사진 첨부는 필수 입니다!'
       });
     } else {
+      setIsLoading(true);
       const result = await fetchWritePost({
         postContent: content,
         contentId: challengeInfo.contentId,
@@ -70,6 +74,7 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
         challengeName: challengeInfo.challengeName,
         areaCode: challengeInfo.areaCode
       });
+      setIsLoading(false);
   
       if(result === 'Post Add Successful') {
         showAlert({
@@ -140,11 +145,27 @@ const PhotoChallengeWrite = ({ route, navigation }) => {
           <AlertComponent />
         </Container>
       </ScrollView>
+
+      {isLoading && (
+        <LoadingContainer>
+          <ActivityIndicator size={'large'} color={'#CA7FFE'} />
+        </LoadingContainer>
+      )}
     </KeyboardAvoidingView>
   );
 };
 
 export default PhotoChallengeWrite;
+
+const LoadingContainer = styled.View`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  justify-content: center;
+  align-items: center;
+`
 
 const Container = styled.View`
   flex: 1;

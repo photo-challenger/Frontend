@@ -191,7 +191,6 @@ async function fetchlocationBasedList(params) {
   sendObj.MobileApp = sendObj.MobileApp || 'Tripture';
   sendObj._type = sendObj._type || 'JSON';
   sendObj.listYN = sendObj.listYN || 'Y';
-  sendObj.arrange = sendObj.arrange || 'A';
   sendObj.contentTypeId = sendObj.contentTypeId || '';
   sendObj.mapX = sendObj.mapX || 127.2178524;
   sendObj.mapY = sendObj.mapY || 37.2561572;
@@ -248,10 +247,11 @@ async function fetchSearchCommnunityRegion(params) {
   try {
     let sendObj = params || {};
     sendObj.searchOne = sendObj.searchOne || '';
+    sendObj.page = sendObj.page || 0;
 
     const queryStr = new URLSearchParams(sendObj).toString();
 
-    const response = await fetch(`${config.apiUrl}post/search?${queryStr}`);
+    const response = await axios.get(`${config.apiUrl}post/search?searchOne=${queryStr}&page=${sendObj.page}`);
     return response.data;
   } catch (error) {
     console.error(error);

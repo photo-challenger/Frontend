@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Animated } from 'react-native';
+import { ActivityIndicator, Animated, View } from 'react-native';
 
 const ScrollWrapper = ({ children, loadMoreData, totalPageNo, currPageNo }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -8,7 +8,8 @@ const ScrollWrapper = ({ children, loadMoreData, totalPageNo, currPageNo }) => {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
 
     // 바닥에 닿았을 때 페이징 콜백
-    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 2) {
+    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 30) {
+
       if (!isLoading && totalPageNo > currPageNo) {
         setIsLoading(true);
         loadMoreData(currPageNo + 1).then(() => {
@@ -25,7 +26,11 @@ const ScrollWrapper = ({ children, loadMoreData, totalPageNo, currPageNo }) => {
       nestedScrollEnabled={true}
     >
       {children}
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      {isLoading && (
+        <View style={{ padding: 20 }}>
+          <ActivityIndicator color="#0000ff" />
+        </View>
+      )}
     </Animated.ScrollView>
   );
 };

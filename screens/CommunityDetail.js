@@ -26,6 +26,7 @@ const CommunityDetail = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [showConfirm, ConfirmComponent] = useConfirm();
 
   const tourType = {
@@ -114,6 +115,7 @@ const CommunityDetail = ({ route, navigation }) => {
         type: tourType[contentDetailResponse.contenttypeid],
         image: contentDetailResponse.firstimage || '',
       });
+      setLikeCount(apiResponseData.postLikeCount);
     } catch (error) {
       console.error('Failed to fetch community detail:', error);
     } finally {
@@ -128,6 +130,12 @@ const CommunityDetail = ({ route, navigation }) => {
   async function addPostLike() {
     const apiResponseData = await fetchAddPostLike(postId);
     setIsLike(apiResponseData.checkDeleteOrSave == 'Save');
+
+    if(apiResponseData.checkDeleteOrSave == 'Save') {
+      setLikeCount(prevCount => prevCount + 1);
+    } else {
+      setLikeCount(prevCount => prevCount - 1);
+    }
   }
 
   useFocusEffect(
@@ -137,7 +145,11 @@ const CommunityDetail = ({ route, navigation }) => {
   );
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <LoadingContainer>
+        <ActivityIndicator size="large" color="#CA7FFE" />
+      </LoadingContainer>
+    );
   }
 
   return (
@@ -204,7 +216,7 @@ const CommunityDetail = ({ route, navigation }) => {
             }
             style={{ width: 24, height: 24 }}
           />
-          <ScoreText>{postInfo.postLikeCount}</ScoreText>
+          <ScoreText>{likeCount}</ScoreText>
         </LikeBox>
         <CommentBox onPress={openCommentModal}>
           <Image
@@ -264,6 +276,12 @@ const CommunityDetail = ({ route, navigation }) => {
 };
 
 export default CommunityDetail;
+
+const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
 const CommunityDetailContainer = styled.View`
   background: #fff;
