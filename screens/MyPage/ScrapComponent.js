@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {
@@ -9,6 +9,9 @@ import {
 } from '../../service/api';
 import Animated from 'react-native-reanimated';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
+
+const { width } = Dimensions.get('window');
+const itemWidth = width / 3 - 20;
 
 const ScrapComponent = ({ route, navigation }) => {
   const [shouldRefresh, setShouldRefresh] = useState(false);
@@ -278,8 +281,8 @@ const ChallengeImageContainer = styled.View`
 `;
 
 const ChallengeImage = styled.Image`
-  width: 30%;
-  height: 110.9px;
+  width: ${itemWidth};
+  height: ${itemWidth};
   margin: 2px;
   border-radius: 8px;
   aspect-ratio: 1;
