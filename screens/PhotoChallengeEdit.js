@@ -47,30 +47,33 @@ const PhotoChallengeEdit = ({ route, navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: '#FFFFFF' }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Container>
+      <Container>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 200 }}>
+
           <ImageWrapper>
             <PostImage source={{ uri: postInfo.imgUrl }} />
           </ImageWrapper>
+          <EditText>내용 수정하기</EditText>
           <InputContainer>
             <BaseTextarea
-              placeholder="문구를 작성해주세요"
+              placeholder="수정할 내용을 작성해 주세요."
               readOnly={false}
               value={postInfo.postContent}
               inputType="default"
               onChangeText={updateContent}
             />
           </InputContainer>
+        </ScrollView>
 
-          <ActionButton onPress={() => editPostData()}>
-            <ButtonText>완료</ButtonText>
-          </ActionButton>
 
-          <AlertComponent />
-        </Container>
-      </ScrollView>
+        <ActionButton onPress={() => editPostData()}>
+          <ButtonText>수정 완료</ButtonText>
+        </ActionButton>
+
+        <AlertComponent />
+      </Container>
     </KeyboardAvoidingView>
   );
 };
@@ -84,10 +87,10 @@ const Container = styled.View`
 
 const ActionButton = styled.TouchableOpacity`
   position: absolute;
-  max-height: 80px;
+  height: 80px;
   width: 100%;
   bottom: 0;
-  background-color: #ca7ffe;
+  background-color: #4f4f4f;
   padding-vertical: 15px;
   margin-top: 10px;
   align-items: center;
@@ -104,13 +107,26 @@ const ButtonText = styled.Text`
 
 const InputContainer = styled.View`
   margin: 0px 24px;
+  background-color: #f2f3f7;
+  border-radius: 12px;
+  padding: 0 24px 10px 24px;
 `;
 
 const ImageWrapper = styled.View`
   height: 262px;
+  margin: 24px;
 `;
 
 const PostImage = styled.Image`
   width: 100%;
   height: 100%;
+  border-radius: 8px;
 `;
+
+const EditText = styled.Text`
+  font-size: 18px;
+  font-family: Semibold;
+  letter-spacing: -0.36px;
+  margin-left: 24px;
+  margin: 10px 0 8px 24px;
+`

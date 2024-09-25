@@ -81,7 +81,8 @@ const CommunityDetail = ({ route, navigation }) => {
   const deletePost = () => {
     // 삭제하시겠습니까?
     showConfirm({
-      msg: '삭제하시겠습니까?',
+      title: "포토챌린지 삭제",
+      msg: '삭제하시겠습니까?\n삭제된 후 다시 작성해도 포인트는\n다시 지급되지 않습니다.',
       onOk: async function () {
         // 삭제 API 호출
         const deleteCbData = await fetchDeletePost(postId);

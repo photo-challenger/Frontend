@@ -114,7 +114,7 @@ const PointComponent = ({ navigation }) => {
         >
           <PointHeaderText>나의 포인트 현황</PointHeaderText>
           <PointContainer>
-            <PointSubText>모은 총 포인트</PointSubText>
+            <PointSubText>지금까지 내가 모은 포인트</PointSubText>
             <PointSubContainer>
               <PointNumText>{myPoint}</PointNumText>
               <PointText>포인트</PointText>
