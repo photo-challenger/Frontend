@@ -79,12 +79,12 @@ const CommunityScreen = ({ route, navigation }) => {
         } else {
           if (page === 0) {
             setStartLoading(true);
-            const apiResponseData = await fetchPopularCommunityList(page);
+            const apiResponseData = await fetchPopularCommunityList({ page: page });
             setchallList(apiResponseData?.popularCalculateDtoList);
             setTotalPage(apiResponseData?.totalPages - 1);
           } else {
             setLoading(true);
-            const apiResponseData = await fetchPopularCommunityList(page);
+            const apiResponseData = await fetchPopularCommunityList({ page : page });
             setchallList(prevList => [...prevList, ...apiResponseData?.popularCalculateDtoList]);
           }
 
@@ -128,7 +128,7 @@ const CommunityScreen = ({ route, navigation }) => {
               <FlatList
                 data={challList}
                 renderItem={({ item }) => <CommunityImageContainer item={item} navigation={navigation} />}
-                keyExtractor={(item) => item.postId.toString()}
+                keyExtractor={(item, index) => item.postId.toString() + "-" + index}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.6}
                 numColumns={3}
@@ -164,6 +164,7 @@ const ListContainer = styled.View`
   height: 100%;
 `;
 const ImageListContainer = styled.View`
+  flex: 1;
   margin: 8px 24px;
   align-items: center;
   flex-direction: row;
