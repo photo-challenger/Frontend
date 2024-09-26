@@ -29,6 +29,7 @@ const CommunityScreen = ({ route, navigation }) => {
   const [challList, setchallList] = useState([]);
   const [startLoading, setStartLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
 
@@ -105,6 +106,18 @@ const CommunityScreen = ({ route, navigation }) => {
     }
   }
 
+  const getRefreshData = async () => {
+    setRefreshing(true);
+    handleSearchSubmit();
+    setRefreshing(false);
+ }
+ 
+  const onRefresh = () => {
+   if(!refreshing) {
+       getRefreshData();
+     }
+ }
+
   return (
     <ListContainer>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -131,6 +144,8 @@ const CommunityScreen = ({ route, navigation }) => {
                 keyExtractor={(item, index) => item.postId.toString() + "-" + index}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.6}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
                 numColumns={3}
                 ListFooterComponent={loading && (
                   <View style={{ padding: 10 }}>
