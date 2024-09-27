@@ -77,6 +77,7 @@ const PointStoreDetail = ({ route, navigation }) => {
         item: item,
         pointInfo: result,
       });
+      setModalVisible(false);
     }
   };
 
