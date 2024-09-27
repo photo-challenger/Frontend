@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {
@@ -95,6 +95,7 @@ const ScrapComponent = ({ route, navigation }) => {
         setShouldRefresh(true);
         getBookmarkContentList(0);
         getBookmarkChallengeList(0);
+        setShouldRefresh(false);
       }
       return () => setShouldRefresh(false);
     }, [navigationState])
@@ -116,73 +117,81 @@ const ScrapComponent = ({ route, navigation }) => {
         >
           <ScrapContentContainer>
             <ScrapContentHeaderText>내가 저장한 관광지</ScrapContentHeaderText>
-            {contentList.length !== 0 ? (
-              <ScrollWrapper
-                loadMoreData={getBookmarkContentList}
-                totalPageNo={myContentTotPageCnt}
-                currPageNo={myContentPageNo}
-                nestedScrollEnabled={true}
-              >
-                <ScrapContentListContainer>
-                  {contentList &&
-                    contentList.map((content, index) => (
-                      <ScrapContentSubContainer
-                        key={content.contentid}
-                        activeOpacity={0.8}
-                        onPress={() => moveContentDetail(content.contentid)}
-                      >
-                        <ScrapContentImageUpCircle />
-                        <ScrapContentImageDownCircle />
-                        <ScrapContentImage
-                          source={{
-                            uri:
-                              content.firstimage !== ''
-                                ? content.firstimage
-                                : 'https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/be_background.png',
-                          }}
-                        />
-                        <ScrapContentDetailContainer>
-                          <ScrapContentTitle
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                          >
-                            {content.title}
-                          </ScrapContentTitle>
-                          <ScrapContentAddress
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                          >
-                            {content.addr1}
-                          </ScrapContentAddress>
-                        </ScrapContentDetailContainer>
-                        <ScrapContentDash />
-                        <ScrapContentChevronImageContainer>
-                          <ScrapContentChevronImage
-                            source={require('../../assets/big-white-chevron-right.png')}
-                          />
-                        </ScrapContentChevronImageContainer>
-                      </ScrapContentSubContainer>
-                    ))}
-                </ScrapContentListContainer>
-              </ScrollWrapper>
-            ) : (
+            {shouldRefresh ? (
               <NoChallengeListContainer>
-                <NoChallengeListText>
-                  아직 저장한 관광지가 없어요.{'\n'}
-                  마음에 드는 관광지를{'\n'}
-                  저장해보세요.
-                </NoChallengeListText>
-                <NoChallengeButton onPress={moveToHome}>
-                  <NoChallengeButtonText>관광지 둘러보기</NoChallengeButtonText>
-                </NoChallengeButton>
+                <ActivityIndicator size="large" color="#ca7ffe" />
               </NoChallengeListContainer>
-            )}
+            ) : contentList.length !== 0 ? (
+                <ScrollWrapper
+                  loadMoreData={getBookmarkContentList}
+                  totalPageNo={myContentTotPageCnt}
+                  currPageNo={myContentPageNo}
+                  nestedScrollEnabled={true}
+                >
+                  <ScrapContentListContainer>
+                    {contentList &&
+                      contentList.map((content, index) => (
+                        <ScrapContentSubContainer
+                          key={content.contentid}
+                          activeOpacity={0.8}
+                          onPress={() => moveContentDetail(content.contentid)}
+                        >
+                          <ScrapContentImageUpCircle />
+                          <ScrapContentImageDownCircle />
+                          <ScrapContentImage
+                            source={{
+                              uri:
+                                content.firstimage !== ''
+                                  ? content.firstimage
+                                  : 'https://tripture.s3.ap-northeast-2.amazonaws.com/staticResource/be_background.png',
+                            }}
+                          />
+                          <ScrapContentDetailContainer>
+                            <ScrapContentTitle
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                            >
+                              {content.title}
+                            </ScrapContentTitle>
+                            <ScrapContentAddress
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                            >
+                              {content.addr1}
+                            </ScrapContentAddress>
+                          </ScrapContentDetailContainer>
+                          <ScrapContentDash />
+                          <ScrapContentChevronImageContainer>
+                            <ScrapContentChevronImage
+                              source={require('../../assets/big-white-chevron-right.png')}
+                            />
+                          </ScrapContentChevronImageContainer>
+                        </ScrapContentSubContainer>
+                      ))}
+                  </ScrapContentListContainer>
+                </ScrollWrapper>
+              ) : (
+                <NoChallengeListContainer>
+                  <NoChallengeListText>
+                    아직 저장한 관광지가 없어요.{'\n'}
+                    마음에 드는 관광지를{'\n'}
+                    저장해보세요.
+                  </NoChallengeListText>
+                  <NoChallengeButton onPress={moveToHome}>
+                    <NoChallengeButtonText>관광지 둘러보기</NoChallengeButtonText>
+                  </NoChallengeButton>
+                </NoChallengeListContainer>
+              )}
           </ScrapContentContainer>
           <ScrapChallengeContainer>
             <ScrapChallengeHeaderText>
               내가 저장한 챌린지
             </ScrapChallengeHeaderText>
-            {scrapChallengeList.length !== 0 ? (
+            {shouldRefresh ? (
+              <NoChallengeListContainer>
+                <ActivityIndicator size="large" color="#ca7ffe" />
+              </NoChallengeListContainer>
+            ) : scrapChallengeList.length !== 0 ? (
               <ScrollWrapper
                 loadMoreData={getBookmarkChallengeList}
                 totalPageNo={myPostTotPageCnt}

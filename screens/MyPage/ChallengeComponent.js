@@ -104,6 +104,7 @@ const ChallengeComponent = ({ route, navigation }) => {
         getProfileLevel();
         getMyPostList(0);
         getMyCommentList(0);
+        setShouldRefresh(false);
       }
       return () => setShouldRefresh(false); // cleanup
     }, [navigationState])
@@ -136,7 +137,11 @@ const ChallengeComponent = ({ route, navigation }) => {
           </ChallengeLevelContainer>
           <ChallengePostContainer>
             <ChallengePostHeaderText>작성한 게시글</ChallengePostHeaderText>
-            {myPostImageList.length !== 0 ? (
+            {shouldRefresh ? (
+              <NoChallengeListContainer>
+                <ActivityIndicator size="large" color="#ca7ffe" />
+              </NoChallengeListContainer>
+            ) : myPostImageList.length !== 0 ? (
               <ScrollWrapper
                 loadMoreData={getMyPostList}
                 totalPageNo={myPostTotPageCnt}
@@ -174,7 +179,11 @@ const ChallengeComponent = ({ route, navigation }) => {
           </ChallengePostContainer>
           <CommentContainer>
             <CommentHeaderText>작성한 댓글</CommentHeaderText>
-            {commentList.length !== 0 ? (
+            {shouldRefresh ? (
+              <NoChallengeListContainer>
+                <ActivityIndicator size="large" color="#ca7ffe" />
+              </NoChallengeListContainer>
+            ) : commentList.length !== 0 ? (
               <ScrollWrapper
                 loadMoreData={getMyCommentList}
                 totalPageNo={myCommentTotPageCnt}
