@@ -476,6 +476,7 @@ const SearchIconImg = styled.Image`
 
 const SearchInput = styled.TextInput`
   padding-left: 10px;
+  padding-right: 10px;
   flex: 1;
   font-family: Regular;
 `;

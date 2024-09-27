@@ -55,12 +55,12 @@ const ChallengeStateScreen = ({ route, navigation }) => {
     console.log(resultData);
     setProfileTotalChallenge(
       resultData.inc[0] +
-        resultData.seo[0] +
-        resultData.jeon[0] +
-        resultData.gang[0] +
-        resultData.chung[0] +
-        resultData.gyeong[0] +
-        resultData.je[0],
+      resultData.seo[0] +
+      resultData.jeon[0] +
+      resultData.gang[0] +
+      resultData.chung[0] +
+      resultData.gyeong[0] +
+      resultData.je[0],
     );
     setChallengeStateList(resultData);
   };
@@ -115,7 +115,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
               <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
                 <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
                 <ChallengeIcon source={images[challengeList[index]]} />
-                <ChallengeStateNum>
+                <ChallengeStateNum count={challengeStateList[challenge][0]}>
                   {challengeStateList[challenge][0]}
                 </ChallengeStateNum>
               </ChallengeSubContainer>

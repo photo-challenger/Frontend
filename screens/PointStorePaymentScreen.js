@@ -87,7 +87,7 @@ const PaymentInfoContainer = styled.View`
 const PaymentInfoHeaderText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   margin-bottom: 24px;
 `;
 
@@ -100,13 +100,13 @@ const PaymentInfoSubContainer = styled.View`
 const PaymentInfoTitle = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
 `;
 
 const PaymentInfoAddress = styled.Text`
   font-size: 10px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   color: #b5b5b5;
   margin-bottom: 10px;
 `;
@@ -114,14 +114,14 @@ const PaymentInfoAddress = styled.Text`
 const PaymentItemCount = styled.Text`
   font-size: 17px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
   text-align: right;
 `;
 
 const PaymentPoint = styled.Text`
   font-size: 20px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #ca7ffe;
   margin-top: 8px;
   text-align: right;
@@ -136,7 +136,7 @@ const PaymentBuyContainer = styled.View`
 const PaymentBuyHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const PaymentBuyPointContainer = styled.View`
@@ -157,14 +157,14 @@ const PaymentRemainingPointContainer = styled.View`
 const PaymentBuyPoint = styled.Text`
   font-size: 17px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   margin-top: 16px;
 `;
 
 const PaymentBuyPointNum = styled.Text`
   font-size: 17px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   margin-top: 16px;
   text-align: right;
 `;
@@ -182,6 +182,6 @@ const BuyButton = styled.TouchableOpacity`
 const BuyButtonText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #ffffff;
 `;

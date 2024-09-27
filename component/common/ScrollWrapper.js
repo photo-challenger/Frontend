@@ -28,7 +28,7 @@ const ScrollWrapper = ({ children, loadMoreData, totalPageNo, currPageNo }) => {
       {children}
       {isLoading && (
         <View style={{ padding: 20 }}>
-          <ActivityIndicator color="#0000ff" />
+          <ActivityIndicator color="#ca7ffe" />
         </View>
       )}
     </Animated.ScrollView>
