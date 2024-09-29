@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import {
@@ -8,6 +8,7 @@ import {
 import Animated from 'react-native-reanimated';
 import DateRangePicker from './DateRangePicker';
 import ScrollWrapper from '../../component/common/ScrollWrapper';
+import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 
 const PointComponent = ({ navigation }) => {
   const [myPoint, setMyPoint] = useState(0);
@@ -16,6 +17,9 @@ const PointComponent = ({ navigation }) => {
   const [pointHistory, setPointHistory] = useState([]);
   const [myPointPageNo, setMyPointPageNo] = useState(0);
   const [myPointTotPageCnt, setmyPointTotPageCnt] = useState(null);
+
+  const navigationState = useNavigationState(state => state);
+
   const moveMyPageTicketScreen = () => {
     navigation.navigate('MyPageTicketScreen');
   };
@@ -40,9 +44,9 @@ const PointComponent = ({ navigation }) => {
 
     if (pageNum === 0) {
       setPointHistory(resultData.pointDtos);
-      setmyPointTotPageCnt(resultData.totalPages);
+      setmyPointTotPageCnt(resultData.totalPages - 1);
     } else {
-      setPointHistory(resultData.pointDtos.concat(commentList));
+      setPointHistory(prevList => [...prevList, ...resultData.pointDtos]);
     }
   };
 
@@ -60,7 +64,7 @@ const PointComponent = ({ navigation }) => {
       _date = new Date(str).getDate();
     }
 
-    const formattedStartDate = `${String(_year)}-${String(_month).padStart(
+    const formattedStartDate = `${String(_year)}-${String(_month + 1).padStart(
       2,
       '0',
     )}-${String(_date).padStart(2, '0')}`;
@@ -91,18 +95,22 @@ const PointComponent = ({ navigation }) => {
   };
 
   useEffect(() => {
-    changeStartDateFomat();
-    changeEndDateFomat();
-  }, []);
-
-  useEffect(() => {
     // startDate와 endDate가 변경될 때마다 호출
     if (startDate && endDate) {
       getPointHistory(0);
     }
   }, [startDate, endDate]);
 
-  useEffect(() => getMyPoint);
+  useFocusEffect(
+    useCallback(() => {
+      if (navigationState.index === 1) {
+        getMyPoint();
+        changeStartDateFomat();
+        changeEndDateFomat();
+      }
+    }, [navigationState])
+  );
+
   return (
     <ChallengeTabContainer>
       <Animated.View style={[styles.animatedSheet]}>
@@ -286,6 +294,7 @@ const MyTicketChevronImage = styled.Image`
 const PointHistoryContainer = styled.View`
   background-color: #ffffff;
   padding: 8px 24px;
+  max-height: 400px;
 `;
 
 const PointHeaderContainer = styled.View`
@@ -308,7 +317,9 @@ const PointHistorySubContainer = styled.View`
   align-items: center;
 `;
 
-const PointHistoryHeaderContainer = styled.View``;
+const PointHistoryHeaderContainer = styled.View`
+  flex: 1;
+`;
 
 const PointHistoryTitle = styled.Text`
   font-size: 16px;
