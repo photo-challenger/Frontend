@@ -192,7 +192,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
           : (<CommentProfileImage source={require('../assets/profile-default-image.png')} />)}
         <CommentDetailContainer>
           <CommentReportContainer>
-            <View>
+            <View style={{width: '91%'}}>
               <CommentProfileContainer>
                 <CommentProfileNickname>
                   {item.nickname}
