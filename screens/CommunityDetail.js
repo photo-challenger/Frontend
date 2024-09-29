@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   View,
+  Text,
   Image,
   ActivityIndicator,
   TouchableWithoutFeedback,
@@ -17,6 +18,7 @@ import {
 import useConfirm from '../hooks/useConfirm';
 import CommunityCommentModal from './CommunityCommentModal';
 import { useFocusEffect } from '@react-navigation/native';
+import useAlert from '../hooks/useAlert';
 
 const CommunityDetail = ({ route, navigation }) => {
   const { postId } = route.params;
@@ -28,6 +30,7 @@ const CommunityDetail = ({ route, navigation }) => {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [showConfirm, ConfirmComponent] = useConfirm();
+  const [showAlert, AlertComponent] = useAlert();
 
   const tourType = {
     12: '관광지',
@@ -79,16 +82,24 @@ const CommunityDetail = ({ route, navigation }) => {
 
   // 삭제하기
   const deletePost = () => {
-    // 삭제하시겠습니까?
     showConfirm({
       title: "포토챌린지 삭제",
-      msg: '삭제하시겠습니까?\n삭제된 후 다시 작성해도 포인트는\n다시 지급되지 않습니다.',
+      msg: (
+      <Text style={{ fontFamily: 'Bold' }}>삭제하시겠습니까?{'\n'}삭제된 후에는
+        <Text style={{ color: '#CA7FFE', fontFamily: 'Bold' }}> 지급된 포인트가 사라집니다.</Text>
+      </Text>),
       onOk: async function () {
         // 삭제 API 호출
-        const deleteCbData = await fetchDeletePost(postId);
-        console.log(deleteCbData);
-        // 화면 나가기
-        navigation.goBack();
+        const response = await fetchDeletePost(postId);
+
+        if(response === 'can\'t delete') {
+          showAlert({
+            title: "포토챌린지 삭제 오류!",
+            msg: "고객님의 포인트가 부족해\n삭제가 불가능 합니다."
+          });
+        } else if(response === 'successful in deleting') {
+          navigation.goBack();
+        }
       },
     });
 
@@ -272,6 +283,7 @@ const CommunityDetail = ({ route, navigation }) => {
       </Modal>
 
       <ConfirmComponent />
+      <AlertComponent />
     </CommunityDetailContainer>
   );
 };
