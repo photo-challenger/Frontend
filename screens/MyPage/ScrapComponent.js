@@ -95,7 +95,9 @@ const ScrapComponent = ({ route, navigation }) => {
         setShouldRefresh(true);
         getBookmarkContentList(0);
         getBookmarkChallengeList(0);
-        setShouldRefresh(false);
+        setTimeout(() => {
+          setShouldRefresh(false);
+        }, 500);
       }
       return () => setShouldRefresh(false);
     }, [navigationState])

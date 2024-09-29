@@ -206,6 +206,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
                     placeholder="사용 중인 비밀번호를 입력해주세요."
                     placeholderTextColor={'#B5B5B5'}
                     onChangeText={(text) => setCurrentPassword(text)}
+                    secureTextEntry={true}
                   />
                 </NicknameInputContent>
 
@@ -217,6 +218,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
                     placeholder="특수문자, 숫자 포함 8자 이상 입력해주세요."
                     placeholderTextColor={'#B5B5B5'}
                     onChangeText={(text) => setPassword(text)}
+                    secureTextEntry={true}
                   />
                 </PasswordContent>
 
@@ -231,6 +233,7 @@ const ProfileEditScreen = ({ route, navigation }) => {
                       placeholder="비밀번호를 다시 한 번 입력해주세요."
                       placeholderTextColor={'#B5B5B5'}
                       onChangeText={(text) => setCheckPassword(text)}
+                      secureTextEntry={true}
                     />
                   </PasswordCheckContent>
                 </View>
