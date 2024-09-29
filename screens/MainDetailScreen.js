@@ -22,6 +22,7 @@ import {
   fetchCheckWrittenPost,
 } from '../service/api';
 import useAlert from '../hooks/useAlert';
+import { useIsFocused } from "@react-navigation/native";
 import { getDistance } from '../component/common/GetDistance';
 
 const MainDetailScreen = ({ route, navigation }) => {
@@ -32,16 +33,16 @@ const MainDetailScreen = ({ route, navigation }) => {
   const [isWrittenPost, setIsWrittenPost] = useState();
   const [showAlert, AlertComponent] = useAlert();
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     const getRegionDetailContent = async () => {
       try {
         setLoading(true);
         const apiResponseData = await fetchDetailCommon(contentId);
         const checkResponse = await fetchCheckContentBookmark(contentId);
-        const checkWrittenPost = await fetchCheckWrittenPost(contentId);
         setRegionDetailContent(apiResponseData);
         setClickBookmark(checkResponse);
-        setIsWrittenPost(checkWrittenPost);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch region detail content:', error);
@@ -50,6 +51,19 @@ const MainDetailScreen = ({ route, navigation }) => {
 
     getRegionDetailContent();
   }, [contentId]);
+
+  useEffect(() => {
+    const getCheckWrittenPost = async () => {
+      try {
+        const checkWrittenPost = await fetchCheckWrittenPost(contentId);
+        setIsWrittenPost(checkWrittenPost);
+      } catch(error) {
+        console.log(error);
+      }
+    };
+
+    getCheckWrittenPost();
+  }, [isFocused]);
 
   const handleBookmarkClick = async () => {
     const response = await fetchContentBookmark(contentId);
@@ -77,7 +91,7 @@ const MainDetailScreen = ({ route, navigation }) => {
         title: '히든 포토챌린지 발견 ✌️',
         msg: '히든 포토챌린지에 참여하면\n더 많은 포인트를 얻을 수 있어요!',
         onOk: () => {
-          navigation.navigate('photoChallengeWrite', {
+          navigation.navigate('photoChallengeDetail', {
             challengeInfo: {
               challengeName: obj.title,
               contentId: obj.contentid,

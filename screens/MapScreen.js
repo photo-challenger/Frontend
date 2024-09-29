@@ -126,6 +126,16 @@ const MapScreen = ({ route, navigation }) => {
 
   // ‘포토챌린지 참여하기' 클릭 시 해당 포토챌린지 작성화면으로 이동
   async function writeChallenge(obj) {
+    const checkPost = await fetchCheckWrittenPost(obj.contentid);
+    
+    if(checkPost) {
+      showAlert({
+        title: '포토챌린지 오류!',
+        msg: '이미 참여한 챌린지 입니다.',
+      });
+      return;
+    }
+
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       showAlert({
@@ -135,14 +145,14 @@ const MapScreen = ({ route, navigation }) => {
       return;
     }
 
-    // let _location = await Location.getCurrentPositionAsync();
-    // if(getDistance(_location.coords.latitude, _location.coords.longitude, obj.mapy, obj.mapx) > 1000) {
-    //   showAlert({
-    //     title: '포토챌린지 작성 불가',
-    //     msg: '관광지로 조금 더 가까이 이동해 주세요!',
-    //   });
-    //   return;
-    // }
+    let _location = await Location.getCurrentPositionAsync();
+    if(getDistance(_location.coords.latitude, _location.coords.longitude, obj.mapy, obj.mapx) > 1000) {
+      showAlert({
+        title: '포토챌린지 작성 불가',
+        msg: '관광지로 조금 더 가까이 이동해 주세요!',
+      });
+      return;
+    }
 
     const response = await fetchCheckChallenge(obj.contentid);
     if (response) {
@@ -173,13 +183,10 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   // 마커 클릭 시
-  async function getMarkerInfo(obj) {
+  function getMarkerInfo(obj) {
     console.log('getMarkerInfo', obj);
     setLayerPopFlag(obj != undefined);
     setTourInfo(obj || {});
-
-    const response = await fetchCheckWrittenPost(obj.contentid);
-    setIsWrittenPost(response);
   }
 
   return (
@@ -249,11 +256,9 @@ const MapScreen = ({ route, navigation }) => {
               <BttmShtDetailBtn onPress={() => moveToDetail(tourInfo)} isWrittenPost={isWrittenPost}>
                 <BttmShtDetailBtnText>자세히 보기</BttmShtDetailBtnText>
               </BttmShtDetailBtn>
-            {isWrittenPost === false && (
             <BttmShtChllngBtn onPress={() => writeChallenge(tourInfo)}>
               <BttmShtChllngBtnText>포토챌린지 참여하기</BttmShtChllngBtnText>
             </BttmShtChllngBtn>
-            )}
           </DetailBtnView>
 
           <AlertComponent />
@@ -330,7 +335,7 @@ const DetailBottomSheet = styled.View`
 `;
 
 const BttmShtDetailBtn = styled.TouchableOpacity`
-  width: ${(props) => props.isWrittenPost ? "100%" : "48.5%"};
+  width: 48.5%;
   height: 50px;
   padding: 12px 9px;
   justify-content: center;

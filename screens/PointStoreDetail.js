@@ -121,7 +121,6 @@ const PointStoreDetail = ({ route, navigation }) => {
           </ItemDescriptionContainer>
         </ScrollView>
 
-
         <ItemPurchaseButton activeOpacity={0.9} onPress={() => openModal()}>
           <PurchaseButtonText>구매하기</PurchaseButtonText>
         </ItemPurchaseButton>
