@@ -148,7 +148,7 @@ const SettingScreen = ({ route, navigation }) => {
               }}
             >
               <SettingCategoryText>버전 정보</SettingCategoryText>
-              <SettingCategoryText>v1.1.0</SettingCategoryText>
+              <SettingCategoryText>v1.1.1</SettingCategoryText>
             </SettingCategorySubContainer>
           </SettingCategoryContainer>
 
