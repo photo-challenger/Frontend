@@ -112,7 +112,7 @@ const ChallengeStateScreen = ({ route, navigation }) => {
 
           <ChallengeContainer>
             {challengeEngList.map((challenge, index) => (
-              <ChallengeSubContainer onPress={() => moveToMap(challenge)}>
+              <ChallengeSubContainer key={index} onPress={() => moveToMap(challenge)}>
                 <ChallengeNameText>{challengeList[index]}</ChallengeNameText>
                 <ChallengeIcon source={images[challengeList[index]]} />
                 <ChallengeStateNum count={challengeStateList[challenge][0]}>
