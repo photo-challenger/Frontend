@@ -217,7 +217,7 @@ const NoChallengeListText = styled.Text`
   text-align: center;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #b3b3b3;
 `;
 
@@ -229,7 +229,7 @@ const ChallengeTabContainer = styled.View`
 const PointHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
   margin: 33px 0 16px 24px;
 `;
 
@@ -244,7 +244,7 @@ const PointContainer = styled.View`
 const PointSubText = styled.Text`
   font-size: 12px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #7a7a7a;
 `;
 
@@ -260,14 +260,14 @@ const PointSubContainer = styled.View`
 const PointNumText = styled.Text`
   font-size: 40px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
 `;
 
 const PointText = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
   margin-left: 4px;
   padding-bottom: 8px;
@@ -282,7 +282,7 @@ const MyTicketContainer = styled.TouchableOpacity`
 const MyTicketText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const MyTicketChevronImage = styled.Image`
@@ -306,7 +306,7 @@ const PointHeaderContainer = styled.View`
 const PointHistoryHeaderText = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const PointHistorySubContainer = styled.View`
@@ -324,20 +324,20 @@ const PointHistoryHeaderContainer = styled.View`
 const PointHistoryTitle = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
   margin-bottom: 8px;
 `;
 
 const PointHistoryDuration = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Medium;
   color: #7a7a7a;
 `;
 
 const PointHistoryNum = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
 `;

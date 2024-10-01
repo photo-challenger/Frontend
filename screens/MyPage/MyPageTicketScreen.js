@@ -227,13 +227,13 @@ const TicketListDetailComponent = styled.View``;
 const TicketListItemDetailName = styled.Text`
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-family: Semibold;
 `;
 
 const TicketListItemDetailAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   margin-top: 6px;
 `;
 

@@ -123,19 +123,19 @@ const TicketDetailContainer = styled.View`
 const TicketName = styled.Text`
   font-size: 22px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const TicketAddress = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
 `;
 
 const TicketCount = styled.Text`
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-family: Semibold;
   color: #ca7ffe;
   margin-top: 24px;
 `;
@@ -155,13 +155,13 @@ const TicketUseButtonText = styled.Text`
   color: #ffffff;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
 `;
 
 const AnnouncementText = styled.Text`
   font-size: 16px;
   font-style: normal;
-  font-weight: 700;
+  font-family: Bold;
   color: #7a7a7a;
   margin-top: 26px;
   margin-bottom: 12px;
@@ -171,7 +171,7 @@ const AnnouncementText = styled.Text`
 const AnnouncementSubText = styled.Text`
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-family: Regular;
   color: #7a7a7a;
   text-align: center;
 `;
