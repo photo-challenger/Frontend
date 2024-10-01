@@ -232,7 +232,7 @@ const CommunityCommentModal = ({ commentModalVisible, setCommentModalVisible, po
               </CommentReplyMoreButtonText>
             )}
           </CommentReplyMoreButton>
-          <View>
+          <View style={{ paddingBottom: 20 }}>
             {showReplies &&
               commentReplayList &&
               commentReplayList.map((item, index) => (
